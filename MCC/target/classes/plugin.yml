@@ -1,0 +1,13 @@
+name: MCC
+version: '1.0.0'
+main: com.mimikcraft.mcc.Main
+api-version: '1.16'
+commands:
+  join:
+    usage: /join
+  leave:
+    usage: /leave
+depend:
+  - MythicMobs
+softdepend: [ExecutableItems, SCore]
+
