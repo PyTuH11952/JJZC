@@ -22,14 +22,15 @@ public class Game {
         preparePlayers();
     }
 
-    private void getkit(){
+    private void getkit(Player player){
+
+        ExecutableApi.giveExecutableItem(player, "Prem_Tornado_Blade", 1);
 
     }
     private void preparePlayers(){
         for (Player player : arena.getPlayers()) {
             player.getInventory().clear();
-            //Kits.getkit(player)
-            ExecutableApi.giveExecutableItem(player, "Prem_Tornado_Blade", 1);
+            getkit(player);
             player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
             player.teleport(new Location(Bukkit.getWorld("world"),1,2,1));
             ChatUtil.sendMessage(player,"&cБейся!");
