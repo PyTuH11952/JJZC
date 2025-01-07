@@ -1,4 +1,1 @@
-MimikCraft
-JustJoy
-dirtylegs
-вонючиеноги
+Plugin for minecraft server JustJoy
