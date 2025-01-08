@@ -2,6 +2,8 @@ package com.mimikcraft.mcc;
 
 import com.ssomar.score.api.executableitems.ExecutableItemsAPI;
 import com.ssomar.score.api.executableitems.config.ExecutableItemInterface;
+import com.ssomar.score.api.executableitems.events.AddItemInPlayerInventoryEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -14,5 +16,7 @@ public class ExecutableApi {
         if (eiOpt.isPresent()) item = eiOpt.get().buildItem(amount, Optional.empty(), Optional.of(player));
         if (item != null)
             player.getInventory().addItem(item);
+        AddItemInPlayerInventoryEvent eventToCall = new AddItemInPlayerInventoryEvent(player, item, player.getInventory().firstEmpty());
+        Bukkit.getPluginManager().callEvent(eventToCall);
     }
 }

@@ -44,7 +44,7 @@ public class Arena {
 
     private Stage arenaStage = Stage.WAITING;
 
-    private Game game;
+    private final Game game;
 
     private final List<Player> players = new ArrayList<>();;
 
@@ -73,7 +73,7 @@ public class Arena {
 //        player.teleport(lobby);
         players.add(player);
         sendArenaMessage(player.getDisplayName() + " присоединился!");
-        if (players.size() >= minPlayers && arenaStage == Stage.WAITING) {
+        if (players.size() >= minPlayers && arenaStage != Stage.CLOSED) {
             startGame();
         }
     }
@@ -90,7 +90,6 @@ public class Arena {
             @Override
             public void run() {
                 if (ctr <=0) {
-                    setExpArena();
                     game.start();
                     cancel();
                 }
@@ -118,9 +117,12 @@ public class Arena {
             player.setExp(playerExp.get(player));
             player.setLevel(playerExp2.get(player));
         }
-        onJoinLocation.remove(player);
+ //       onJoinLocation.remove(player);
         players.remove(player);
         sendArenaMessage(player.getDisplayName() + " отключился!");
+        if (players.size() < 1 && arenaStage == Stage.STARTING){
+            arenaStage = Stage.WAITING;
+        }
     }
 
     public void sendArenaMessage(String message){
@@ -167,17 +169,11 @@ public class Arena {
         return name;
     }
 
-    public Location getLobby() {
-        return lobby;
-    }
 
     public List<Player> getPlayers() {
         return players;
     }
 
-    public void setLobby(Location lobby) {
-        this.lobby = lobby;
-    }
 
     public int getMinPlayers() {
         return minPlayers;

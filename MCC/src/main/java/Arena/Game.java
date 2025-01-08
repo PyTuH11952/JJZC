@@ -108,11 +108,11 @@ public class Game {
             spawnmob(player.getLocation(), "SkeletonKing");
             spawnmob(player.getLocation(), "SkeletonKing");
             player.setGameMode(GameMode.ADVENTURE);
-            getkit(player);
+//            getkit(player);
 
         }
     }
-    public void spawnmob(Location location, String name){
+    private void spawnmob(Location location, String name){
         new BukkitRunnable(){
 
             @Override

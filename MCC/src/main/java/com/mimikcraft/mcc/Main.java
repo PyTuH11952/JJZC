@@ -20,8 +20,8 @@ public final class Main extends JavaPlugin {
         getServer().getPluginCommand("leave").setExecutor(new Leave());
         instance = this;
         for(int i = 0 ; i < maxarenas; i++){
-            Arena singletonarena = new Arena("arena"+i);
-            ArenaList.addarena(singletonarena);
+            Arena arena = new Arena("arena"+i);
+            ArenaList.addarena(arena);
         }
     }
 
