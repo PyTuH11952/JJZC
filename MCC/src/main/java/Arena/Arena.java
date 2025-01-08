@@ -32,8 +32,6 @@ public class Arena {
 
     private final int timeToStart = 60;
 
-    private int hardlevel = 1;
-
     private final boolean isInfinity = false;
 
     private final Map<Player, Location> onJoinLocation = new HashMap<>();
@@ -48,9 +46,7 @@ public class Arena {
 
     private Game game;
 
-    private final List<Player> players = new ArrayList<>();
-
-    private final List<Entity> mobs = new ArrayList<Entity>();
+    private final List<Player> players = new ArrayList<>();;
 
     public Arena(String name) {
 
@@ -93,6 +89,11 @@ public class Arena {
 
             @Override
             public void run() {
+                if (ctr <=0) {
+                    setExpArena();
+                    game.start();
+                    cancel();
+                }
                 expTimerArena(ctr);
                 if (ctr == 60 || ctr == 30 || ctr == 15 || ctr == 10 || ctr == 5 || ctr == 4 || ctr == 3 || ctr == 2 || ctr == 1) {
                     sendArenaTitle("&eДо старта игры осталось", "&c&l" + ctr);
@@ -104,39 +105,9 @@ public class Arena {
                     arenaStage = Stage.WAITING;
                     cancel();
                 }
-                if (ctr <=0) {
-                    game.start();
-                    setExpArena();
-                    cancel();
-
-                }
             }
         }.runTaskTimer(Main.getInstance(), 0L,20L);
 
-
-    }
-
-    public void spawnmob(Location location, String name){
-        new BukkitRunnable(){
-
-            @Override
-
-            public void run(){
-                Location particle = location;
-                particle.setX(particle.getX() - 0.5);
-                particle.setZ(particle.getZ() - 0.5);
-
-                Bukkit.getWorld("world").spawnParticle(Particle.FLAME, particle,10, 0.3, 0.3, 0.3, 0);
-                Bukkit.getWorld("world").playSound(particle, Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 1, 1);
-
-                cancel();
-            }
-
-        }.runTaskTimer(Main.getInstance(), 0L, 10L);
-
-        ActiveMob mythicentity = MythicBukkit.inst().getMobManager().spawnMob(name, location, hardlevel);
-        Entity entity = mythicentity.getEntity().getBukkitEntity();
-        mobs.add(entity);
 
     }
 
