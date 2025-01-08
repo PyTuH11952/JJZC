@@ -9,5 +9,8 @@ commands:
     usage: /leave
 depend:
   - MythicMobs
-softdepend: [ExecutableItems, SCore]
+  - Vault
+softdepend:
+  - ExecutableItems
+  - SCore
 
