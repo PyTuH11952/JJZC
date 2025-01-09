@@ -19,7 +19,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginCommand("join").setExecutor(new Join());
         getServer().getPluginCommand("leave").setExecutor(new Leave());
         instance = this;
-        for(int i = 0 ; i < maxarenas; i++){
+        for(int i = 0 ; i <= maxarenas; i++){
             Arena arena = new Arena("arena"+i);
             ArenaList.addarena(arena);
         }

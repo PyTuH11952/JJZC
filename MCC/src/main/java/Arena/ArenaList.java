@@ -17,8 +17,9 @@ public class ArenaList {
     public static Arena get(String name) {
 
         for (Arena arena : arenas) {
-            if (arena.getName().equals(name)) ;
-            return arena;
+            if (arena.getName().equals(name)){
+                return arena;
+            }
         }
 
         return null;

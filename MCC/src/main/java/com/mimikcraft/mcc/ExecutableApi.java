@@ -13,10 +13,13 @@ public class ExecutableApi {
     public static void giveExecutableItem(Player player, String executableItemId, int amount) {
         ItemStack item = null;
         Optional<ExecutableItemInterface> eiOpt = ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(executableItemId);
-        if (eiOpt.isPresent()) item = eiOpt.get().buildItem(amount, Optional.empty(), Optional.of(player));
-        if (item != null)
+        if (eiOpt.isPresent()) {
+            item = eiOpt.get().buildItem(amount, Optional.empty(), Optional.of(player));
+        }
+        if (item != null) {
+            AddItemInPlayerInventoryEvent eventToCall = new AddItemInPlayerInventoryEvent(player, item, player.getInventory().firstEmpty());
+            Bukkit.getPluginManager().callEvent(eventToCall);
             player.getInventory().addItem(item);
-        AddItemInPlayerInventoryEvent eventToCall = new AddItemInPlayerInventoryEvent(player, item, player.getInventory().firstEmpty());
-        Bukkit.getPluginManager().callEvent(eventToCall);
+        }
     }
 }

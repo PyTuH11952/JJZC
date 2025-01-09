@@ -99,20 +99,16 @@ public class Game {
     private void preparePlayers(){
         for (Player player : arena.getPlayers()) {
             player.getInventory().clear();
+     //       getkit(player);
             player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
             player.teleport(new Location(Bukkit.getWorld("world"),1,2,1));
             ChatUtil.sendMessage(player,"&cБейся!");
-            spawnmob(player.getLocation(), "SkeletonKing");
-            spawnmob(player.getLocation(), "SkeletonKing");
-            glowing();
-            spawnmob(player.getLocation(), "SkeletonKing");
-            spawnmob(player.getLocation(), "SkeletonKing");
+            spawnMob(player.getLocation(), "SkeletonKing");
             player.setGameMode(GameMode.ADVENTURE);
-//            getkit(player);
 
         }
     }
-    private void spawnmob(Location location, String name){
+    private void spawnMob(Location location, String name){
         new BukkitRunnable(){
 
             @Override
