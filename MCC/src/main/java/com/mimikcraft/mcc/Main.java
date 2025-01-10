@@ -12,8 +12,6 @@ public final class Main extends JavaPlugin {
 
     private final int maxarenas = 3;
 
-    public static Arena arena1 = new Arena("amongus");
-
     @Override
     public void onEnable() {
         getServer().getPluginCommand("join").setExecutor(new Join());

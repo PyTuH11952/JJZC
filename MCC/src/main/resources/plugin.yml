@@ -7,6 +7,24 @@ commands:
     usage: /join
   leave:
     usage: /leave
+  faststart:
+    usage: /faststart
+  newgame:
+    usage: /newgame
+  gamesettings:
+    usage: /gamesettings
+  party:
+    usage: /party
+  choosespawns:
+    usage: /choosespawns
+  setspawns:
+    usage: /setspawns
+  setchests:
+    usage: /setchests
+  bestiary:
+    usage: /bestiary
+  prestige:
+    usage: /prestige
 depend:
   - MythicMobs
   - Vault
