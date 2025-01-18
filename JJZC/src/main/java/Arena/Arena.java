@@ -2,17 +2,8 @@ package Arena;
 
 import Utils.ChatUtil;
 import com.mimikcraft.mcc.Main;
-import io.lumine.mythic.api.exceptions.InvalidMobTypeException;
-import io.lumine.mythic.api.mobs.MythicMob;
-import io.lumine.mythic.bukkit.BukkitAdapter;
-import io.lumine.mythic.bukkit.MythicBukkit;
-import io.lumine.mythic.bukkit.events.MythicMobSpawnEvent;
-import io.lumine.mythic.core.mobs.ActiveMob;
 import org.bukkit.*;
-import org.bukkit.block.data.type.Switch;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -42,7 +33,7 @@ public class Arena {
 
     private Location lobby;
 
-    private Stage arenaStage = Stage.WAITING;
+    private ArenaStage arenaStage = ArenaStage.WAITING;
 
     private final Game game;
 
@@ -57,7 +48,7 @@ public class Arena {
     }
 
     public void reset(){
-        arenaStage = Stage.RESET;
+        arenaStage = ArenaStage.RESET;
     }
 
     public void join(Player player){
@@ -65,7 +56,7 @@ public class Arena {
             ChatUtil.sendMessage(player, "Вы уже на арене!");
             return;
         }
-        if (arenaStage == Stage.CLOSED) {
+        if (arenaStage == ArenaStage.CLOSED) {
             ChatUtil.sendMessage(player, "Арена закрыта!");
             return;
         }
@@ -73,14 +64,14 @@ public class Arena {
 //        player.teleport(lobby);
         players.add(player);
         sendArenaMessage(player.getDisplayName() + " присоединился!");
-        if (players.size() >= minPlayers && arenaStage != Stage.CLOSED) {
+        if (players.size() >= minPlayers && arenaStage != ArenaStage.CLOSED) {
             startGame();
         }
     }
 
     private void startGame(){
 
-        arenaStage = Stage.STARTING;
+        arenaStage = ArenaStage.STARTING;
         saveExpArena();
 
         new BukkitRunnable() {
@@ -101,7 +92,7 @@ public class Arena {
                 }
                 ctr--;
                 if (players.size() < 1){
-                    arenaStage = Stage.WAITING;
+                    arenaStage = ArenaStage.WAITING;
                     cancel();
                 }
             }
@@ -113,15 +104,15 @@ public class Arena {
     public void leave(Player player){
 //        player.teleport(onJoinLocation.get(player));
 //        player.teleport(onJoinLocation.get(player));
-        if (arenaStage == Stage.WAITING){
+        if (arenaStage == ArenaStage.WAITING){
             player.setExp(playerExp.get(player));
             player.setLevel(playerExp2.get(player));
         }
  //       onJoinLocation.remove(player);
         players.remove(player);
         sendArenaMessage(player.getDisplayName() + " отключился!");
-        if (players.size() < 1 && arenaStage == Stage.STARTING){
-            arenaStage = Stage.WAITING;
+        if (players.size() < 1 && arenaStage == ArenaStage.STARTING){
+            arenaStage = ArenaStage.WAITING;
         }
     }
 

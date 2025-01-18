@@ -1,6 +1,6 @@
 package Arena;
 
-public enum Stage {
+public enum ArenaStage {
     CLOSED,
     WAITING,
     STARTING,
