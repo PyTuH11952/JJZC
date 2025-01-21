@@ -89,15 +89,9 @@
       <dependency>
           <groupId>com.ssomar.score</groupId>
           <artifactId>SCore</artifactId>
-          <version>5.25.1.5</version>
+          <version>5.25.1.19</version>
           <scope>system</scope>
-          <systemPath>C:/Users/User/IdeaProjects/MCC/depencies/SCore.jar</systemPath>
-      </dependency>
-      <dependency>
-          <groupId>com.github.MilkBowl</groupId>
-          <artifactId>VaultAPI</artifactId>
-          <version>1.7</version>
-          <scope>provided</scope>
+          <systemPath>${project.basedir}/src/main/resources/SCore.jar</systemPath>
       </dependency>
   </dependencies>
 </project>

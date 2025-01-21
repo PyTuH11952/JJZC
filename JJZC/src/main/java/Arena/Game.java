@@ -3,6 +3,8 @@ package Arena;
 import Utils.ChatUtil;
 import com.mimikcraft.mcc.ExecutableApi;
 import com.mimikcraft.mcc.Main;
+import com.ssomar.score.api.executableitems.ExecutableItemsAPI;
+import com.ssomar.score.api.executableitems.config.ExecutableItemInterface;
 import com.ssomar.score.usedapi.VaultAPI;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
@@ -10,10 +12,14 @@ import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static com.mimikcraft.mcc.ExecutableApi.giveExecutableItem;
 
 public class Game {
 
@@ -43,54 +49,54 @@ public class Game {
 
         if (player.hasPermission("default")) {
 
-            ExecutableApi.giveExecutableItem(player, "case1", 3);
+            giveExecutableItem(player, "case1", 3);
 
         } else if (player.hasPermission("vip")) {
-            ExecutableApi.giveExecutableItem(player, "case1", 10);
-            ExecutableApi.giveExecutableItem(player, "bomba1", 3);
-            ExecutableApi.giveExecutableItem(player, "bomba2", 2);
+            giveExecutableItem(player, "case1", 10);
+            giveExecutableItem(player, "bomba1", 3);
+            giveExecutableItem(player, "bomba2", 2);
         } else if (player.hasPermission("vip+")) {
-            ExecutableApi.giveExecutableItem(player, "case1", 10);
-            ExecutableApi.giveExecutableItem(player, "case2", 3);
-            ExecutableApi.giveExecutableItem(player, "bomba1", 5);
-            ExecutableApi.giveExecutableItem(player, "bomba2", 3);
+            giveExecutableItem(player, "case1", 10);
+            giveExecutableItem(player, "case2", 3);
+            giveExecutableItem(player, "bomba1", 5);
+            giveExecutableItem(player, "bomba2", 3);
 
         } else if (player.hasPermission("premium")) {
-            ExecutableApi.giveExecutableItem(player, "case1", 15);
-            ExecutableApi.giveExecutableItem(player, "case2", 5);
-            ExecutableApi.giveExecutableItem(player, "case3", 3);
-            ExecutableApi.giveExecutableItem(player, "bomba1", 7);
-            ExecutableApi.giveExecutableItem(player, "bomba2", 5);
-            ExecutableApi.giveExecutableItem(player, "bomba3", 3);
+            giveExecutableItem(player, "case1", 15);
+            giveExecutableItem(player, "case2", 5);
+            giveExecutableItem(player, "case3", 3);
+            giveExecutableItem(player, "bomba1", 7);
+            giveExecutableItem(player, "bomba2", 5);
+            giveExecutableItem(player, "bomba3", 3);
 
         } else if (player.hasPermission("sponsor")) {
-            ExecutableApi.giveExecutableItem(player, "case1", 16);
-            ExecutableApi.giveExecutableItem(player, "case2", 6);
-            ExecutableApi.giveExecutableItem(player, "case3", 4);
-            ExecutableApi.giveExecutableItem(player, "bomba1", 8);
-            ExecutableApi.giveExecutableItem(player, "bomba2", 6);
-            ExecutableApi.giveExecutableItem(player, "bomba3", 4);
+            giveExecutableItem(player, "case1", 16);
+            giveExecutableItem(player, "case2", 6);
+            giveExecutableItem(player, "case3", 4);
+            giveExecutableItem(player, "bomba1", 8);
+            giveExecutableItem(player, "bomba2", 6);
+            giveExecutableItem(player, "bomba3", 4);
 
         } else if (player.hasPermission("elite")) {
-            ExecutableApi.giveExecutableItem(player, "case1", 16);
-            ExecutableApi.giveExecutableItem(player, "case2", 5);
-            ExecutableApi.giveExecutableItem(player, "case3", 3);
-            ExecutableApi.giveExecutableItem(player, "case4", 2);
-            ExecutableApi.giveExecutableItem(player, "bomba1", 8);
-            ExecutableApi.giveExecutableItem(player, "bomba2", 6);
-            ExecutableApi.giveExecutableItem(player, "bomba3", 4);
-            ExecutableApi.giveExecutableItem(player, "lom", 1);
+            giveExecutableItem(player, "case1", 16);
+            giveExecutableItem(player, "case2", 5);
+            giveExecutableItem(player, "case3", 3);
+            giveExecutableItem(player, "case4", 2);
+            giveExecutableItem(player, "bomba1", 8);
+            giveExecutableItem(player, "bomba2", 6);
+            giveExecutableItem(player, "bomba3", 4);
+            giveExecutableItem(player, "lom", 1);
 
         } else if (player.hasPermission("god")) {
-            ExecutableApi.giveExecutableItem(player, "case1", 16);
-            ExecutableApi.giveExecutableItem(player, "case2", 5);
-            ExecutableApi.giveExecutableItem(player, "case3", 3);
-            ExecutableApi.giveExecutableItem(player, "case4", 2);
-            ExecutableApi.giveExecutableItem(player, "bomba1", 8);
-            ExecutableApi.giveExecutableItem(player, "bomba2", 6);
-            ExecutableApi.giveExecutableItem(player, "bomba3", 4);
-            ExecutableApi.giveExecutableItem(player, "bomba5", 2);
-            ExecutableApi.giveExecutableItem(player, "lom2", 1);
+            giveExecutableItem(player, "case1", 16);
+            giveExecutableItem(player, "case2", 5);
+            giveExecutableItem(player, "case3", 3);
+            giveExecutableItem(player, "case4", 2);
+            giveExecutableItem(player, "bomba1", 8);
+            giveExecutableItem(player, "bomba2", 6);
+            giveExecutableItem(player, "bomba3", 4);
+            giveExecutableItem(player, "bomba5", 2);
+            giveExecutableItem(player, "lom2", 1);
 
         }
 
@@ -99,11 +105,10 @@ public class Game {
     private void preparePlayers(){
         for (Player player : arena.getPlayers()) {
             player.getInventory().clear();
-     //       getkit(player);
+            getkit(player);
             player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
             player.teleport(new Location(Bukkit.getWorld("world"),1,2,1));
             ChatUtil.sendMessage(player,"&cБейся!");
-            spawnMob(player.getLocation(), "SkeletonKing");
             player.setGameMode(GameMode.ADVENTURE);
 
         }

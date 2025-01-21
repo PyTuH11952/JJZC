@@ -21,7 +21,7 @@ public class Arena {
 
     private final int maxPlayers = 8;
 
-    private final int timeToStart = 60;
+    private final int timeToStart = 10;
 
     private final boolean isInfinity = false;
 

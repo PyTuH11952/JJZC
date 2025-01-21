@@ -53,6 +53,10 @@
       <name>Lumine Releases</name>
       <url>https://mvn.lumine.io/repository/maven-public/</url>
     </repository>
+    <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
@@ -70,9 +74,9 @@
     <dependency>
       <groupId>com.ssomar.score</groupId>
       <artifactId>SCore</artifactId>
-      <version>5.25.1.5</version>
+      <version>5.25.1.19</version>
       <scope>system</scope>
-      <systemPath>C:/Users/User/IdeaProjects/MCC/depencies/SCore.jar</systemPath>
+      <systemPath>${project.basedir}/src/main/resources/SCore.jar</systemPath>
     </dependency>
   </dependencies>
   <properties>
