@@ -133,3 +133,18 @@ JustJoyZombierubkaCore functional list:
 2. 2 станция
 3. 3 станция
 4. 4 станция
+
+Структруа конфига с локациями:
+<Название локации>:
+	spawnLocation: 'x y z'  - точка спавна на локации
+	chests: ['x y z', ...]  - координаты сундуков
+	stages:
+		- spawners: - список координат спавнеров зомби
+			- 'x y z'
+			- ...
+		  waves: 
+			- zombies: ['zombieName', ...] - список всех зомби в стадии
+		  	  zombieCount: int
+			  
+		  
+	
