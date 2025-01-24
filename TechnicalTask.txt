@@ -140,15 +140,18 @@ JustJoyZombierubkaCore functional list:
 	chests:  - координаты сундуков
 		- 'x y z'
 		- ...  
-	zombies: 
-		- zombieName: 'zombieName'  - название зомби в mythicmobs
-		  spawnChance: int  - процент шанс сппавна
-		- ...
-	stages:
-		- spawners:  - список координат спавнеров зомби
-			- 'x y z'
-			- ...
-		  wavesCount: int  - количество волн на этапе
+	zombies:  - список зомби на локации
+		zombie1:
+			zombieName: 'zombieName'  - название зомби в mythicmobs
+			spawnChance: num  - процент шанс сппавна
+		...
+	stages:  - список этапов
+		stage1:
+			spawners:  - список координат спавнеров зомби
+				- 'x y z'
+				- ...
+		 	wavesCount: num - количество волн на этапе
+		...
 			  
 		  
 	
