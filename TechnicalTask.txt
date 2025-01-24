@@ -137,7 +137,9 @@ JustJoyZombierubkaCore functional list:
 Структруа конфига с локациями:
 <Название локации>:
 	spawnLocation: 'x y z'  - точка спавна на локации
-	chests: ['x y z', ...]  - координаты сундуков
+	chests:  - координаты сундуков
+		- 'x y z'
+		- ...  
 	zombies: 
 		- zombieName: 'zombieName'  - название зомби в mythicmobs
 		  spawnChance: int  - процент шанс сппавна
