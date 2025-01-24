@@ -141,9 +141,7 @@ JustJoyZombierubkaCore functional list:
 		- 'x y z'
 		- ...  
 	zombies:  - список зомби на локации
-		zombie1:
-			zombieName: 'zombieName'  - название зомби в mythicmobs
-			spawnChance: num  - процент шанс сппавна
+		<Название зомби>: <Шанс спавна>
 		...
 	stages:  - список этапов
 		stage1:

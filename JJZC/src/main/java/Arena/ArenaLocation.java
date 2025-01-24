@@ -1,6 +1,7 @@
 package Arena;
 
 import com.mimikcraft.mcc.Main;
+import com.sun.javafx.collections.MappingChange;
 import io.lumine.mythic.bukkit.utils.config.ConfigurationSection;
 import io.lumine.mythic.bukkit.utils.config.file.YamlConfiguration;
 import org.bukkit.Location;
@@ -9,16 +10,15 @@ import org.bukkit.World;
 import java.io.File;
 import java.io.IOException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class ArenaLocation {
 
     public LocationTypes locationType;
 
-    private final Location spawnPosition;
+    private Location spawnPosition;
     private final List<Location> chests = new ArrayList<>();
+    private final Map<String, Double> zombies = new HashMap<>();
     private final List<Stage> stages = new ArrayList<>();
 
     public ArenaLocation(LocationTypes locationType, World world){
@@ -48,11 +48,26 @@ public class ArenaLocation {
             double z = Double.parseDouble(chestCordsStr[2]);
             chests.add(new Location(world, x, y, z));
         }
-        List<Object> = locationSection.getList
+
+        for(Map.Entry<String, Object> entry: locationSection.getValues(false).entrySet()){
+            zombies.put(entry.getKey(), Double.parseDouble(entry.getValue().toString()));
+        }
     }
 
     public Location getSpawnPosition() {
         return spawnPosition;
+    }
+
+    public List<Location> getChests() {
+        return chests;
+    }
+
+    public Map<String, Double> getZombies() {
+        return zombies;
+    }
+
+    public List<Stage> getStages() {
+        return stages;
     }
 
     public enum LocationTypes {
