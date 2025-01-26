@@ -1,10 +1,10 @@
 package Arena;
 
 import com.mimikcraft.mcc.Main;
-import io.lumine.mythic.bukkit.utils.config.ConfigurationSection;
-import io.lumine.mythic.bukkit.utils.config.file.YamlConfiguration;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class ArenaLocation {
             }
         }
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        ConfigurationSection locationSection = config.getConfigurationSection(locationType.toString().toLowerCase());
+        ConfigurationSection locationSection = config.getConfigurationSection(locationType.name().toLowerCase());
 
         String[] spawnCoordinatesStr = locationSection.getString("spawnLocation").split(" ");
         double spawnX = Double.parseDouble(spawnCoordinatesStr[0]);
@@ -48,7 +48,7 @@ public class ArenaLocation {
         double spawnZ = Double.parseDouble(spawnCoordinatesStr[2]);
         spawnLocation = new Location(world, spawnX, spawnY, spawnZ);
 
-        String[] lobbyCoordinatesStr = locationSection.getString("spawnLocation").split(" ");
+        String[] lobbyCoordinatesStr = locationSection.getString("lobbyLocation").split(" ");
         double lobbyX = Double.parseDouble(lobbyCoordinatesStr[0]);
         double lobbyY = Double.parseDouble(lobbyCoordinatesStr[1]);
         double lobbyZ = Double.parseDouble(lobbyCoordinatesStr[2]);
