@@ -44,11 +44,13 @@ public class Arena {
     private final List<Player> ghosts = new ArrayList<>();
 
     public Arena(String name) {
-        WorldCreator worldCreator = new WorldCreator(name);
-        worldCreator.environment(World.Environment.NORMAL);
-        worldCreator.generator(new EmptyChunkGenerator());
-        worldCreator.generateStructures(false);
-        worldCreator.createWorld();
+        if (Bukkit.getWorld(name) == null){
+            WorldCreator worldCreator = new WorldCreator(name);
+            worldCreator.environment(World.Environment.NORMAL);
+            worldCreator.generator(new EmptyChunkGenerator());
+            worldCreator.generateStructures(false);
+            worldCreator.createWorld();
+        }
         arenaWorld = Bukkit.getWorld(name);
 
         this.name = name;

@@ -10,20 +10,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="826ec8dd-69ce-4dea-9d10-7bbbf4b43755" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/Commands/Test2CMD.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mimikcraft/mcc/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mimikcraft/mcc/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/ArenaLocation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/ArenaLocation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/MCC-1.0.0-shaded.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/MCC-1.0.0-shaded.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/MCC-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/MCC-1.0.0.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Arena/Arena$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Arena$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Arena/Arena.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Arena.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Game$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Game.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/mimikcraft/mcc/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mimikcraft/mcc/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/plugin.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Arena/ArenaLocation.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/ArenaLocation.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/original-MCC-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/original-MCC-1.0.0.jar" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -49,22 +43,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Maven.MCC [package].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/Documents/GitHub/JJZC/JJZC&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JAR Application.Unnamed.executor": "Run",
+    "Maven.JJZC.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/GitHub/JJZC/JJZC",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
-    <configuration name="MCC [package]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+    <configuration name="JJZC" type="MavenRunConfiguration" factoryName="Maven">
       <MavenSettings>
         <option name="myGeneralSettings" />
         <option name="myRunnerSettings" />
