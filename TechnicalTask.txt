@@ -136,6 +136,7 @@ JustJoyZombierubkaCore functional list:
 
 Структруа конфига с локациями:
 <Название локации>:
+	lobbyLocation: 'x y z'  - коориднаты комнаты ожидания
 	spawnLocation: 'x y z'  - точка спавна на локации
 	chests:  - координаты сундуков
 		- 'x y z'

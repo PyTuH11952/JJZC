@@ -1,7 +1,6 @@
 package Arena;
 
 import com.mimikcraft.mcc.Main;
-import com.sun.javafx.collections.MappingChange;
 import io.lumine.mythic.bukkit.utils.config.ConfigurationSection;
 import io.lumine.mythic.bukkit.utils.config.file.YamlConfiguration;
 import org.bukkit.Location;
@@ -9,14 +8,14 @@ import org.bukkit.World;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.SecureRandom;
 import java.util.*;
 
 public class ArenaLocation {
 
     private LocationTypes locationType;
 
-    private Location spawnPosition;
+    private Location spawnLocation;
+    private Location lobbyLocation;
     private final List<Location> chests = new ArrayList<>();
     private final Map<String, Double> zombies = new HashMap<>();
     private final List<Stage> stages = new ArrayList<>();
@@ -42,11 +41,19 @@ public class ArenaLocation {
         }
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         ConfigurationSection locationSection = config.getConfigurationSection(locationType.toString().toLowerCase());
-        String[] coordinatesStr = locationSection.getString("spawnLocation").split(" ");
-        double spawnX = Double.parseDouble(coordinatesStr[0]);
-        double spawnY = Double.parseDouble(coordinatesStr[1]);
-        double spawnZ = Double.parseDouble(coordinatesStr[2]);
-        spawnPosition = new Location(world, spawnX, spawnY, spawnZ);
+
+        String[] spawnCoordinatesStr = locationSection.getString("spawnLocation").split(" ");
+        double spawnX = Double.parseDouble(spawnCoordinatesStr[0]);
+        double spawnY = Double.parseDouble(spawnCoordinatesStr[1]);
+        double spawnZ = Double.parseDouble(spawnCoordinatesStr[2]);
+        spawnLocation = new Location(world, spawnX, spawnY, spawnZ);
+
+        String[] lobbyCoordinatesStr = locationSection.getString("spawnLocation").split(" ");
+        double lobbyX = Double.parseDouble(lobbyCoordinatesStr[0]);
+        double lobbyY = Double.parseDouble(lobbyCoordinatesStr[1]);
+        double lobbyZ = Double.parseDouble(lobbyCoordinatesStr[2]);
+        lobbyLocation = new Location(world, lobbyX, lobbyY, lobbyZ);
+
         List<String> chestsCoordinatesStr = locationSection.getStringList("chests");
         for(String chestCords : chestsCoordinatesStr){
             String[] chestCordsStr = chestCords.split(" ");
@@ -77,8 +84,8 @@ public class ArenaLocation {
         }
     }
 
-    public Location getSpawnPosition() {
-        return spawnPosition;
+    public Location getSpawnLocation() {
+        return spawnLocation;
     }
 
     public List<Location> getChests() {
