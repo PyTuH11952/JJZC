@@ -25,6 +25,8 @@ commands:
     usage: /bestiary
   prestige:
     usage: /prestige
+  setlocation:
+    usage: /setlocation
 depend:
   - MythicMobs
   - Vault

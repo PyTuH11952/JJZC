@@ -126,7 +126,7 @@ public class Arena {
         }
     }
 
-    public void setLocationType(Arena.ArenaLocation.LocationTypes locationType){
+    public void setLocationType(ArenaLocation.LocationTypes locationType){
         location = new ArenaLocation(locationType, arenaWorld);
     }
 
