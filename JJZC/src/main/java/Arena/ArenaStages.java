@@ -1,6 +1,6 @@
 package Arena;
 
-public enum ArenaStage {
+public enum ArenaStages {
     CLOSED,
     WAITING,
     STARTING,
@@ -12,6 +12,4 @@ public enum ArenaStage {
     GAME_ENDED,
 
     RESET
-
-
 }

@@ -23,23 +23,31 @@ public class Arena {
 
     private final int timeToStart = 10;
 
-    private final boolean isInfinity = false;
+    private boolean isInfinity = false;
+
+    private World arenaWorld;
 
     private final Map<Player, Location> onJoinLocation = new HashMap<>();
 
-    private Map<Player, Float> playerExp = new HashMap<>();
+    private final Map<Player, Float> playerExp = new HashMap<>();
 
-    private Map<Player, Integer> playerExp2 = new HashMap<>();
+    private final Map<Player, Integer> playerLvl = new HashMap<>();
 
-    private Location lobby;
-
-    private ArenaStage arenaStage = ArenaStage.WAITING;
+    private ArenaStages arenaStage = ArenaStages.WAITING;
 
     private final Game game;
+    private ArenaLocation location;
 
-    private final List<Player> players = new ArrayList<>();;
+    private final List<Player> players = new ArrayList<>();
+    private final List<Player> ghosts = new ArrayList<>();
 
     public Arena(String name) {
+        WorldCreator worldCreator = new WorldCreator(name);
+        worldCreator.environment(World.Environment.NORMAL);
+        worldCreator.generator(new EmptyChunkGenerator());
+        worldCreator.generateStructures(false);
+        worldCreator.createWorld();
+        arenaWorld = Bukkit.getWorld(name);
 
         this.name = name;
 
@@ -48,7 +56,7 @@ public class Arena {
     }
 
     public void reset(){
-        arenaStage = ArenaStage.RESET;
+        arenaStage = ArenaStages.RESET;
     }
 
     public void join(Player player){
@@ -56,22 +64,26 @@ public class Arena {
             ChatUtil.sendMessage(player, "Вы уже на арене!");
             return;
         }
-        if (arenaStage == ArenaStage.CLOSED) {
+        if (arenaStage == ArenaStages.CLOSED) {
             ChatUtil.sendMessage(player, "Арена закрыта!");
             return;
         }
-//onJoinLocation.put(player, player.getLocation());
-//        player.teleport(lobby);
+        if (players.size() == maxPlayers){
+            ChatUtil.sendMessage(player, "Арена заполнена!");
+            return;
+        }
         players.add(player);
+        player.teleport(location.getSpawnLocation());
         sendArenaMessage(player.getDisplayName() + " присоединился!");
-        if (players.size() >= minPlayers && arenaStage != ArenaStage.CLOSED) {
+        if (!players.isEmpty() && arenaStage != ArenaStages.CLOSED) {
             startGame();
         }
+
     }
 
     private void startGame(){
 
-        arenaStage = ArenaStage.STARTING;
+        arenaStage = ArenaStages.STARTING;
         saveExpArena();
 
         new BukkitRunnable() {
@@ -80,19 +92,20 @@ public class Arena {
 
             @Override
             public void run() {
-                if (ctr <=0) {
+                if (ctr <= 0) {
                     game.start();
                     cancel();
                 }
                 expTimerArena(ctr);
+
                 if (ctr == 60 || ctr == 30 || ctr == 15 || ctr == 10 || ctr == 5 || ctr == 4 || ctr == 3 || ctr == 2 || ctr == 1) {
                     sendArenaTitle("&eДо старта игры осталось", "&c&l" + ctr);
                     sendArenaMessage("&eДо старта осталось &c " + ctr + " &eсекунд...");
                     expSoundArena();
                 }
                 ctr--;
-                if (players.size() < 1){
-                    arenaStage = ArenaStage.WAITING;
+                if (players.isEmpty()){
+                    arenaStage = ArenaStages.WAITING;
                     cancel();
                 }
             }
@@ -102,18 +115,19 @@ public class Arena {
     }
 
     public void leave(Player player){
-//        player.teleport(onJoinLocation.get(player));
-//        player.teleport(onJoinLocation.get(player));
-        if (arenaStage == ArenaStage.WAITING){
+        if (arenaStage == ArenaStages.WAITING){
             player.setExp(playerExp.get(player));
-            player.setLevel(playerExp2.get(player));
+            player.setLevel(playerLvl.get(player));
         }
- //       onJoinLocation.remove(player);
         players.remove(player);
         sendArenaMessage(player.getDisplayName() + " отключился!");
-        if (players.size() < 1 && arenaStage == ArenaStage.STARTING){
-            arenaStage = ArenaStage.WAITING;
+        if (players.size() < 1 && arenaStage == ArenaStages.STARTING){
+            arenaStage = ArenaStages.WAITING;
         }
+    }
+
+    public void setLocationType(Arena.ArenaLocation.LocationTypes locationType){
+        location = new ArenaLocation(locationType, arenaWorld);
     }
 
     public void sendArenaMessage(String message){
@@ -145,14 +159,14 @@ public class Arena {
     public void saveExpArena(){
         for (Player player : players){
             playerExp.put(player,player.getExp());
-            playerExp2.put(player,player.getLevel());
+            playerLvl.put(player,player.getLevel());
             player.setExp(0.0f);
         }
     }
     public void setExpArena(){
         for (Player player : players){
             player.setExp(playerExp.get(player));
-            player.setLevel(playerExp2.get(player));
+            player.setLevel(playerLvl.get(player));
         }
     }
 
@@ -175,4 +189,7 @@ public class Arena {
         return onJoinLocation;
     }
 
+    public void setInfinity(boolean infinity) {
+        isInfinity = infinity;
+    }
 }
