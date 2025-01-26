@@ -7,8 +7,11 @@ commands:
     usage: /join
   leave:
     usage: /leave
-  faststart:
-    usage: /faststart
+  forcestart:
+    usage: /forcestart
+    aliases:
+      - faststart
+      - start
   newgame:
     usage: /newgame
   gamesettings:

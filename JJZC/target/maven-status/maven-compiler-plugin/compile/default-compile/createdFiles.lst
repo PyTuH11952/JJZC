@@ -1,3 +1,5 @@
 Arena\ArenaStages.class
-Commands\TestCMD.class
 Arena\EmptyChunkGenerator.class
+Commands\ForceStartCMD.class
+Commands\TestCMD.class
+Arena\PlayerJoin.class
