@@ -36,9 +36,11 @@ public class Arena {
     private ArenaStages arenaStage = ArenaStages.WAITING;
 
     private final Game game;
+
     private ArenaLocation location;
 
     private final List<Player> players = new ArrayList<>();
+
     private final List<Player> ghosts = new ArrayList<>();
 
     public Arena(String name) {
@@ -75,7 +77,7 @@ public class Arena {
             return;
         }
         players.add(player);
-        player.teleport(location.getSpawnLocation());
+        player.teleport(location.getSpawnPosition());
         sendArenaMessage(player.getDisplayName() + " присоединился!");
         if (!players.isEmpty() && arenaStage != ArenaStages.CLOSED) {
             startGame();
@@ -86,6 +88,7 @@ public class Arena {
     private void startGame(){
 
         arenaStage = ArenaStages.STARTING;
+        setLocationType(ArenaLocation.LocationTypes.HOSPITAL);
         saveExpArena();
 
         new BukkitRunnable() {
@@ -165,10 +168,41 @@ public class Arena {
             player.setExp(0.0f);
         }
     }
+
     public void setExpArena(){
         for (Player player : players){
             player.setExp(playerExp.get(player));
             player.setLevel(playerLvl.get(player));
+        }
+    }
+
+    public boolean canjoin(Player player) {
+
+        if (location.locationType == ArenaLocation.LocationTypes.HOSPITAL) {
+            return true;
+        } else if (location.locationType == ArenaLocation.LocationTypes.MALL) {
+            if (player.hasPermission("loc1.1")) {return true;}
+            else {return false;}
+        } else if (location.locationType == ArenaLocation.LocationTypes.GARAGE) {
+            if (player.hasPermission("loc2.1")) {return true;}
+            else {return false;}
+        } else if (location.locationType == ArenaLocation.LocationTypes.FACTORY) {
+            if (player.hasPermission("loc3.1")) {return true;}
+            else {return false;}
+        } else if (location.locationType == ArenaLocation.LocationTypes.METRO) {
+            if (player.hasPermission("loc4.1")) {return true;}
+            else {return false;}
+        }
+        ChatUtil.sendMessage(player, "&cНе удалось определить локацию");
+        return true;
+    }
+
+    public boolean isArenaClosed() {
+        if (arenaStage == ArenaStages.CLOSED) {
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
@@ -194,4 +228,5 @@ public class Arena {
     public void setInfinity(boolean infinity) {
         isInfinity = infinity;
     }
+
 }
