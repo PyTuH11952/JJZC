@@ -77,7 +77,7 @@ public class Arena {
             return;
         }
         players.add(player);
-        player.teleport(location.getSpawnPosition());
+        player.teleport(location.getSpawnLocation());
         sendArenaMessage(player.getDisplayName() + " присоединился!");
         if (!players.isEmpty() && arenaStage != ArenaStages.CLOSED) {
             startGame();
@@ -151,7 +151,6 @@ public class Arena {
     public void expTimerArena (int value){
         for (Player player : players){
             player.setLevel(value);
-
         }
     }
     public void expSoundArena (){
@@ -169,27 +168,20 @@ public class Arena {
         }
     }
 
-    public void setExpArena(){
-        for (Player player : players){
-            player.setExp(playerExp.get(player));
-            player.setLevel(playerLvl.get(player));
-        }
-    }
+    public boolean canJoin(Player player) {
 
-    public boolean canjoin(Player player) {
-
-        if (location.locationType == ArenaLocation.LocationTypes.HOSPITAL) {
+        if (location.getLocationType() == ArenaLocation.LocationTypes.HOSPITAL) {
             return true;
-        } else if (location.locationType == ArenaLocation.LocationTypes.MALL) {
+        } else if (location.getLocationType() == ArenaLocation.LocationTypes.MALL) {
             if (player.hasPermission("loc1.1")) {return true;}
             else {return false;}
-        } else if (location.locationType == ArenaLocation.LocationTypes.GARAGE) {
+        } else if (location.getLocationType() == ArenaLocation.LocationTypes.GARAGE) {
             if (player.hasPermission("loc2.1")) {return true;}
             else {return false;}
-        } else if (location.locationType == ArenaLocation.LocationTypes.FACTORY) {
+        } else if (location.getLocationType() == ArenaLocation.LocationTypes.FACTORY) {
             if (player.hasPermission("loc3.1")) {return true;}
             else {return false;}
-        } else if (location.locationType == ArenaLocation.LocationTypes.METRO) {
+        } else if (location.getLocationType() == ArenaLocation.LocationTypes.METRO) {
             if (player.hasPermission("loc4.1")) {return true;}
             else {return false;}
         }
@@ -198,12 +190,7 @@ public class Arena {
     }
 
     public boolean isArenaClosed() {
-        if (arenaStage == ArenaStages.CLOSED) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return arenaStage == ArenaStages.CLOSED;
     }
 
     public String getName() {

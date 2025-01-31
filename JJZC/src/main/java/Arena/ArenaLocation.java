@@ -83,6 +83,9 @@ public class ArenaLocation {
             stages.add(new Stage(tempCordsList, wavesCount));
         }
     }
+    public LocationTypes getLocationType(){
+        return locationType;
+    }
 
     public Location getSpawnLocation() {
         return spawnLocation;

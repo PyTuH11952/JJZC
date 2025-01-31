@@ -20,8 +20,8 @@ public class ForceStartCMD implements CommandExecutor {
         Player player = (Player) commandSender;
         for (int i = 1; i <= Main.getInstance().getMaxarenas(); i++){
             Arena arena = ArenaList.get("arena"+i);
-            if (arena.isArenaClosed() == false) {
-                if (arena.canjoin(player) == true) {
+            if (!arena.isArenaClosed()) {
+                if (arena.canJoin(player)) {
                     arena.join(player);
                     return true;
                 }
