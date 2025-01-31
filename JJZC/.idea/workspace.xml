@@ -11,14 +11,6 @@
   <component name="ChangeListManager">
     <list default="true" id="826ec8dd-69ce-4dea-9d10-7bbbf4b43755" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/ArenaLocation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/ArenaLocation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/MCC-1.0.0-shaded.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/MCC-1.0.0-shaded.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/MCC-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/MCC-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Arena$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Arena$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Arena.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Arena.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/ArenaLocation.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/ArenaLocation.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/original-MCC-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/original-MCC-1.0.0.jar" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +41,7 @@
     "Maven.JJZC.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Locations-systems",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/GitHub/JJZC/JJZC",
     "project.structure.last.edited": "Project",
