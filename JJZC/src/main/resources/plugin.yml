@@ -35,6 +35,8 @@ commands:
     usage: /prestige
   setlocation:
     usage: /setlocation
+  test:
+    usage: /test
 depend:
   - MythicMobs
   - Vault

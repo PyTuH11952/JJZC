@@ -14,6 +14,11 @@ commands:
       - start
   newgame:
     usage: /newgame
+    aliases:
+      - creategame
+      - create
+      - launch
+      - launchgame
   gamesettings:
     usage: /gamesettings
   party:
@@ -30,6 +35,8 @@ commands:
     usage: /prestige
   setlocation:
     usage: /setlocation
+  test:
+    usage: /test
 depend:
   - MythicMobs
   - Vault

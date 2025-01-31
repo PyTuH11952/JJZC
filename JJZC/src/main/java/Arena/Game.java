@@ -10,8 +10,11 @@ import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -135,6 +138,15 @@ public class Game {
         Entity entity = mythicentity.getEntity().getBukkitEntity();
         mobs.add(entity);
     }
+
+    private void additems(Location location, ItemStack item) {
+        Block block = location.getBlock();
+        Chest chest = (Chest)block.getState();
+        Inventory inv = chest.getInventory();
+
+        inv.setItem(1, item);
+    }
+
     public void glowing(){
         for (Entity entity : mobs) {
             entity.setGlowing(true);

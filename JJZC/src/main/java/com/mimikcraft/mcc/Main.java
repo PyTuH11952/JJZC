@@ -1,12 +1,9 @@
 package com.mimikcraft.mcc;
 
 import Arena.Arena;
-import Commands.ForceStartCMD;
-import Commands.JoinCMD;
-import Commands.TestCMD;
+import Commands.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import Arena.ArenaList;
-import Commands.LeaveCMD;
 
 public final class Main extends JavaPlugin {
 
@@ -20,6 +17,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginCommand("leave").setExecutor(new LeaveCMD());
         getServer().getPluginCommand("forcestart").setExecutor(new ForceStartCMD());
         getServer().getPluginCommand("setlocation").setExecutor(new TestCMD());
+        getServer().getPluginCommand("test").setExecutor(new Test2CMD());
         instance = this;
         for(int i = 0 ; i <= maxarenas; i++){
             Arena arena = new Arena("arena"+i);
