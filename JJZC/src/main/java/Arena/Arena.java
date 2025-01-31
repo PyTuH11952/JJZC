@@ -77,7 +77,7 @@ public class Arena {
             return;
         }
         players.add(player);
-        player.teleport(location.getSpawnLocation());
+        player.teleport(location.getSpawnPosition());
         sendArenaMessage(player.getDisplayName() + " присоединился!");
         if (!players.isEmpty() && arenaStage != ArenaStages.CLOSED) {
             startGame();
@@ -168,6 +168,7 @@ public class Arena {
         }
     }
 
+<<<<<<< HEAD
     public boolean canJoin(Player player) {
 
         if (location.getLocationType() == ArenaLocation.LocationTypes.HOSPITAL) {
@@ -184,6 +185,12 @@ public class Arena {
         } else if (location.getLocationType() == ArenaLocation.LocationTypes.METRO) {
             if (player.hasPermission("loc4.1")) {return true;}
             else {return false;}
+=======
+    public void setExpArena(){
+        for (Player player : players){
+            player.setExp(playerExp.get(player));
+            player.setLevel(playerLvl.get(player));
+>>>>>>> eaddb9b0fee2b6ce317da6b237075598ea33c985
         }
         ChatUtil.sendMessage(player, "&cНе удалось определить локацию");
         return true;
@@ -191,6 +198,36 @@ public class Arena {
 
     public boolean isArenaClosed() {
         return arenaStage == ArenaStages.CLOSED;
+    }
+
+    public boolean canjoin(Player player) {
+
+        if (location.locationType == ArenaLocation.LocationTypes.HOSPITAL) {
+            return true;
+        } else if (location.locationType == ArenaLocation.LocationTypes.MALL) {
+            if (player.hasPermission("loc1.1")) {return true;}
+            else {return false;}
+        } else if (location.locationType == ArenaLocation.LocationTypes.GARAGE) {
+            if (player.hasPermission("loc2.1")) {return true;}
+            else {return false;}
+        } else if (location.locationType == ArenaLocation.LocationTypes.FACTORY) {
+            if (player.hasPermission("loc3.1")) {return true;}
+            else {return false;}
+        } else if (location.locationType == ArenaLocation.LocationTypes.METRO) {
+            if (player.hasPermission("loc4.1")) {return true;}
+            else {return false;}
+        }
+        ChatUtil.sendMessage(player, "&cНе удалось определить локацию");
+        return true;
+    }
+
+    public boolean isArenaClosed() {
+        if (arenaStage == ArenaStages.CLOSED) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     public String getName() {
