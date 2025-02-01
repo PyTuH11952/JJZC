@@ -75,7 +75,8 @@ public class Arena {
             return;
         }
         players.add(player);
-        player.teleport(location.getSpawnLocation());
+        onJoinLocation.put(player, player.getLocation());
+        player.teleport(location.getLobbyLocation());
         sendArenaMessage(player.getDisplayName() + " присоединился!");
         if (!players.isEmpty() && arenaStage != ArenaStages.CLOSED) {
             startGame();
@@ -123,7 +124,8 @@ public class Arena {
         }
         players.remove(player);
         sendArenaMessage(player.getDisplayName() + " отключился!");
-        if (players.size() < 1 && arenaStage == ArenaStages.STARTING){
+        player.teleport(onJoinLocation.get(player));
+        if (players.isEmpty() && arenaStage == ArenaStages.STARTING){
             arenaStage = ArenaStages.WAITING;
         }
     }
@@ -148,13 +150,11 @@ public class Arena {
     public void expTimerArena (int value){
         for (Player player : players){
             player.setLevel(value);
-
         }
     }
     public void expSoundArena (){
         for (Player player : players){
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1,1);
-
         }
     }
 
@@ -165,7 +165,7 @@ public class Arena {
             player.setExp(0.0f);
         }
     }
-    public void setExpArena(){
+    public void setPlayerExp(){
         for (Player player : players){
             player.setExp(playerExp.get(player));
             player.setLevel(playerLvl.get(player));

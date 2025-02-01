@@ -88,6 +88,10 @@ public class ArenaLocation {
         return spawnLocation;
     }
 
+    public Location getLobbyLocation(){
+        return lobbyLocation;
+    }
+
     public List<Location> getChests() {
         return chests;
     }

@@ -7,18 +7,10 @@ commands:
     usage: /join
   leave:
     usage: /leave
-  forcestart:
-    usage: /forcestart
-    aliases:
-      - faststart
-      - start
+  faststart:
+    usage: /faststart
   newgame:
     usage: /newgame
-    aliases:
-      - creategame
-      - create
-      - launch
-      - launchgame
   gamesettings:
     usage: /gamesettings
   party:
@@ -35,8 +27,6 @@ commands:
     usage: /prestige
   setlocation:
     usage: /setlocation
-  test:
-    usage: /test
 depend:
   - MythicMobs
   - Vault

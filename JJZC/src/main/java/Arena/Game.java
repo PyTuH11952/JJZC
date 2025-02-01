@@ -107,6 +107,7 @@ public class Game {
             player.getInventory().clear();
             getkit(player);
             player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+            arena.setPlayerExp();
             player.teleport(new Location(Bukkit.getWorld("world"),1,2,1));
             ChatUtil.sendMessage(player,"&cБейся!");
             player.setGameMode(GameMode.ADVENTURE);
