@@ -36,11 +36,9 @@ public class Arena {
     private ArenaStages arenaStage = ArenaStages.WAITING;
 
     private final Game game;
-
     private ArenaLocation location;
 
     private final List<Player> players = new ArrayList<>();
-
     private final List<Player> ghosts = new ArrayList<>();
 
     public Arena(String name) {
@@ -77,7 +75,7 @@ public class Arena {
             return;
         }
         players.add(player);
-        player.teleport(location.getSpawnPosition());
+        player.teleport(location.getSpawnLocation());
         sendArenaMessage(player.getDisplayName() + " присоединился!");
         if (!players.isEmpty() && arenaStage != ArenaStages.CLOSED) {
             startGame();
@@ -88,7 +86,6 @@ public class Arena {
     private void startGame(){
 
         arenaStage = ArenaStages.STARTING;
-        setLocationType(ArenaLocation.LocationTypes.HOSPITAL);
         saveExpArena();
 
         new BukkitRunnable() {
@@ -151,6 +148,7 @@ public class Arena {
     public void expTimerArena (int value){
         for (Player player : players){
             player.setLevel(value);
+
         }
     }
     public void expSoundArena (){
@@ -167,28 +165,12 @@ public class Arena {
             player.setExp(0.0f);
         }
     }
-
-    public boolean canJoin(Player player) {
-
-        if (location.getLocationType() == ArenaLocation.LocationTypes.HOSPITAL) {
-            return true;
-        } else if (location.getLocationType() == ArenaLocation.LocationTypes.MALL) {
-            return player.hasPermission("loc1.1");
-        } else if (location.getLocationType() == ArenaLocation.LocationTypes.GARAGE) {
-            return player.hasPermission("loc2.1");
-        } else if (location.getLocationType() == ArenaLocation.LocationTypes.FACTORY) {
-            return player.hasPermission("loc3.1");
-        } else if (location.getLocationType() == ArenaLocation.LocationTypes.METRO) {
-            return player.hasPermission("loc4.1");
+    public void setExpArena(){
+        for (Player player : players){
+            player.setExp(playerExp.get(player));
+            player.setLevel(playerLvl.get(player));
         }
-        ChatUtil.sendMessage(player, "&cНе удалось определить локацию");
-        return false;
     }
-
-    public boolean isArenaClosed() {
-        return arenaStage == ArenaStages.CLOSED;
-    }
-
 
     public String getName() {
         return name;
@@ -212,5 +194,4 @@ public class Arena {
     public void setInfinity(boolean infinity) {
         isInfinity = infinity;
     }
-
 }
