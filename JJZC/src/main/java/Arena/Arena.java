@@ -143,7 +143,6 @@ public class Arena {
     public void sendArenaTitle (String message, String subMessage){
         for (Player player : players){
             player.sendTitle(ChatColor.translateAlternateColorCodes('&', message), ChatColor.translateAlternateColorCodes('&', subMessage), 10, 40, 10);
-
         }
     }
 
@@ -189,6 +188,18 @@ public class Arena {
 
     public Map<Player, Location> getOnJoinLocation() {
         return onJoinLocation;
+    }
+
+    public World getArenaWorld(){
+        return arenaWorld;
+    }
+
+    public ArenaLocation getLocation(){
+        return location;
+    }
+
+    public Game getGame(){
+        return game;
     }
 
     public void setInfinity(boolean infinity) {

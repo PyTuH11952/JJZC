@@ -1,23 +1,19 @@
 package Arena;
 
 import Utils.ChatUtil;
-import com.mimikcraft.mcc.ExecutableApi;
 import com.mimikcraft.mcc.Main;
-import com.ssomar.score.api.executableitems.ExecutableItemsAPI;
-import com.ssomar.score.api.executableitems.config.ExecutableItemInterface;
-import com.ssomar.score.usedapi.VaultAPI;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import static com.mimikcraft.mcc.ExecutableApi.giveExecutableItem;
 
@@ -25,17 +21,22 @@ public class Game {
 
     private final Arena arena;
 
-    private int hardlevel = 1;
+    private int hardLevel = 1;
 
     private int wave = 1;
 
-    private int infinitywave = 1;
+    private int wavesCount;
 
-    private int zombiecount = 0;
+    private int infinityWave = 1;
+
+    private int stage = 1;
+
+    private int zombiesCount = 0;
 
     private int life = 3;
 
-    private final List<Entity> mobs = new ArrayList<Entity>();
+    public final List<Entity> mobs = new ArrayList<Entity>();
+    public  int aliveZomibes = 0;
 
     public Game(Arena arena) {
         this.arena = arena;
@@ -108,7 +109,7 @@ public class Game {
             getkit(player);
             player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
             arena.setPlayerExp();
-            player.teleport(new Location(Bukkit.getWorld("world"),1,2,1));
+            player.teleport(arena.getLocation().getSpawnLocation());
             ChatUtil.sendMessage(player,"&cБейся!");
             player.setGameMode(GameMode.ADVENTURE);
 
@@ -118,27 +119,53 @@ public class Game {
         new BukkitRunnable(){
 
             @Override
-
             public void run(){
-                Location particle = location;
-                particle.setX(particle.getX() - 0.5);
-                particle.setZ(particle.getZ() - 0.5);
-
-                Bukkit.getWorld("world").spawnParticle(Particle.FLAME, particle,10, 0.3, 0.3, 0.3, 0);
-                Bukkit.getWorld("world").playSound(particle, Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 1, 1);
-
-                cancel();
+                boolean isParticlesSpawned = false;
+                if(!isParticlesSpawned){
+                    arena.getArenaWorld().spawnParticle(Particle.FLAME, location,10, 0.3, 0.3, 0.3, 0);
+                    arena.getArenaWorld().playSound(location, Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 1, 1);
+                    isParticlesSpawned = true;
+                }else{
+                    ActiveMob mythicentity = MythicBukkit.inst().getMobManager().spawnMob(name, location, hardLevel);
+                    Entity entity = mythicentity.getEntity().getBukkitEntity();
+                    mobs.add(entity);
+                    cancel();
+                }
             }
 
         }.runTaskTimer(Main.getInstance(), 0L, 10L);
 
-        ActiveMob mythicentity = MythicBukkit.inst().getMobManager().spawnMob(name, location, hardlevel);
-        Entity entity = mythicentity.getEntity().getBukkitEntity();
-        mobs.add(entity);
     }
     public void glowing(){
         for (Entity entity : mobs) {
             entity.setGlowing(true);
         }
+    }
+
+    public void startNewWave(){
+        if(wavesCount == wave){{
+            stage++;
+            wavesCount = wavesCount + arena.getLocation().getStages().get(stage).wavesCount;
+            wave++;
+        }}
+        zombiesCount = (int)((wavesCount+2)*arena.getPlayers().size()*arena.getLocation().getLocationFactor());
+        arena.sendArenaTitle("Волна: " + wave, "Кол-во зомби: " + zombiesCount);
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                int spawnersCount = arena.getLocation().getStages().get(stage).spawners.size();
+                int random = (int)(Math.random() * 10000);
+                int temp = 0;
+                String zombieName = "";
+                for(Map.Entry<String, Double> entry : arena.getLocation().getZombies().entrySet()){
+                    temp += (int) (entry.getValue() * 100);
+                    if(random <= temp){
+                        zombieName = entry.getKey();
+                        break;
+                    }
+                }
+                spawnMob(arena.getLocation().getStages().get(stage).spawners.get((int)(Math.random() * spawnersCount)), zombieName);
+            }
+        }.runTaskTimer(Main.getInstance(), 0L, 10L);
     }
 }

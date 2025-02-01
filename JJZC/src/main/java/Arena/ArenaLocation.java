@@ -16,10 +16,11 @@ public class ArenaLocation {
 
     private Location spawnLocation;
     private Location lobbyLocation;
+    private World world;
+    private double locationFactor;
     private final List<Location> chests = new ArrayList<>();
     private final Map<String, Double> zombies = new HashMap<>();
     private final List<Stage> stages = new ArrayList<>();
-    private World world;
 
     public ArenaLocation(LocationTypes locationType, World world){
         this.world = world;
@@ -53,6 +54,8 @@ public class ArenaLocation {
         double lobbyY = Double.parseDouble(lobbyCoordinatesStr[1]);
         double lobbyZ = Double.parseDouble(lobbyCoordinatesStr[2]);
         lobbyLocation = new Location(world, lobbyX, lobbyY, lobbyZ);
+
+        locationFactor = Double.parseDouble(locationSection.getString("lcationFactor"));
 
         List<String> chestsCoordinatesStr = locationSection.getStringList("chests");
         for(String chestCords : chestsCoordinatesStr){
@@ -102,6 +105,10 @@ public class ArenaLocation {
 
     public List<Stage> getStages() {
         return stages;
+    }
+
+    public double getLocationFactor(){
+        return locationFactor;
     }
 
     public enum LocationTypes {
