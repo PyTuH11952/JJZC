@@ -55,7 +55,7 @@ public class ArenaLocation {
         double lobbyZ = Double.parseDouble(lobbyCoordinatesStr[2]);
         lobbyLocation = new Location(world, lobbyX, lobbyY, lobbyZ);
 
-        locationFactor = Double.parseDouble(locationSection.getString("lcationFactor"));
+        locationFactor = Double.parseDouble(locationSection.getString("locationFactor"));
 
         List<String> chestsCoordinatesStr = locationSection.getStringList("chests");
         for(String chestCords : chestsCoordinatesStr){
@@ -67,7 +67,7 @@ public class ArenaLocation {
         }
 
         for(Map.Entry<String, Object> entry: locationSection.getConfigurationSection("zombies").getValues(false).entrySet()){
-            zombies.put(entry.getKey(), Double.parseDouble(entry.getValue().toString()));
+           zombies.put(entry.getKey(), Double.parseDouble(entry.getValue().toString()));
         }
 
         ConfigurationSection stagesSection = locationSection.getConfigurationSection("stages");
@@ -109,6 +109,10 @@ public class ArenaLocation {
 
     public double getLocationFactor(){
         return locationFactor;
+    }
+
+    public LocationTypes getLocationType() {
+        return locationType;
     }
 
     public enum LocationTypes {

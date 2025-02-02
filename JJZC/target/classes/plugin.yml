@@ -25,12 +25,18 @@ commands:
     usage: /bestiary
   prestige:
     usage: /prestige
-  setlocation:
-    usage: /setlocation
+  launch:
+    usage: /launch
+    aliases:
+      - startgame
+      - launchgame
+      - start
 depend:
   - MythicMobs
   - Vault
 softdepend:
   - ExecutableItems
   - SCore
+  - Multiverse-Core
+
 

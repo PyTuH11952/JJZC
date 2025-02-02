@@ -1,16 +1,25 @@
 package Arena;
 
 import Utils.ChatUtil;
+import Utils.WorldUtil;
 import com.mimikcraft.mcc.Main;
+import com.onarandombox.MultiverseCore.MultiverseCore;
+import com.onarandombox.MultiverseCore.api.MVWorldManager;
+import com.onarandombox.MultiverseCore.api.MultiverseWorld;
+import com.onarandombox.MultiverseCore.utils.WorldManager;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static Utils.WorldUtil.copyWorld;
 import static io.lumine.mythic.bukkit.utils.Players.spawnParticle;
 
 public class Arena {
@@ -33,7 +42,7 @@ public class Arena {
 
     private final Map<Player, Integer> playerLvl = new HashMap<>();
 
-    private ArenaStages arenaStage = ArenaStages.WAITING;
+    private ArenaStages arenaStage = ArenaStages.CLOSED;
 
     private final Game game;
     private ArenaLocation location;
@@ -41,13 +50,20 @@ public class Arena {
     private final List<Player> players = new ArrayList<>();
     private final List<Player> ghosts = new ArrayList<>();
 
+    MultiverseCore core = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
+    MVWorldManager worldManager = core.getMVWorldManager();
+
     public Arena(String name) {
         if (Bukkit.getWorld(name) == null){
-            WorldCreator worldCreator = new WorldCreator(name);
-            worldCreator.environment(World.Environment.NORMAL);
-            worldCreator.generator(new EmptyChunkGenerator());
-            worldCreator.generateStructures(false);
-            worldCreator.createWorld();
+            World source = Bukkit.getWorld("zombie");
+            File sourceFolder = source.getWorldFolder();
+
+            File file = new File("/home/container/"+name);
+
+            copyWorld(sourceFolder, file);
+
+            WorldCreator wc = new WorldCreator(name);
+            wc.createWorld();
         }
         arenaWorld = Bukkit.getWorld(name);
 
@@ -59,6 +75,14 @@ public class Arena {
 
     public void reset(){
         arenaStage = ArenaStages.RESET;
+        Bukkit.getServer().unloadWorld(name, true);
+        World source = Bukkit.getWorld("zombie");
+        File sourceFolder = source.getWorldFolder();
+        File file = new File("/home/container/"+name);
+        copyWorld(sourceFolder, file);
+        WorldCreator wc = new WorldCreator(name);
+        wc.createWorld();
+        arenaStage = ArenaStages.CLOSED;
     }
 
     public void join(Player player){
@@ -96,6 +120,7 @@ public class Arena {
             @Override
             public void run() {
                 if (ctr <= 0) {
+                    arenaStage = ArenaStages.STARTING;
                     game.start();
                     cancel();
                 }
@@ -126,7 +151,7 @@ public class Arena {
         sendArenaMessage(player.getDisplayName() + " отключился!");
         player.teleport(onJoinLocation.get(player));
         if (players.isEmpty() && arenaStage == ArenaStages.STARTING){
-            arenaStage = ArenaStages.WAITING;
+            reset();
         }
     }
 
@@ -171,6 +196,28 @@ public class Arena {
         }
     }
 
+    public boolean canjoin(Player player) {
+
+        if (getLocation().getLocationType() == ArenaLocation.LocationTypes.HOSPITAL) {
+            return true;
+        } else if (getLocation().getLocationType() == ArenaLocation.LocationTypes.MALL) {
+            if (player.hasPermission("loc1.1")) {return true;}
+            else {return false;}
+        } else if (getLocation().getLocationType() == ArenaLocation.LocationTypes.GARAGE) {
+            if (player.hasPermission("loc2.1")) {return true;}
+            else {return false;}
+        } else if (getLocation().getLocationType() == ArenaLocation.LocationTypes.FACTORY) {
+            if (player.hasPermission("loc3.1")) {return true;}
+            else {return false;}
+        } else if (getLocation().getLocationType() == ArenaLocation.LocationTypes.METRO) {
+            if (player.hasPermission("loc4.1")) {return true;}
+            else {return false;}
+        }
+        ChatUtil.sendMessage(player, "&cНе удалось определить локацию");
+        return true;
+    }
+
+
     public String getName() {
         return name;
     }
@@ -204,5 +251,13 @@ public class Arena {
 
     public void setInfinity(boolean infinity) {
         isInfinity = infinity;
+    }
+
+    public ArenaStages getArenaStage() {
+        return arenaStage;
+    }
+
+    public void setArenaStage(ArenaStages arenaStage) {
+        this.arenaStage = arenaStage;
     }
 }

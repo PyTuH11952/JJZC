@@ -1,3 +1,6 @@
+Events\KillsEventListener.class
 Arena\ArenaStages.class
-Commands\TestCMD.class
 Arena\EmptyChunkGenerator.class
+Arena\Game$2.class
+Commands\LaunchCMD.class
+Utils\WorldUtil.class
