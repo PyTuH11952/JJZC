@@ -1,6 +1,7 @@
 package Arena;
 
 import Utils.ChatUtil;
+import Utils.SmoothTeleportUtil;
 import com.mimikcraft.mcc.Main;
 import com.ssomar.score.api.executableitems.ExecutableItemsAPI;
 import com.ssomar.score.api.executableitems.config.ExecutableItemInterface;
@@ -13,8 +14,11 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import javax.swing.*;
@@ -41,17 +45,17 @@ public class Game {
     private int life = 3;
 
     public final List<Entity> mobs = new ArrayList<Entity>();
-    public  int aliveZomibes = 0;
+    public int aliveZomibes = 0;
 
     public Game(Arena arena) {
         this.arena = arena;
     }
 
-    public void start(){
+    public void start() {
         preparePlayers();
     }
 
-    private void getkit(Player player){
+    private void getkit(Player player) {
 
         if (player.hasPermission("default")) {
 
@@ -108,25 +112,147 @@ public class Game {
 
 
     }
-    private void preparePlayers(){
+
+    private void preparePlayers() {
         for (Player player : arena.getPlayers()) {
             player.getInventory().clear();
             getkit(player);
             player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
             arena.setPlayerExp();
-
-            player.teleport(arena.getLocation().getSpawnLocation());
-            ChatUtil.sendMessage(player,"&cБейся!");
+            Location location = arena.getLocation().getSpawnLocation();
+            player.teleport(new Location(Bukkit.getWorld(arena.getArenaWorld().getName()), location.getX(), location.getY(), location.getZ()));
+            ChatUtil.sendMessage(player, "&cБейся!");
             player.setGameMode(GameMode.ADVENTURE);
-
+            Location showloc = new Location(arena.getArenaWorld(), 36.8, 134.8, 3.8, 91, 5);
+            Location loc1 = new Location(arena.getArenaWorld(), 36.8, 134.8, 30.8, 91, 5);
+            Location loc2 = new Location(arena.getArenaWorld(), 32.8, 134.8, 3.8, 91, 5);
+            Location loc3 = new Location(arena.getArenaWorld(), 36.8, 130.8, 30.8, 91, 5);
+            List<Location> test = new ArrayList<>();
+            List<Location> test2 = new ArrayList<>();
+            test.add(loc1);
+            test.add(loc2);
+            test.add(loc3);
+            test2.add(loc1);
+            test2.add(loc3);
+            cutScene("test1", "titleStages","titleDoors", showloc, test, test2);
         }
+    }
+
+    private void cutScene(String titleLoc, String titleStages, String titleDoors, Location showLoc, List<Location> showStages, List<Location> showDoors) {
+        for (Player player : arena.getPlayers()) {
+            player.setAllowFlight(true);
+            player.setFlying(true);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 1000000, 1, false, false, false));
+            player.getInventory().clear();
+            player.playSound(player.getLocation(), Sound.AMBIENT_CAVE, 1, 1);
+        }
+        showLoc(titleLoc, titleStages, titleDoors, showLoc,showStages,showDoors);
+    }
+
+    private void showLoc(String titleLoc, String titleStages, String titleDoors, Location showLoc, List<Location> showStages, List<Location> showDoors){
+        new BukkitRunnable(){
+            boolean bob = false;
+            @Override
+            public void run(){
+                if(!bob){
+                    for(Player player : arena.getPlayers()){
+                        player.teleport(showLoc);
+                    }
+                    arena.sendArenaTitle(titleLoc, "");
+                    bob = true;
+                }else{
+                    arena.sendArenaTitle(titleStages, "");
+                    showStages(showStages, titleDoors, showDoors);
+                    cancel();
+                }
+            }
+
+        }.runTaskTimer(Main.getInstance(), 0L, 80L);
+    }
+    private void showStages(List<Location> showStages, String titleDoors, List<Location> showDoors){
+        new BukkitRunnable(){
+            int i = 0;
+            @Override
+            public void run(){
+                if(i < showStages.size()){
+                    for(Player player : arena.getPlayers()){
+                        player.teleport(showStages.get(i));
+                        player.playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK,1,1);
+                    }
+                    i++;
+                }else{
+                    arena.sendArenaTitle(titleDoors, "");
+                    showDoors(showDoors);
+
+                    cancel();
+                }
+            }
+
+        }.runTaskTimer(Main.getInstance(), 0L, 20L);
+    }
+    private void showDoors(List<Location> showDoors){
+        new BukkitRunnable(){
+            int i = 0;
+            @Override
+            public void run(){
+                if(i < showDoors.size()){
+                    for(Player player : arena.getPlayers()){
+                        player.teleport(showDoors.get(i));
+                        player.playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK, 1, 1);
+                    }
+                    i++;
+                }else{
+                    for (Player player : arena.getPlayers()){
+                        player.playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_AMBIENT,1 ,1);
+                        player.setGameMode(GameMode.SPECTATOR);
+                        smoothTeleport(player, player.getLocation(), arena.getLocation().getSpawnLocation());
+                        player.setGameMode(GameMode.ADVENTURE);
+                        player.setFlying(false);
+                        player.setAllowFlight(false);
+                        player.removePotionEffect(PotionEffectType.INVISIBILITY);
+                    }
+
+                    cancel();
+                }
+            }
+
+        }.runTaskTimer(Main.getInstance(), 0L, 20L);
+    }
+    private void smoothTeleport(Player player, Location loc1, Location loc2) {
+
+            new BukkitRunnable() {
+                double x1 = loc1.getX();
+                double y1 = loc1.getY();
+                double z1 = loc1.getZ();
+                double x2 = loc2.getX();
+                double y2 = loc2.getY();
+                double z2 = loc2.getZ();
+                double x;
+                double y;
+                double z;
+                int i = 0;
+                World world = loc1.getWorld();
+                @Override
+                public void run() {
+                    double t = 0 + 0.01 * i;
+                    i++;
+                    x = (1-t) * x1 + t * x2;
+                    y = (1-t) * y1 + t * y2;
+                    z = (1-t) * z1 + t * z2;
+                        if (t > 1){
+                            cancel();
+                        } else {
+                                SmoothTeleportUtil.teleport(player, new Location(world, x, y, z));
+                }
+            }
+
+        }.runTaskTimer(Main.getInstance(), 0L, 1L);
     }
     private void spawnMob(Location location, String name){
         new BukkitRunnable(){
-
+            boolean isParticlesSpawned = false;
             @Override
             public void run(){
-                boolean isParticlesSpawned = false;
                 if(!isParticlesSpawned){
                     arena.getArenaWorld().spawnParticle(Particle.FLAME, location,10, 0.3, 0.3, 0.3, 0);
                     arena.getArenaWorld().playSound(location, Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 1, 1);

@@ -1,26 +1,18 @@
 package Arena;
 
 import Utils.ChatUtil;
-import Utils.WorldUtil;
 import com.mimikcraft.mcc.Main;
-import com.onarandombox.MultiverseCore.MultiverseCore;
-import com.onarandombox.MultiverseCore.api.MVWorldManager;
-import com.onarandombox.MultiverseCore.api.MultiverseWorld;
-import com.onarandombox.MultiverseCore.utils.WorldManager;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static Utils.WorldUtil.copyWorld;
-import static io.lumine.mythic.bukkit.utils.Players.spawnParticle;
 
 public class Arena {
 
@@ -50,9 +42,6 @@ public class Arena {
     private final List<Player> players = new ArrayList<>();
     private final List<Player> ghosts = new ArrayList<>();
 
-    MultiverseCore core = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
-    MVWorldManager worldManager = core.getMVWorldManager();
-
     public Arena(String name) {
         if (Bukkit.getWorld(name) == null){
             World source = Bukkit.getWorld("zombie");
@@ -75,7 +64,7 @@ public class Arena {
 
     public void reset(){
         arenaStage = ArenaStages.RESET;
-        Bukkit.getServer().unloadWorld(name, true);
+        Bukkit.unloadWorld(Bukkit.getWorld(name), true);;
         World source = Bukkit.getWorld("zombie");
         File sourceFolder = source.getWorldFolder();
         File file = new File("/home/container/"+name);
@@ -100,7 +89,7 @@ public class Arena {
         }
         players.add(player);
         onJoinLocation.put(player, player.getLocation());
-        player.teleport(location.getLobbyLocation());
+        player.teleport(new Location(Bukkit.getWorld(name), location.getLobbyLocation().getX(),location.getLobbyLocation().getY(), location.getLobbyLocation().getZ()));
         sendArenaMessage(player.getDisplayName() + " присоединился!");
         if (!players.isEmpty() && arenaStage != ArenaStages.CLOSED) {
             startGame();

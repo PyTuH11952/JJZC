@@ -1,6 +1,11 @@
+Arena\Game$3.class
 Events\KillsEventListener.class
 Arena\ArenaStages.class
+Arena\Game$5.class
 Arena\EmptyChunkGenerator.class
 Arena\Game$2.class
+Arena\Game$4.class
 Commands\LaunchCMD.class
+Utils\SmoothTeleportUtil.class
+Arena\Game$6.class
 Utils\WorldUtil.class

@@ -79,10 +79,6 @@
           <id>enginehub</id>
           <url>https://maven.enginehub.org/repo/</url>
       </repository>
-      <repository>
-          <id>OnARandomBox</id>
-          <url>https://repo.onarandombox.com/content/groups/public/</url>
-      </repository>
   </repositories>
 
   <dependencies>
@@ -109,12 +105,6 @@
           <groupId>com.github.MilkBowl</groupId>
           <artifactId>VaultAPI</artifactId>
           <version>1.7</version>
-          <scope>provided</scope>
-      </dependency>
-      <dependency>
-          <groupId>com.onarandombox.multiversecore</groupId>
-          <artifactId>Multiverse-Core</artifactId>
-          <version>4.3.1</version>
           <scope>provided</scope>
       </dependency>
   </dependencies>

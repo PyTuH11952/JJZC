@@ -37,6 +37,5 @@ depend:
 softdepend:
   - ExecutableItems
   - SCore
-  - Multiverse-Core
 
 
