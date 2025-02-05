@@ -52,6 +52,18 @@ public class Game {
     }
 
     public void start() {
+        Location showloc = new Location(arena.getArenaWorld(), 36.8, 134.8, 3.8, 91, 5);
+        Location loc1 = new Location(arena.getArenaWorld(), 36.8, 134.8, 30.8, 91, 5);
+        Location loc2 = new Location(arena.getArenaWorld(), 32.8, 134.8, 3.8, 91, 5);
+        Location loc3 = new Location(arena.getArenaWorld(), 36.8, 130.8, 30.8, 91, 5);
+        List<Location> test = new ArrayList<>();
+        List<Location> test2 = new ArrayList<>();
+        test.add(loc1);
+        test.add(loc2);
+        test.add(loc3);
+        test2.add(loc1);
+        test2.add(loc3);
+        cutScene("test1", "titleStages","titleDoors", showloc, test, test2);
         preparePlayers();
     }
 
@@ -123,18 +135,6 @@ public class Game {
             player.teleport(new Location(Bukkit.getWorld(arena.getArenaWorld().getName()), location.getX(), location.getY(), location.getZ()));
             ChatUtil.sendMessage(player, "&cБейся!");
             player.setGameMode(GameMode.ADVENTURE);
-            Location showloc = new Location(arena.getArenaWorld(), 36.8, 134.8, 3.8, 91, 5);
-            Location loc1 = new Location(arena.getArenaWorld(), 36.8, 134.8, 30.8, 91, 5);
-            Location loc2 = new Location(arena.getArenaWorld(), 32.8, 134.8, 3.8, 91, 5);
-            Location loc3 = new Location(arena.getArenaWorld(), 36.8, 130.8, 30.8, 91, 5);
-            List<Location> test = new ArrayList<>();
-            List<Location> test2 = new ArrayList<>();
-            test.add(loc1);
-            test.add(loc2);
-            test.add(loc3);
-            test2.add(loc1);
-            test2.add(loc3);
-            cutScene("test1", "titleStages","titleDoors", showloc, test, test2);
         }
     }
 
