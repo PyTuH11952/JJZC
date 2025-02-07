@@ -14,14 +14,12 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import javax.swing.*;
 import java.util.*;
 
 import static com.mimikcraft.mcc.ExecutableApi.giveExecutableItem;
@@ -298,12 +296,12 @@ public class Game {
         return item;
     }
 
-    public void fillchest(Location location, int locationnumber){
+    public void fillСhest(Location location, int locationNumber){
         Random random = new Random();
-        int armorweaponcount = random.nextInt(3);
-        int materialcount = random.nextInt(3);
-        int differentcount = random.nextInt(2);
-        int locitemcount = random.nextInt(2);
+        int armorWeaponCount = random.nextInt(3);
+        int materialCount = random.nextInt(3);
+        int differentCount = random.nextInt(2);
+        int locItemCount = random.nextInt(2);
 
         Block block = location.getBlock();
         Inventory inv;
@@ -317,7 +315,7 @@ public class Game {
             inv.clear();
         }
 
-        for (int i = 0; i <= armorweaponcount; i++) {
+        for (int i = 0; i <= armorWeaponCount; i++) {
             double d = Math.random();
 
             if (d < 0.39) {
@@ -352,7 +350,7 @@ public class Game {
                 additems(location, getitem("tir5weapon" + tir5weapon, 1));
             }
         }
-        for (int i = 0; i <= materialcount; i++) {
+        for (int i = 0; i <= materialCount; i++) {
             double d = Math.random();
             int matcount = random.nextInt(2) + 1;
             if (d < 0.5) {
@@ -367,7 +365,7 @@ public class Game {
                 additems(location, getitem("material5", matcount));
             }
         }
-        for (int i = 0; i <= differentcount; i++){
+        for (int i = 0; i <= differentCount; i++){
             double d = Math.random();
             int diffcount = random.nextInt(2) + 1;
             if (d < 0.7){
@@ -390,12 +388,12 @@ public class Game {
                 additems(location, getitem("lom2", 1));
             }
         }
-        for (int i = 0; i <= locitemcount; i++){
+        for (int i = 0; i <= locItemCount; i++){
             double d = Math.random();
             int loccount = random.nextInt(2) + 1;
             int lootcount = random.nextInt(3) + 1;
             if (d < 0.02){
-                additems(location, getitem("loc"+locationnumber+"loot"+lootcount, loccount));
+                additems(location, getitem("loc"+locationNumber+"loot"+lootcount, loccount));
             }
 
 
@@ -411,8 +409,12 @@ public class Game {
         zombiesCount = (int)((wavesCount+2)*arena.getPlayers().size()*arena.getLocation().getLocationFactor());
         arena.sendArenaTitle("Волна: " + wave, "Кол-во зомби: " + zombiesCount);
         new BukkitRunnable(){
+            int spawnedZombies = 0;
             @Override
             public void run() {
+                if(spawnedZombies == zombiesCount){
+                    cancel();
+                }
                 int spawnersCount = arena.getLocation().getStages().get(stage).spawners.size();
                 int random = (int)(Math.random() * 10000);
                 int temp = 0;
@@ -425,6 +427,7 @@ public class Game {
                     }
                 }
                 spawnMob(arena.getLocation().getStages().get(stage).spawners.get((int)(Math.random() * spawnersCount)), zombieName);
+                spawnedZombies++;
             }
         }.runTaskTimer(Main.getInstance(), 0L, 10L);
     }
