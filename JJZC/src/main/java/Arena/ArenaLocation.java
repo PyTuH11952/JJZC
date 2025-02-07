@@ -19,7 +19,7 @@ public class ArenaLocation {
     private World world;
     private double locationFactor;
     private final List<Location> chests = new ArrayList<>();
-    private final Map<String, Double> zombies = new HashMap<>();
+    private final List<Zombie> zombies = new ArrayList<>();
     private final List<Stage> stages = new ArrayList<>();
 
     public ArenaLocation(LocationTypes locationType, World world){
@@ -66,14 +66,19 @@ public class ArenaLocation {
             chests.add(new Location(world, x, y, z));
         }
 
-        for(Map.Entry<String, Object> entry: locationSection.getConfigurationSection("zombies").getValues(false).entrySet()){
-           zombies.put(entry.getKey(), Double.parseDouble(entry.getValue().toString()));
+        ConfigurationSection zombiesSection = locationSection.getConfigurationSection("zombies");
+        Set<String> zombiesNames = zombiesSection.getKeys(false);
+        for(String zombieName : zombiesNames){
+            Zombie zombie = new Zombie(zombieName,
+                    zombiesSection.getDouble(zombieName + ".spawnChance"),
+                    zombiesSection.getInt(zombieName + ".hardLevel"));
+            zombies.add(zombie);
         }
 
         ConfigurationSection stagesSection = locationSection.getConfigurationSection("stages");
-        Set<String> keys = stagesSection.getKeys(false);
-        for(String section : keys){
-            List<String> spawnersCoordinatesStr = locationSection.getStringList("stages." + section + ".spawners");
+        Set<String> stagesKeys = stagesSection.getKeys(false);
+        for(String section : stagesKeys){
+            List<String> spawnersCoordinatesStr = stagesSection.getStringList(section + ".spawners");
             List<Location> tempCordsList = new ArrayList<>();
             for(String spawnerCords : spawnersCoordinatesStr){
                 String[] spawnerCordsStr = spawnerCords.split(" ");
@@ -99,7 +104,7 @@ public class ArenaLocation {
         return chests;
     }
 
-    public Map<String, Double> getZombies() {
+    public List<Zombie> getZombies() {
         return zombies;
     }
 
@@ -131,6 +136,18 @@ class Stage{
     public Stage(List<Location> spawners, int wavesCount){
         this.spawners = spawners;
         this.wavesCount = wavesCount;
+    }
+}
+
+
+class Zombie{
+    String name;
+    Double spawnChance;
+    int hardLevel;
+    public Zombie(String name, Double spawnChance, int hardLevel){
+        this.name = name;
+        this.spawnChance = spawnChance;
+        this.hardLevel = hardLevel;
     }
 }
 

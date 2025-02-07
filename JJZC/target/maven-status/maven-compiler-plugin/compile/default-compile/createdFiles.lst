@@ -5,6 +5,7 @@ Arena\Game$5.class
 Arena\EmptyChunkGenerator.class
 Arena\Game$2.class
 Arena\Game$4.class
+Arena\Zombie.class
 Commands\LaunchCMD.class
 Utils\SmoothTeleportUtil.class
 Arena\Game$6.class

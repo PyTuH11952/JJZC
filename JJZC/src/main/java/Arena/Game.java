@@ -416,13 +416,36 @@ public class Game {
                     cancel();
                 }
                 int spawnersCount = arena.getLocation().getStages().get(stage).spawners.size();
+
+                String zombieName = "";
+                List<Zombie> tempZombies = arena.getLocation().getZombies();
+                double extraChances = 0;
+                int firstWaveZombiesCount = 0;
+                for(Zombie zombie : tempZombies){
+                    if(zombie.hardLevel > hardLevel){
+                        tempZombies.remove(zombie);
+                    }
+                    if(zombie.hardLevel > 1){
+                        extraChances += zombie.spawnChance;
+                    }else{
+                        firstWaveZombiesCount++;
+                    }
+                }
+                extraChances /= firstWaveZombiesCount;
+                for(Zombie zombie: tempZombies){
+                    if(extraChances == 0){
+                        break;
+                    }
+                    if(zombie.hardLevel == 1){
+                        tempZombies.get(tempZombies.indexOf(zombie)).spawnChance -= extraChances;
+                    }
+                }
                 int random = (int)(Math.random() * 10000);
                 int temp = 0;
-                String zombieName = "";
-                for(Map.Entry<String, Double> entry : arena.getLocation().getZombies().entrySet()){
-                    temp += (int) (entry.getValue() * 100);
+                for(Zombie zombie : tempZombies){
+                    temp += (int) (zombie.spawnChance * 100);
                     if(random <= temp){
-                        zombieName = entry.getKey();
+                        zombieName = zombie.name;
                         break;
                     }
                 }
@@ -432,3 +455,4 @@ public class Game {
         }.runTaskTimer(Main.getInstance(), 0L, 10L);
     }
 }
+

@@ -3,21 +3,17 @@ package com.mimikcraft.mcc;
 import Arena.Arena;
 import Commands.JoinCMD;
 import Commands.LaunchCMD;
-import Utils.WorldUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
+import Events.KillsEventListener;
 import org.bukkit.WorldCreator;
 import org.bukkit.plugin.java.JavaPlugin;
 import Arena.ArenaList;
 import Commands.LeaveCMD;
 
-import java.io.File;
-
 public final class Main extends JavaPlugin {
 
     private static Main instance;
 
-    private final int maxarenas = 3;
+    private final int maxArenas = 3;
 
     @Override
     public void onEnable() {
@@ -26,8 +22,9 @@ public final class Main extends JavaPlugin {
         getServer().getPluginCommand("join").setExecutor(new JoinCMD());
         getServer().getPluginCommand("leave").setExecutor(new LeaveCMD());
         getServer().getPluginCommand("launch").setExecutor(new LaunchCMD());
+        getServer().getPluginManager().registerEvents(new KillsEventListener(), this);
         instance = this;
-        for(int i = 0 ; i <= maxarenas; i++){
+        for(int i = 0; i <= maxArenas; i++){
             Arena arena = new Arena("arena"+i);
             ArenaList.addarena(arena);
 
@@ -37,7 +34,6 @@ public final class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         instance = null;
-        // Plugin shutdown logic
     }
     public static Main getInstance() {
         return instance;
