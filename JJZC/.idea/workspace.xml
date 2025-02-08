@@ -10,6 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="826ec8dd-69ce-4dea-9d10-7bbbf4b43755" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Commands/SetSpawnsCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands/SetSpawnsCMD.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

@@ -48,7 +48,7 @@ public class SetSpawnsCMD implements CommandExecutor {
                 AbstractLocation absLoc = mob.getLocation();
                 Location spawner = new Location(player.getWorld(), absLoc.getX(), absLoc.getY(), absLoc.getZ());
                 spawners.add(spawner);
-                mob.setDead();
+                mob.despawn();
             }
         }
         File folder = new File(Main.getInstance().getDataFolder().getAbsolutePath());
