@@ -43,7 +43,7 @@ public class Game {
     private int life = 3;
 
     public final List<Entity> mobs = new ArrayList<Entity>();
-    public int aliveZomibes = 0;
+    public int aliveZombies = 0;
 
     public Game(Arena arena) {
         this.arena = arena;
