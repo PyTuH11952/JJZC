@@ -5,8 +5,6 @@ import com.mimikcraft.mcc.Main;
 import io.lumine.mythic.api.adapters.AbstractLocation;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
-import io.lumine.mythic.core.skills.mechanics.PlayAnimationEffect;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

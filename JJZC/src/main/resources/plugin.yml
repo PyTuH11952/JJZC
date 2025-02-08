@@ -15,8 +15,6 @@ commands:
     usage: /gamesettings
   party:
     usage: /party
-  choosespawns:
-    usage: /choosespawns
   setspawns:
     usage: /setspawns
   setchests:
