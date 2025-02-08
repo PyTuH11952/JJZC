@@ -1,13 +1,11 @@
 package com.mimikcraft.mcc;
 
 import Arena.Arena;
-import Commands.JoinCMD;
-import Commands.LaunchCMD;
+import Commands.*;
 import Events.KillsEventListener;
 import org.bukkit.WorldCreator;
 import org.bukkit.plugin.java.JavaPlugin;
 import Arena.ArenaList;
-import Commands.LeaveCMD;
 
 public final class Main extends JavaPlugin {
 
@@ -22,6 +20,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginCommand("join").setExecutor(new JoinCMD());
         getServer().getPluginCommand("leave").setExecutor(new LeaveCMD());
         getServer().getPluginCommand("launch").setExecutor(new LaunchCMD());
+        getServer().getPluginCommand("setspawns").setExecutor(new SetSpawnsCMD());
         getServer().getPluginManager().registerEvents(new KillsEventListener(), this);
         instance = this;
         for(int i = 0; i <= maxArenas; i++){
