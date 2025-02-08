@@ -63,16 +63,17 @@ public class SetSpawnsCMD implements CommandExecutor {
             }
         }
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        if(!config.contains(args[0])){
+
+        if(config.getConfigurationSection(args[0]) == null){
             config.createSection(args[0]);
         }
-        if(!config.contains(args[0] + ".stages")){
+        if(config.getConfigurationSection(args[0] + ".stages") == null){
             config.createSection(args[0] + ".stages");
         }
-        if(!config.contains(args[0] + ".stages.stage" + args[1])){
+        if(config.getConfigurationSection(args[0] + ".stages.stage" + args[1]) == null){
             config.createSection(args[0] + ".stages.stage" + args[1]);
         }
-        if(!config.contains(args[0] + ".stages.stage" + args[1] + ".spawners")){
+        if(config.getConfigurationSection(args[0] + ".stages.stage" + args[1] + ".spawners") == null){
             config.createSection(args[0] + ".stages.stage" + args[1] + ".spawners");
         }
         List<String> locationsStr = new ArrayList<>();
@@ -81,6 +82,11 @@ public class SetSpawnsCMD implements CommandExecutor {
             locationsStr.add(res);
         }
         config.set(args[0] + ".stages.stage" + args[1] + ".spawners", locationsStr);
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return true;
     }
 }
