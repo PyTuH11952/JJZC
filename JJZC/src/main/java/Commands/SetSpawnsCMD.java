@@ -65,11 +65,14 @@ public class SetSpawnsCMD implements CommandExecutor {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         if(!config.contains(args[0])){
             config.createSection(args[0]);
-        }else if(!config.contains(args[0] + ".stages")){
+        }
+        if(!config.contains(args[0] + ".stages")){
             config.createSection(args[0] + ".stages");
-        }else if(!config.contains(args[0] + ".stages.stage" + args[1])){
+        }
+        if(!config.contains(args[0] + ".stages.stage" + args[1])){
             config.createSection(args[0] + ".stages.stage" + args[1]);
-        }else if(!config.contains(args[0] + ".stages.stage" + args[1] + ".spawners")){
+        }
+        if(!config.contains(args[0] + ".stages.stage" + args[1] + ".spawners")){
             config.createSection(args[0] + ".stages.stage" + args[1] + ".spawners");
         }
         List<String> locationsStr = new ArrayList<>();
