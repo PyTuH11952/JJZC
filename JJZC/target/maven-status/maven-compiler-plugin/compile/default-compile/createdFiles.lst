@@ -1,5 +1,6 @@
 Arena\Game$3.class
 Events\KillsEventListener.class
+Commands\SetSpawnsCMD.class
 Arena\ArenaStages.class
 Arena\Game$5.class
 Arena\EmptyChunkGenerator.class
