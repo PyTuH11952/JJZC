@@ -22,7 +22,7 @@ import java.util.List;
 public class SetSpawnsCMD implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
-        if(!(command instanceof Player)){
+        if(!(commandSender instanceof Player)){
             return true;
         }
         Player player = (Player) commandSender;
@@ -41,6 +41,7 @@ public class SetSpawnsCMD implements CommandExecutor {
         Collection<ActiveMob> mobs = MythicBukkit.inst().getMobManager().getActiveMobs();
         List<Location> spawners = new ArrayList<>();
         for(ActiveMob mob : mobs){
+            mob.setDead();
             if(mob.getFaction().equals("maintenance")){
                 AbstractLocation absLoc = mob.getLocation();
                 Location spawner = new Location(player.getWorld(), absLoc.getX(), absLoc.getY(), absLoc.getZ());
