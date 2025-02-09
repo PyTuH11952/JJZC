@@ -9,14 +9,14 @@ commands:
     usage: /leave
   faststart:
     usage: /faststart
-  newgame:
-    usage: /newgame
   gamesettings:
     usage: /gamesettings
   party:
     usage: /party
   setspawns:
     usage: /setspawns
+  getchests:
+    usage: /getchests
   setchests:
     usage: /setchests
   bestiary:
