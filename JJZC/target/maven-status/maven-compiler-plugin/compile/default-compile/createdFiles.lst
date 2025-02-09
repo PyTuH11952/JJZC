@@ -4,12 +4,13 @@ Commands\SetSpawnsCMD.class
 Arena\ArenaStages.class
 Arena\Game$5.class
 Arena\EmptyChunkGenerator.class
+Utils\KeyUtil.class
 Events\BlockEventListener.class
 Arena\Game$2.class
 Arena\Game$4.class
 Arena\Zombie.class
 Commands\LaunchCMD.class
-Commands\GetChestsCMD.class
+Commands\GetChestCMD.class
 Utils\SmoothTeleportUtil.class
 Arena\Game$6.class
 Utils\WorldUtil.class

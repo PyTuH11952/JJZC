@@ -1,14 +1,18 @@
 package Events;
 
+import Utils.KeyUtil;
 import com.mimikcraft.mcc.Main;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,18 +22,16 @@ import java.util.List;
 import static org.bukkit.Material.BARREL;
 
 public class BlockEventListener implements Listener {
-    List<Location> chests = new ArrayList<>();
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event){
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
-        if (event.getBlock().getType() == Material.CHEST || event.getBlock().getType() == BARREL){
-
-            if (item.getItemMeta().getDisplayName().equalsIgnoreCase("cords")){
-                String location = item.getItemMeta().getLore().get(0);
-
-                Location chest = event.getBlock().getLocation();
-                chests.add(chest);
+        if(item.getItemMeta().getPersistentDataContainer() != null){
+            ItemMeta meta = item.getItemMeta();
+            if(meta.getPersistentDataContainer().has(KeyUtil.locationKey, PersistentDataType.STRING)){
+                String locationName = meta.getPersistentDataContainer().get(KeyUtil.locationKey, PersistentDataType.STRING).toLowerCase();
+                Location chestLocation = event.getBlockPlaced().getLocation();
+                String res = chestLocation.getX() + " " + chestLocation.getY() + " " + chestLocation.getZ();
 
                 File folder = new File(Main.getInstance().getDataFolder().getAbsolutePath());
 
@@ -44,28 +46,23 @@ public class BlockEventListener implements Listener {
                 }
                 YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 
-                if(config.getConfigurationSection(location) == null){
-                    config.createSection(location);
+                if(config.getConfigurationSection(locationName) == null){
+                    config.createSection(locationName);
                 }
-                if(config.getConfigurationSection(location + ".chests") == null){
-                    config.createSection(location + ".chests");
+                List<String> tempList = new ArrayList<>();
+                if(config.getConfigurationSection(locationName + ".chests") == null){
+                    config.createSection(locationName + ".chests");
+                }else{
+                    tempList.addAll(config.getStringList(locationName + ".chests"));
                 }
-                List<String> locationsStr = new ArrayList<>();
-                for(Location configchest : chests){
-                    String res = configchest.getX() + " " + configchest.getY() + " " + configchest.getZ();
-                    locationsStr.add(res);
-                }
-                config.set(location + ".chests", locationsStr);
+                tempList.add(res);
+                config.set(locationName + ".chests", tempList);
                 try {
                     config.save(file);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
-
-
-
-
         }
     }
 }

@@ -22,7 +22,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginCommand("leave").setExecutor(new LeaveCMD());
         getServer().getPluginCommand("launch").setExecutor(new LaunchCMD());
         getServer().getPluginCommand("setspawns").setExecutor(new SetSpawnsCMD());
-        getServer().getPluginCommand("getchests").setExecutor(new GetChestsCMD());
+        getServer().getPluginCommand("getchest").setExecutor(new GetChestCMD());
         getServer().getPluginManager().registerEvents(new KillsEventListener(), this);
         getServer().getPluginManager().registerEvents(new BlockEventListener(), this);
         instance = this;

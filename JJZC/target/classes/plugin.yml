@@ -15,10 +15,8 @@ commands:
     usage: /party
   setspawns:
     usage: /setspawns
-  getchests:
-    usage: /getchests
-  setchests:
-    usage: /setchests
+  getchest:
+    usage: /getchest
   bestiary:
     usage: /bestiary
   prestige:
