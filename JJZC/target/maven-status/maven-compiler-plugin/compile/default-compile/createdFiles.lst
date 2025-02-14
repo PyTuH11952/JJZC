@@ -3,7 +3,9 @@ Events\KillsEventListener.class
 Commands\SetSpawnsCMD.class
 Arena\ArenaStages.class
 Arena\Game$5.class
+Events\MenuEvents.class
 Arena\EmptyChunkGenerator.class
+Events\PlayerJoinEvent.class
 Utils\KeyUtil.class
 Events\BlockEventListener.class
 Arena\Game$2.class
