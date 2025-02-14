@@ -41,6 +41,7 @@ public class Arena {
 
     private final List<Player> players = new ArrayList<>();
     private final List<Player> ghosts = new ArrayList<>();
+    private final List<Player> leavedPlayers = new ArrayList<>();
 
     public Arena(String name) {
         if (Bukkit.getWorld(name) == null){
@@ -87,6 +88,9 @@ public class Arena {
             ChatUtil.sendMessage(player, "Арена заполнена!");
             return;
         }
+        if(leavedPlayers.contains(player)){
+            ChatUtil.sendMessage(player, "Вы уже сбежали с этой игры! Вернуться нельзя.");
+        }
         players.add(player);
         onJoinLocation.put(player, player.getLocation());
         player.teleport(new Location(Bukkit.getWorld(name), location.getLobbyLocation().getX(),location.getLobbyLocation().getY(), location.getLobbyLocation().getZ()));
@@ -109,7 +113,7 @@ public class Arena {
             @Override
             public void run() {
                 if (ctr <= 0) {
-                    arenaStage = ArenaStages.STARTING;
+                    arenaStage = ArenaStages.IN_PROCESS;
                     game.start();
                     cancel();
                 }
@@ -127,8 +131,6 @@ public class Arena {
                 }
             }
         }.runTaskTimer(Main.getInstance(), 0L,20L);
-
-
     }
 
     public void leave(Player player){
@@ -137,7 +139,12 @@ public class Arena {
             player.setLevel(playerLvl.get(player));
         }
         players.remove(player);
-        sendArenaMessage(player.getDisplayName() + " отключился!");
+        if(arenaStage == ArenaStages.IN_PROCESS){
+            leavedPlayers.add(player);
+            sendArenaMessage(player.getDisplayName() + "сбежал!");
+        }else{
+            sendArenaMessage(player.getDisplayName() + " отключился!");
+        }
         player.teleport(onJoinLocation.get(player));
         if (players.isEmpty() && arenaStage == ArenaStages.STARTING){
             reset();
@@ -185,7 +192,7 @@ public class Arena {
         }
     }
 
-    public boolean canjoin(Player player) {
+    public boolean canJoin(Player player) {
 
         if (getLocation().getLocationType() == ArenaLocation.LocationTypes.HOSPITAL) {
             return true;

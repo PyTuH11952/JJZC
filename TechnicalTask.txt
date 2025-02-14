@@ -131,7 +131,10 @@ JustJoyZombierubkaCore functional list:
 3. 3 станция
 4. 4 станция
 
-Структруа конфига с локациями:
+Структура базового конфига "config.yml":
+baseWorldName: <name>  - название мира базы
+
+Структруа конфига с локациями "Locations.yml":
 <Название локации>:
   lcationFactor: double  - коэффицент локации
   lobbyLocation: 'x y z'  - коориднаты комнаты ожидания
