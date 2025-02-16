@@ -420,7 +420,7 @@ public class Game {
                 String zombieName = "";
                 List<Zombie> tempZombies = arena.getLocation().getZombies();
                 double extraChances = 0;
-                int firstWaveZombiesCount = 0;
+                int firstHardLevelZombiesCount = 0;
                 for(Zombie zombie : tempZombies){
                     if(zombie.hardLevel > hardLevel){
                         tempZombies.remove(zombie);
@@ -428,10 +428,10 @@ public class Game {
                     if(zombie.hardLevel > 1){
                         extraChances += zombie.spawnChance;
                     }else{
-                        firstWaveZombiesCount++;
+                        firstHardLevelZombiesCount++;
                     }
                 }
-                extraChances /= firstWaveZombiesCount;
+                extraChances /= firstHardLevelZombiesCount;
                 for(Zombie zombie: tempZombies){
                     if(extraChances == 0){
                         break;
