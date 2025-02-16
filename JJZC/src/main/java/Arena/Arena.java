@@ -52,7 +52,7 @@ public class Arena {
 
             copyWorld(sourceFolder, file);
 
-            WorldCreator wc = new WorldCreator(name);
+            WorldCreator wc = new WorldCreator(name).generator(new EmptyChunkGenerator());
             wc.createWorld();
         }
         arenaWorld = Bukkit.getWorld(name);
@@ -70,7 +70,7 @@ public class Arena {
         File sourceFolder = source.getWorldFolder();
         File file = new File("/home/container/"+name);
         copyWorld(sourceFolder, file);
-        WorldCreator wc = new WorldCreator(name);
+        WorldCreator wc = new WorldCreator(name).generator(new EmptyChunkGenerator());
         wc.createWorld();
         arenaStage = ArenaStages.CLOSED;
     }

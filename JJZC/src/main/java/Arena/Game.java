@@ -42,7 +42,7 @@ public class Game {
 
     private int life = 3;
 
-    public final List<Entity> mobs = new ArrayList<Entity>();
+    public final List<Entity> mobs = new ArrayList<>();
     public int aliveZombies = 0;
 
     public Game(Arena arena) {
@@ -62,7 +62,6 @@ public class Game {
         test2.add(loc1);
         test2.add(loc3);
         cutScene("test1", "titleStages","titleDoors", showloc, test, test2);
-        preparePlayers();
     }
 
     private void getkit(Player player) {
@@ -138,9 +137,10 @@ public class Game {
 
     private void cutScene(String titleLoc, String titleStages, String titleDoors, Location showLoc, List<Location> showStages, List<Location> showDoors) {
         for (Player player : arena.getPlayers()) {
-            player.setAllowFlight(true);
-            player.setFlying(true);
-            player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 1000000, 1, false, false, false));
+            player.setGameMode(GameMode.SPECTATOR);
+            for (Player otherplayer : arena.getPlayers()) {
+                    otherplayer.hidePlayer(Main.getInstance(), otherplayer);
+            }
             player.getInventory().clear();
             player.playSound(player.getLocation(), Sound.AMBIENT_CAVE, 1, 1);
         }
@@ -202,12 +202,7 @@ public class Game {
                 }else{
                     for (Player player : arena.getPlayers()){
                         player.playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_AMBIENT,1 ,1);
-                        player.setGameMode(GameMode.SPECTATOR);
                         smoothTeleport(player, player.getLocation(), arena.getLocation().getSpawnLocation());
-                        player.setGameMode(GameMode.ADVENTURE);
-                        player.setFlying(false);
-                        player.setAllowFlight(false);
-                        player.removePotionEffect(PotionEffectType.INVISIBILITY);
                     }
                     cancel();
                 }
@@ -236,6 +231,10 @@ public class Game {
                     y = (1-t) * y1 + t * y2;
                     z = (1-t) * z1 + t * z2;
                     if (t > 1){
+                        for (Player otherplayer : arena.getPlayers()) {
+                                otherplayer.showPlayer(Main.getInstance(), otherplayer);
+                        }
+                        preparePlayers();
                         startNewWave();
                         cancel();
                     }
@@ -404,16 +403,17 @@ public class Game {
             wavesCount = wavesCount + arena.getLocation().getStages().get(stage - 1).wavesCount;
         }
         wave++;
-        zombiesCount = (int)((wavesCount+2)*arena.getPlayers().size()*arena.getLocation().getLocationFactor());
-        aliveZombies = zombiesCount;
+        zombiesCount = (int)((wave+2)*arena.getPlayers().size()*arena.getLocation().getLocationFactor());
+        aliveZombies += zombiesCount;
         arena.sendArenaTitle("Волна: " + wave, "Кол-во зомби: " + zombiesCount);
         new BukkitRunnable(){
             int spawnedZombies = 0;
             @Override
             public void run() {
-                if(spawnedZombies == zombiesCount){
+                if(spawnedZombies == (zombiesCount-1)){
                     cancel();
                 }
+                spawnedZombies++;
                 int spawnersCount = arena.getLocation().getStages().get(stage - 1).spawners.size();
 
                 String zombieName = "";
@@ -449,7 +449,6 @@ public class Game {
                     }
                 }
                 spawnMob(arena.getLocation().getStages().get(stage - 1).spawners.get((int)(Math.random() * spawnersCount)), zombieName);
-                spawnedZombies++;
             }
         }.runTaskTimer(Main.getInstance(), 0L, 20L);
     }

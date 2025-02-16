@@ -13,14 +13,13 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Arena/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Events/KillsEventListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Events/KillsEventListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mimikcraft/mcc/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mimikcraft/mcc/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/MCC-1.0.0-shaded.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/MCC-1.0.0-shaded.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Arena$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Arena$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/MCC-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/MCC-1.0.0.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Arena/Arena.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Arena.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Game$3.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Game$6.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Game.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Events/KillsEventListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Events/KillsEventListener.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/original-MCC-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/original-MCC-1.0.0.jar" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

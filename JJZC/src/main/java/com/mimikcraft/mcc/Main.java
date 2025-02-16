@@ -2,8 +2,7 @@ package com.mimikcraft.mcc;
 
 import Arena.Arena;
 import Commands.*;
-import Events.KillsEventListener;
-import Events.BlockEventListener;
+import Events.*;
 import org.bukkit.WorldCreator;
 import org.bukkit.plugin.java.JavaPlugin;
 import Arena.ArenaList;
