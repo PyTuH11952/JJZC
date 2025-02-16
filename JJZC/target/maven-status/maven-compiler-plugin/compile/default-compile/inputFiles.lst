@@ -3,10 +3,13 @@ D:\GitHub\JJZC\JJZC\src\main\java\Handlers\PlayerHandler.java
 D:\GitHub\JJZC\JJZC\src\main\java\Arena\ArenaLocation.java
 D:\GitHub\JJZC\JJZC\src\main\java\Arena\EmptyChunkGenerator.java
 D:\GitHub\JJZC\JJZC\src\main\java\Events\KillsEventListener.java
+D:\GitHub\JJZC\JJZC\src\main\java\Events\BlockEventListener.java
 D:\GitHub\JJZC\JJZC\src\main\java\Arena\ArenaList.java
 D:\GitHub\JJZC\JJZC\src\main\java\com\mimikcraft\mcc\ExecutableApi.java
 D:\GitHub\JJZC\JJZC\src\main\java\Arena\Team.java
+D:\GitHub\JJZC\JJZC\src\main\java\Events\MenuEvents.java
 D:\GitHub\JJZC\JJZC\src\main\java\Utils\WorldUtil.java
+D:\GitHub\JJZC\JJZC\src\main\java\Commands\GetChestCMD.java
 D:\GitHub\JJZC\JJZC\src\main\java\Arena\ArenaStages.java
 D:\GitHub\JJZC\JJZC\src\main\java\com\mimikcraft\mcc\Main.java
 D:\GitHub\JJZC\JJZC\src\main\java\Commands\LaunchCMD.java
@@ -14,6 +17,8 @@ D:\GitHub\JJZC\JJZC\src\main\java\Utils\SmoothTeleportUtil.java
 D:\GitHub\JJZC\JJZC\src\main\java\Arena\Arena.java
 D:\GitHub\JJZC\JJZC\src\main\java\Commands\JoinCMD.java
 D:\GitHub\JJZC\JJZC\src\main\java\Arena\Game.java
+D:\GitHub\JJZC\JJZC\src\main\java\Events\PlayerJoinEvent.java
+D:\GitHub\JJZC\JJZC\src\main\java\Utils\KeyUtil.java
 D:\GitHub\JJZC\JJZC\src\main\java\Commands\LeaveCMD.java
 D:\GitHub\JJZC\JJZC\src\main\java\Utils\ChatUtil.java
 D:\GitHub\JJZC\JJZC\src\main\java\Structure\Arena.java

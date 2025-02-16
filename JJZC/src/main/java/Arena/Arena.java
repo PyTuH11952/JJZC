@@ -93,6 +93,9 @@ public class Arena {
             return;
         }
         players.add(player);
+        playerExp.put(player,player.getExp());
+        playerLvl.put(player,player.getLevel());
+        player.setExp(0.0f);
         onJoinLocation.put(player, player.getLocation());
         player.teleport(new Location(Bukkit.getWorld(name), location.getLobbyLocation().getX(),location.getLobbyLocation().getY(), location.getLobbyLocation().getZ()));
         sendArenaMessage(player.getDisplayName() + " присоединился!");
@@ -105,7 +108,6 @@ public class Arena {
     private void startGame(){
 
         arenaStage = ArenaStages.STARTING;
-        saveExpArena();
 
         new BukkitRunnable() {
 
@@ -179,15 +181,11 @@ public class Arena {
         }
     }
 
-    public void saveExpArena(){
-        for (Player player : players){
-            playerExp.put(player,player.getExp());
-            playerLvl.put(player,player.getLevel());
-            player.setExp(0.0f);
-        }
-    }
     public void setPlayerExp(){
         for (Player player : players){
+            if(playerExp.get(player) == 0 || playerLvl.get(player) == 0){
+                return;
+            }
             player.setExp(playerExp.get(player));
             player.setLevel(playerLvl.get(player));
         }

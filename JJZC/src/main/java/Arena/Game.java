@@ -30,13 +30,13 @@ public class Game {
 
     private int hardLevel = 1;
 
-    private int wave = 1;
+    private int wave = 0;
 
     private int wavesCount;
 
     private int infinityWave = 1;
 
-    private int stage = 1;
+    private int stage = 0;
 
     private int zombiesCount = 0;
 
@@ -209,7 +209,6 @@ public class Game {
                         player.setAllowFlight(false);
                         player.removePotionEffect(PotionEffectType.INVISIBILITY);
                     }
-
                     cancel();
                 }
             }
@@ -217,7 +216,6 @@ public class Game {
         }.runTaskTimer(Main.getInstance(), 0L, 20L);
     }
     private void smoothTeleport(Player player, Location loc1, Location loc2) {
-
             new BukkitRunnable() {
                 double x1 = loc1.getX();
                 double y1 = loc1.getY();
@@ -237,14 +235,14 @@ public class Game {
                     x = (1-t) * x1 + t * x2;
                     y = (1-t) * y1 + t * y2;
                     z = (1-t) * z1 + t * z2;
-                        if (t > 1){
-                            cancel();
-                        } else {
-                                SmoothTeleportUtil.teleport(player, new Location(world, x, y, z));
+                    if (t > 1){
+                        startNewWave();
+                        cancel();
+                    }
+                    else
+                        SmoothTeleportUtil.teleport(player, new Location(world, x, y, z));
                 }
-            }
-
-        }.runTaskTimer(Main.getInstance(), 0L, 1L);
+            }.runTaskTimer(Main.getInstance(), 0L, 1L);
     }
     private void spawnMob(Location location, String name){
         new BukkitRunnable(){
@@ -263,7 +261,7 @@ public class Game {
                 }
             }
 
-        }.runTaskTimer(Main.getInstance(), 0L, 10L);
+        }.runTaskTimer(Main.getInstance(), 0L, 20L);
 
     }
     public void glowing(){
@@ -401,12 +399,13 @@ public class Game {
     }
 
     public void startNewWave(){
-        if(wavesCount == wave){{
+        if(wavesCount == wave){
             stage++;
-            wavesCount = wavesCount + arena.getLocation().getStages().get(stage).wavesCount;
-            wave++;
-        }}
+            wavesCount = wavesCount + arena.getLocation().getStages().get(stage - 1).wavesCount;
+        }
+        wave++;
         zombiesCount = (int)((wavesCount+2)*arena.getPlayers().size()*arena.getLocation().getLocationFactor());
+        aliveZombies = zombiesCount;
         arena.sendArenaTitle("Волна: " + wave, "Кол-во зомби: " + zombiesCount);
         new BukkitRunnable(){
             int spawnedZombies = 0;
@@ -415,7 +414,7 @@ public class Game {
                 if(spawnedZombies == zombiesCount){
                     cancel();
                 }
-                int spawnersCount = arena.getLocation().getStages().get(stage).spawners.size();
+                int spawnersCount = arena.getLocation().getStages().get(stage - 1).spawners.size();
 
                 String zombieName = "";
                 List<Zombie> tempZombies = arena.getLocation().getZombies();
@@ -449,10 +448,10 @@ public class Game {
                         break;
                     }
                 }
-                spawnMob(arena.getLocation().getStages().get(stage).spawners.get((int)(Math.random() * spawnersCount)), zombieName);
+                spawnMob(arena.getLocation().getStages().get(stage - 1).spawners.get((int)(Math.random() * spawnersCount)), zombieName);
                 spawnedZombies++;
             }
-        }.runTaskTimer(Main.getInstance(), 0L, 10L);
+        }.runTaskTimer(Main.getInstance(), 0L, 20L);
     }
 }
 
