@@ -53,6 +53,7 @@ public class LeaveCMD implements CommandExecutor {
             itemMeta.getPersistentDataContainer().set(KeyUtil.buttonKey, PersistentDataType.STRING, "exit");
             exitButton.setItemMeta(itemMeta);
             menu.setItem(13, exitButton);
+            player.openInventory(menu);
             return true;
         }
 

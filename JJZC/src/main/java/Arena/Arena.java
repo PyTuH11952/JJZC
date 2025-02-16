@@ -90,12 +90,13 @@ public class Arena {
         }
         if(leavedPlayers.contains(player)){
             ChatUtil.sendMessage(player, "Вы уже сбежали с этой игры! Вернуться нельзя.");
+            return;
         }
         players.add(player);
         onJoinLocation.put(player, player.getLocation());
         player.teleport(new Location(Bukkit.getWorld(name), location.getLobbyLocation().getX(),location.getLobbyLocation().getY(), location.getLobbyLocation().getZ()));
         sendArenaMessage(player.getDisplayName() + " присоединился!");
-        if (!players.isEmpty() && arenaStage != ArenaStages.CLOSED) {
+        if (players.size() == 1 && arenaStage != ArenaStages.CLOSED) {
             startGame();
         }
 
