@@ -12,6 +12,9 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Barrel;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -45,9 +48,14 @@ public class Game {
     public final List<Entity> mobs = new ArrayList<>();
     public int aliveZombies = 0;
 
+    BossBar bossbar = Bukkit.getServer().createBossBar("Осталось зомби: " + (aliveZombies - 2), BarColor.BLUE, BarStyle.SOLID);
+
+
     public Game(Arena arena) {
         this.arena = arena;
     }
+
+
 
     public void start() {
         Location showloc = new Location(arena.getArenaWorld(), 36.8, 134.8, 3.8, 91, 5);
@@ -263,7 +271,7 @@ public class Game {
         }.runTaskTimer(Main.getInstance(), 0L, 20L);
 
     }
-    public void glowing(){
+    private void glowing(){
         for (Entity entity : mobs) {
             entity.setGlowing(true);
         }
@@ -293,7 +301,7 @@ public class Game {
         return item;
     }
 
-    public void fillСhest(Location location, int locationNumber){
+    private void fillСhest(Location location, int locationNumber){
         Random random = new Random();
         int armorWeaponCount = random.nextInt(3);
         int materialCount = random.nextInt(3);
@@ -397,6 +405,17 @@ public class Game {
         }
     }
 
+    public void sendBossBar() {
+        for (Player player : arena.getPlayers()) {
+            bossbar.addPlayer(player);
+        }
+        double progress = (double) (aliveZombies - 2) / zombiesCount;
+        if (progress <= 0) {
+            bossbar.removeAll();
+        }
+        bossbar.setTitle("Осталось зомби: " + (aliveZombies - 2));
+        bossbar.setProgress(progress);
+    }
     public void startNewWave(){
         if(wavesCount == wave){
             stage++;
@@ -406,6 +425,7 @@ public class Game {
         zombiesCount = (int)((wave+2)*arena.getPlayers().size()*arena.getLocation().getLocationFactor());
         aliveZombies += zombiesCount;
         arena.sendArenaTitle("Волна: " + wave, "Кол-во зомби: " + zombiesCount);
+        sendBossBar();
         new BukkitRunnable(){
             int spawnedZombies = 0;
             @Override

@@ -15,6 +15,7 @@ public class KillsEventListener implements Listener {
                 Arena arena = ArenaList.get(e.getEntity().getWorld().getName());
                 arena.getGame().mobs.remove(e.getEntity());
                 arena.getGame().aliveZombies -= 1;
+                arena.getGame().sendBossBar();
                 if(arena.getGame().aliveZombies <= 2){
                     arena.getGame().startNewWave();
                 }

@@ -2,7 +2,12 @@ package Arena;
 
 import Utils.ChatUtil;
 import com.mimikcraft.mcc.Main;
+import io.lumine.mythic.bukkit.utils.bossbar.BossBarColor;
+import io.lumine.mythic.bukkit.utils.bossbar.BossBarStyle;
 import org.bukkit.*;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
