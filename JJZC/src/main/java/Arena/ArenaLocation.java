@@ -1,6 +1,7 @@
 package Arena;
 
 import com.mimikcraft.mcc.Main;
+import com.sun.tools.javac.file.Locations;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -17,6 +18,7 @@ public class ArenaLocation {
     private Location spawnLocation;
     private Location lobbyLocation;
     private World world;
+    private CutScene cutScene;
     private double locationFactor;
     private final List<Location> chests = new ArrayList<>();
     private final List<Zombie> zombies = new ArrayList<>();
@@ -24,7 +26,9 @@ public class ArenaLocation {
 
     public ArenaLocation(LocationTypes locationType, World world){
         this.world = world;
-        setLocationType(locationType);
+        if(locationType != null){
+            setLocationType(locationType);
+        }
     }
 
     public void setLocationType(LocationTypes locationType) {
@@ -90,6 +94,26 @@ public class ArenaLocation {
             int wavesCount = stagesSection.getInt(section + ".wavesCount");
             stages.add(new Stage(tempCordsList, wavesCount));
         }
+
+        ConfigurationSection cutSceneSection = locationSection.getConfigurationSection("cutScene");
+        String locTitle = cutSceneSection.getString("locTitle");
+        String floorsTitle = cutSceneSection.getString("floorsTitle");
+        String doorsTitle = cutSceneSection.getString("doorsTitle");
+        String[] showLocCordsStr = cutSceneSection.getString("").split(" ");
+        Location locShowLocation = new Location(world, Double.parseDouble(showLocCordsStr[0]), Double.parseDouble(showLocCordsStr[1]), Double.parseDouble(showLocCordsStr[2]), Float.parseFloat(showLocCordsStr[3]), Float.parseFloat(showLocCordsStr[4]));
+        List<String> floorsLocationsStr = cutSceneSection.getStringList("floorsLocations");
+        List<Location> floorsLocations = new ArrayList<>();
+        for(String floorsLocationStr : floorsLocationsStr){
+            String[] floorsCordsStr = floorsLocationStr.split(" ");
+            floorsLocations.add(new Location(world, Double.parseDouble(floorsCordsStr[0]), Double.parseDouble(floorsCordsStr[1]), Double.parseDouble(floorsCordsStr[2]), Float.parseFloat(floorsCordsStr[3]), Float.parseFloat(floorsCordsStr[4])));
+        }
+        List<String> doorsLocationsStr = cutSceneSection.getStringList("doorsLocations");
+        List<Location> doorsLocations = new ArrayList<>();
+        for(String doorsLocationStr : doorsLocationsStr){
+            String[] doorsCordsStr = doorsLocationStr.split(" ");
+            doorsLocations.add(new Location(world, Double.parseDouble(doorsCordsStr[0]), Double.parseDouble(doorsCordsStr[1]), Double.parseDouble(doorsCordsStr[2]), Float.parseFloat(doorsCordsStr[3]), Float.parseFloat(doorsCordsStr[4])));
+        }
+        cutScene = new CutScene(locTitle, floorsTitle, doorsTitle, locShowLocation, floorsLocations, doorsLocations);
     }
 
     public Location getSpawnLocation() {
@@ -118,6 +142,10 @@ public class ArenaLocation {
 
     public LocationTypes getLocationType() {
         return locationType;
+    }
+
+    public CutScene getCutScene() {
+        return cutScene;
     }
 
     public enum LocationTypes {
@@ -152,3 +180,20 @@ class Zombie{
 }
 
 
+class CutScene {
+    String locTitle;
+    String floorsTitle;
+    String doorsTitle;
+    Location locShowLocation;
+    List<Location> floorsLocations;
+    List<Location> doorsLocationcs;
+
+    public CutScene(String locTitle, String floorsTitle, String doorsTitle, Location locShowLocation, List<Location> floorsLocations, List<Location> doorsLocationcs) {
+        this.locTitle = locTitle;
+        this.floorsTitle = floorsTitle;
+        this.doorsTitle = doorsTitle;
+        this.locShowLocation = locShowLocation;
+        this.floorsLocations = floorsLocations;
+        this.doorsLocationcs = doorsLocationcs;
+    }
+}

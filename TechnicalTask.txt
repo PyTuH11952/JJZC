@@ -148,10 +148,20 @@ baseWorldName: <name>  - название мира базы
   stages:  - список этапов
     stage1:
       spawners:  - список координат спавнеров зомби
-        - 'x y z'
+        - 'x y z yaw pitch'
 	- ...
       wavesCount: num - количество волн на этапе
     ...
-			  
+  cutScene:
+    locTitle: <string>  - название локации
+    floorsTitle: <string>  - тайтл при показе этажей
+    doorsTittle: <string>  - тайтл при показе дверей
+    locShowLocation: 'x y z yaw pitch'  - координаты точки показа всей локации
+    floorsLocations:  - координаты точек показа этажей
+      - 'x y z yaw pitch'
+      - ...
+    doorsLocations:  - координаты точек показа дверей
+      - 'x y z yaw pitch'
+      - ... 
 		  
 	

@@ -19,8 +19,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -58,18 +56,13 @@ public class Game {
 
 
     public void start() {
-        Location showloc = new Location(arena.getArenaWorld(), 36.8, 134.8, 3.8, 91, 5);
-        Location loc1 = new Location(arena.getArenaWorld(), 36.8, 134.8, 30.8, 91, 5);
-        Location loc2 = new Location(arena.getArenaWorld(), 32.8, 134.8, 3.8, 91, 5);
-        Location loc3 = new Location(arena.getArenaWorld(), 36.8, 130.8, 30.8, 91, 5);
-        List<Location> test = new ArrayList<>();
-        List<Location> test2 = new ArrayList<>();
-        test.add(loc1);
-        test.add(loc2);
-        test.add(loc3);
-        test2.add(loc1);
-        test2.add(loc3);
-        cutScene("test1", "titleStages","titleDoors", showloc, test, test2);
+        CutScene cutScene = arena.getLocation().getCutScene();
+        showCutScene(cutScene.locTitle,
+                cutScene.floorsTitle,
+                cutScene.doorsTitle,
+                cutScene.locShowLocation,
+                cutScene.floorsLocations,
+                cutScene.doorsLocationcs);
     }
 
     private void getkit(Player player) {
@@ -143,7 +136,7 @@ public class Game {
         }
     }
 
-    private void cutScene(String titleLoc, String titleStages, String titleDoors, Location showLoc, List<Location> showStages, List<Location> showDoors) {
+    private void showCutScene(String titleLoc, String titleStages, String titleDoors, Location showLoc, List<Location> showStages, List<Location> showDoors) {
         for (Player player : arena.getPlayers()) {
             player.setGameMode(GameMode.SPECTATOR);
             for (Player otherplayer : arena.getPlayers()) {
@@ -239,8 +232,8 @@ public class Game {
                     y = (1-t) * y1 + t * y2;
                     z = (1-t) * z1 + t * z2;
                     if (t > 1){
-                        for (Player otherplayer : arena.getPlayers()) {
-                                otherplayer.showPlayer(Main.getInstance(), otherplayer);
+                        for (Player otherPlayer : arena.getPlayers()) {
+                                otherPlayer.showPlayer(Main.getInstance(), otherPlayer);
                         }
                         preparePlayers();
                         startNewWave();
