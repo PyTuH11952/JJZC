@@ -1,0 +1,60 @@
+package Commands;
+
+import Events.BlockEventListener;
+import Events.Editor;
+import Utils.ChatUtil;
+import com.mimikcraft.mcc.Main;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+public class SetStructureChanges implements CommandExecutor {
+    @Override
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        if(!(commandSender instanceof Player)){
+            System.out.println("Иди нафиг, консоль!");
+            return true;
+        }
+        Player player = (Player) commandSender;
+        for(Editor editor : BlockEventListener.editors){
+            if(editor.player.getUniqueId().equals(player.getUniqueId())){
+                String locName = editor.locName;
+                int stage = editor.stage;
+                File folder = new File(Main.getInstance().getDataFolder().getAbsolutePath());
+
+                File file = new File(folder.getAbsolutePath() + "/Locations.yml");
+
+                if (!file.exists()) {
+                    try {
+                        file.createNewFile();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+                ConfigurationSection stageSection = config.getConfigurationSection(locName.toLowerCase() + ".stages.stage" + stage);
+                Map<String, String> temp = new HashMap<>();
+                for(Map.Entry<Location, Material> entry : editor.changes.entrySet()){
+                    String coordsStr = entry.getKey().getX() + " " + entry.getKey().getY() + " " + entry.getKey().getZ() + " ";
+                    temp.put(coordsStr, entry.getValue().name());
+                }
+                stageSection.set("structureChanges", temp);
+                BlockEventListener.editors.remove(editor);
+                return true;
+            }
+        }
+        ChatUtil.sendMessage(player, "&cСначала пропишите команду /choosestructurechanges и сделайте изменения в локации");
+        return true;
+    }
+}

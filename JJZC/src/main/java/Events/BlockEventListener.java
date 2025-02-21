@@ -4,11 +4,11 @@ import Utils.KeyUtil;
 import com.mimikcraft.mcc.Main;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -19,12 +19,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.bukkit.Material.BARREL;
-
 public class BlockEventListener implements Listener {
+
+    public static List<Editor> editors = new ArrayList<>();
+
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event){
         Player player = event.getPlayer();
+        for(Editor editor : editors){
+            if(editor.player.getUniqueId().equals(player.getUniqueId())){
+                editors.get(editors.indexOf(editor)).changes.put(event.getBlockPlaced().getLocation(), event.getBlockPlaced().getType());
+            }
+        }
         ItemStack item = player.getInventory().getItemInMainHand();
         if(item.getItemMeta().getPersistentDataContainer() != null){
             ItemMeta meta = item.getItemMeta();
@@ -65,4 +71,15 @@ public class BlockEventListener implements Listener {
             }
         }
     }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event){
+        Player player = event.getPlayer();
+        for(Editor editor : editors){
+            if(editor.player.getUniqueId().equals(player.getUniqueId())){
+                editors.get(editors.indexOf(editor)).changes.put(event.getBlock().getLocation(), Material.AIR);
+            }
+        }
+    }
 }
+

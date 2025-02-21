@@ -2,8 +2,12 @@ package Arena;
 
 import com.mimikcraft.mcc.Main;
 import com.sun.tools.javac.file.Locations;
+import org.bukkit.Bukkit;
+import org.bukkit.Bukkit.*;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -82,7 +86,8 @@ public class ArenaLocation {
         ConfigurationSection stagesSection = locationSection.getConfigurationSection("stages");
         Set<String> stagesKeys = stagesSection.getKeys(false);
         for(String section : stagesKeys){
-            List<String> spawnersCoordinatesStr = stagesSection.getStringList(section + ".spawners");
+            ConfigurationSection stageSection = stagesSection.getConfigurationSection(section);
+            List<String> spawnersCoordinatesStr = stageSection.getStringList("spawners");
             List<Location> tempCordsList = new ArrayList<>();
             for(String spawnerCords : spawnersCoordinatesStr){
                 String[] spawnerCordsStr = spawnerCords.split(" ");
@@ -91,8 +96,18 @@ public class ArenaLocation {
                 double z = Double.parseDouble(spawnerCordsStr[2]);
                 tempCordsList.add(new Location(world, x, y, z));
             }
-            int wavesCount = stagesSection.getInt(section + ".wavesCount");
-            stages.add(new Stage(tempCordsList, wavesCount));
+            HashMap<String, String> structureChangesStr = (HashMap) stageSection.get("structureChanges");
+            HashMap<Location, Material> structureChanges = new HashMap<>();
+            for(Map.Entry<String, String> entry : structureChangesStr.entrySet()){
+                String[] blockCordsStr = entry.getKey().split(" ");
+                double x = Double.parseDouble(blockCordsStr[0]);
+                double y = Double.parseDouble(blockCordsStr[1]);
+                double z = Double.parseDouble(blockCordsStr[2]);
+                structureChanges.put(new Location(world, x, y, z), Material.valueOf(entry.getValue().toUpperCase()));
+            }
+            int wavesCount = stageSection.getInt("wavesCount");
+
+            stages.add(new Stage(tempCordsList, structureChanges, wavesCount));
         }
 
         ConfigurationSection cutSceneSection = locationSection.getConfigurationSection("cutScene");
@@ -160,9 +175,11 @@ public class ArenaLocation {
 
 class Stage{
     List<Location> spawners;
+    HashMap<Location, Material> structureChanges;
     int wavesCount;
-    public Stage(List<Location> spawners, int wavesCount){
+    public Stage(List<Location> spawners, HashMap<Location, Material> structureChanges, int wavesCount){
         this.spawners = spawners;
+        this.structureChanges = structureChanges;
         this.wavesCount = wavesCount;
     }
 }

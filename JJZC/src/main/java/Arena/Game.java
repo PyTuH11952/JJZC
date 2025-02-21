@@ -416,6 +416,9 @@ public class Game {
         }
         wave++;
         zombiesCount = (int)((wave+2)*arena.getPlayers().size()*arena.getLocation().getLocationFactor());
+        if(wave == wavesCount){
+            zombiesCount *= 10;
+        }
         aliveZombies += zombiesCount;
         arena.sendArenaTitle("Волна: " + wave, "Кол-во зомби: " + zombiesCount);
         sendBossBar();
