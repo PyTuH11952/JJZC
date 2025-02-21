@@ -7,6 +7,8 @@ import com.ssomar.score.api.executableitems.ExecutableItemsAPI;
 import com.ssomar.score.api.executableitems.config.ExecutableItemInterface;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
+import me.neznamy.tab.api.TabAPI;
+import me.neznamy.tab.api.TabPlayer;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Barrel;
@@ -20,6 +22,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.util.*;
 
@@ -124,7 +128,6 @@ public class Game {
     }
 
     private void preparePlayers() {
-        startNewWave();
         for (Player player : arena.getPlayers()) {
             player.getInventory().clear();
             getkit(player);
@@ -134,14 +137,21 @@ public class Game {
             player.teleport(new Location(Bukkit.getWorld(arena.getArenaWorld().getName()), location.getX(), location.getY(), location.getZ()));
             ChatUtil.sendMessage(player, "&cБейся!");
             player.setGameMode(GameMode.ADVENTURE);
+            TabPlayer tabPlayer = TabAPI.getInstance().getPlayer(player.getUniqueId());
+            TabAPI.getInstance().getScoreboardManager().toggleScoreboard(tabPlayer, true);
         }
+                startNewWave();
     }
 
     private void showCutScene(String titleLoc, String titleStages, String titleDoors, Location showLoc, List<Location> showStages, List<Location> showDoors) {
         for (Player player : arena.getPlayers()) {
             player.setGameMode(GameMode.SPECTATOR);
-            for (Player otherplayer : arena.getPlayers()) {
-                    otherplayer.hidePlayer(Main.getInstance(), otherplayer);
+            TabPlayer tabPlayer = TabAPI.getInstance().getPlayer(player.getUniqueId());
+            TabAPI.getInstance().getScoreboardManager().toggleScoreboard(tabPlayer, false);
+            for (Player otherPlayer : arena.getPlayers()) {
+                    otherPlayer.hidePlayer(Main.getInstance(), player);
+                    player.hidePlayer(Main.getInstance(), otherPlayer);
+
             }
             player.getInventory().clear();
             player.playSound(player.getLocation(), Sound.AMBIENT_CAVE, 1, 1);
@@ -204,15 +214,15 @@ public class Game {
                 }else{
                     for (Player player : arena.getPlayers()){
                         player.playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_AMBIENT,1 ,1);
-                        smoothTeleport(player, player.getLocation(), arena.getLocation().getSpawnLocation());
                     }
+                    smoothTeleport(arena.getPlayers().get(0).getLocation(), arena.getLocation().getSpawnLocation());
                     cancel();
                 }
             }
 
         }.runTaskTimer(Main.getInstance(), 0L, 20L);
     }
-    private void smoothTeleport(Player player, Location loc1, Location loc2) {
+    private void smoothTeleport(Location loc1, Location loc2) {
             new BukkitRunnable() {
                 double x1 = loc1.getX();
                 double y1 = loc1.getY();
@@ -233,14 +243,19 @@ public class Game {
                     y = (1-t) * y1 + t * y2;
                     z = (1-t) * z1 + t * z2;
                     if (t > 1){
-                        for (Player otherPlayer : arena.getPlayers()) {
-                            otherPlayer.showPlayer(Main.getInstance(), otherPlayer);
+                        for (Player player : arena.getPlayers()) {
+                            for (Player otherPlayer : arena.getPlayers()) {
+                                otherPlayer.showPlayer(Main.getInstance(), player);
+                                player.showPlayer(Main.getInstance(), otherPlayer);
+                            }
                         }
                         preparePlayers();
                         cancel();
                     }
                     else
-                        SmoothTeleportUtil.teleport(player, new Location(world, x, y, z));
+                        for (Player player : arena.getPlayers()){
+                            SmoothTeleportUtil.teleport(player, new Location(world, x, y, z));
+                        }
                 }
             }.runTaskTimer(Main.getInstance(), 0L, 1L);
     }
@@ -405,6 +420,7 @@ public class Game {
         double progress = (double) (aliveZombies - 2) / zombiesCount;
         if (progress <= 0) {
             bossbar.removeAll();
+            return;
         }
         bossbar.setTitle("Осталось зомби: " + (aliveZombies - 2));
         bossbar.setProgress(progress);
@@ -412,15 +428,23 @@ public class Game {
     public void startNewWave(){
         if(wavesCount == wave){
             stage++;
+            if (stage == (arena.getLocation().getStages().size()+1)){
+                arena.sendArenaTitle("&cВолна: " + wave, "Босс!");
+                return;
+            }
             wavesCount = wavesCount + arena.getLocation().getStages().get(stage - 1).wavesCount;
         }
         wave++;
-        zombiesCount = (int)((wave+2)*arena.getPlayers().size()*arena.getLocation().getLocationFactor());
+
+        zombiesCount = (int)(wave*arena.getPlayers().size()*arena.getLocation().getLocationFactor()+2+1);
         if(wave == wavesCount){
-            zombiesCount *= 10;
+            zombiesCount *= 2;
         }
         aliveZombies += zombiesCount;
-        arena.sendArenaTitle("Волна: " + wave, "Кол-во зомби: " + zombiesCount);
+        if (wave == wavesCount){
+            arena.sendArenaTitle("&cВолна: " + wave, "&cКол-во зомби: " + zombiesCount);
+        } else
+        {arena.sendArenaTitle("Волна: " + wave, "Кол-во зомби: " + zombiesCount);}
         sendBossBar();
         new BukkitRunnable(){
             int spawnedZombies = 0;

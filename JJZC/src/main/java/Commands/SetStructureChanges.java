@@ -65,6 +65,11 @@ public class SetStructureChanges implements CommandExecutor {
                     changesStr.add(coordsStr + ":" + entry.getValue().name());
                 }
                 stageSection.set("structureChanges",  changesStr);
+                try {
+                    config.save(file);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 BlockEventListener.editors.remove(editor);
                 return true;
             }

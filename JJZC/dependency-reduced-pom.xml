@@ -86,6 +86,12 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>com.github.NEZNAMY</groupId>
+      <artifactId>TAB-API</artifactId>
+      <version>5.0.7</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>com.ssomar.score</groupId>
       <artifactId>SCore</artifactId>
       <version>5.25.1.5</version>

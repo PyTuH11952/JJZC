@@ -1,5 +1,6 @@
 package Events;
 
+import Utils.ChatUtil;
 import Utils.KeyUtil;
 import com.mimikcraft.mcc.Main;
 import org.bukkit.Location;
