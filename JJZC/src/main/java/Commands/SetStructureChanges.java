@@ -43,6 +43,19 @@ public class SetStructureChanges implements CommandExecutor {
                     }
                 }
                 YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+                if(config.getConfigurationSection(locName.toLowerCase()) == null){
+                    config.createSection(locName.toLowerCase());
+
+                }
+                if(config.getConfigurationSection(locName.toLowerCase() + ".stages") == null){
+                    config.createSection(locName.toLowerCase() + ".stages");
+                }
+                if(config.getConfigurationSection(locName.toLowerCase() + ".stages.stage" + stage) == null){
+                    config.createSection(locName.toLowerCase() + ".stages.stage" + stage);
+                }
+                if(config.getConfigurationSection(locName.toLowerCase() + ".stages.stage" + stage + ".structureChanges") == null){
+                    config.createSection(locName.toLowerCase() + ".stages.stage" + stage + ".structureChanges");
+                }
                 ConfigurationSection stageSection = config.getConfigurationSection(locName.toLowerCase() + ".stages.stage" + stage);
                 Map<String, String> temp = new HashMap<>();
                 for(Map.Entry<Location, Material> entry : editor.changes.entrySet()){

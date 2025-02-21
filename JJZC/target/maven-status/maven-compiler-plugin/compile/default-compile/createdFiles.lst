@@ -1,4 +1,5 @@
 Arena\Game$3.class
+Commands\ChooseStructureChanges.class
 Events\KillsEventListener.class
 Commands\SetSpawnsCMD.class
 Arena\ArenaStages.class
@@ -7,6 +8,7 @@ Events\MenuEvents.class
 Arena\EmptyChunkGenerator.class
 Events\PlayerJoinEvent.class
 Utils\KeyUtil.class
+Commands\SetStructureChanges.class
 Events\BlockEventListener.class
 Arena\Game$2.class
 Arena\Game$4.class
@@ -16,3 +18,5 @@ Commands\GetChestCMD.class
 Utils\SmoothTeleportUtil.class
 Arena\Game$6.class
 Utils\WorldUtil.class
+Events\Editor.class
+Arena\CutScene.class

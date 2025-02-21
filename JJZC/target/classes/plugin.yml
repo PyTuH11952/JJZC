@@ -27,6 +27,10 @@ commands:
       - startgame
       - launchgame
       - start
+  choosestructurechanges:
+    usage: /chooseStructureChange
+  setstructurechanges:
+    usage: /setStructureChanges
 depend:
   - MythicMobs
   - Vault
