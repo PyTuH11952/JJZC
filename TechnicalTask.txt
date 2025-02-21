@@ -154,12 +154,14 @@ baseWorldName: <name>  - название мира базы
         - 'x y z yaw pitch'
 	- ...
       wavesCount: num - количество волн на этапе
-      structureChanges: {'x y z': blockType, ...}
+      structureChanges: 
+        - 'x y z:blockType'
+        - ...
     ...
   cutScene:
     locTitle: <string>  - название локации
     floorsTitle: <string>  - тайтл при показе этажей
-    doorsTittle: <string>  - тайтл при показе дверей
+    doorsTitle: <string>  - тайтл при показе дверей
     locShowLocation: 'x y z yaw pitch'  - координаты точки показа всей локации
     floorsLocations:  - координаты точек показа этажей
       - 'x y z yaw pitch'

@@ -16,7 +16,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SetStructureChanges implements CommandExecutor {
@@ -28,7 +30,7 @@ public class SetStructureChanges implements CommandExecutor {
         }
         Player player = (Player) commandSender;
         for(Editor editor : BlockEventListener.editors){
-            if(editor.player.getUniqueId().equals(player.getUniqueId())){
+            if(editor.player.getUniqueId().toString().equals(player.getUniqueId().toString())){
                 String locName = editor.locName;
                 int stage = editor.stage;
                 File folder = new File(Main.getInstance().getDataFolder().getAbsolutePath());
@@ -57,12 +59,12 @@ public class SetStructureChanges implements CommandExecutor {
                     config.createSection(locName.toLowerCase() + ".stages.stage" + stage + ".structureChanges");
                 }
                 ConfigurationSection stageSection = config.getConfigurationSection(locName.toLowerCase() + ".stages.stage" + stage);
-                Map<String, String> temp = new HashMap<>();
+                List<String> changesStr = new ArrayList<>();
                 for(Map.Entry<Location, Material> entry : editor.changes.entrySet()){
                     String coordsStr = entry.getKey().getX() + " " + entry.getKey().getY() + " " + entry.getKey().getZ() + " ";
-                    temp.put(coordsStr, entry.getValue().name());
+                    changesStr.add(coordsStr + ":" + entry.getValue().name());
                 }
-                stageSection.set("structureChanges", temp);
+                stageSection.set("structureChanges",  changesStr);
                 BlockEventListener.editors.remove(editor);
                 return true;
             }

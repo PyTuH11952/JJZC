@@ -96,14 +96,14 @@ public class ArenaLocation {
                 double z = Double.parseDouble(spawnerCordsStr[2]);
                 tempCordsList.add(new Location(world, x, y, z));
             }
-            HashMap<String, String> structureChangesStr = (HashMap) stageSection.get("structureChanges");
+            List<String> structureChangesStr = stageSection.getStringList("structureChanges");
             HashMap<Location, Material> structureChanges = new HashMap<>();
-            for(Map.Entry<String, String> entry : structureChangesStr.entrySet()){
-                String[] blockCordsStr = entry.getKey().split(" ");
+            for(String line : structureChangesStr){
+                String[] blockCordsStr = line.split(":")[0].split(" ");
                 double x = Double.parseDouble(blockCordsStr[0]);
                 double y = Double.parseDouble(blockCordsStr[1]);
                 double z = Double.parseDouble(blockCordsStr[2]);
-                structureChanges.put(new Location(world, x, y, z), Material.valueOf(entry.getValue().toUpperCase()));
+                structureChanges.put(new Location(world, x, y, z), Material.valueOf(line.split(":")[1].toUpperCase()));
             }
             int wavesCount = stageSection.getInt("wavesCount");
 
@@ -114,7 +114,7 @@ public class ArenaLocation {
         String locTitle = cutSceneSection.getString("locTitle");
         String floorsTitle = cutSceneSection.getString("floorsTitle");
         String doorsTitle = cutSceneSection.getString("doorsTitle");
-        String[] showLocCordsStr = cutSceneSection.getString("").split(" ");
+        String[] showLocCordsStr = cutSceneSection.getString("locShowLocation").split(" ");
         Location locShowLocation = new Location(world, Double.parseDouble(showLocCordsStr[0]), Double.parseDouble(showLocCordsStr[1]), Double.parseDouble(showLocCordsStr[2]), Float.parseFloat(showLocCordsStr[3]), Float.parseFloat(showLocCordsStr[4]));
         List<String> floorsLocationsStr = cutSceneSection.getStringList("floorsLocations");
         List<Location> floorsLocations = new ArrayList<>();

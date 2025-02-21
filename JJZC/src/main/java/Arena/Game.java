@@ -124,6 +124,7 @@ public class Game {
     }
 
     private void preparePlayers() {
+        startNewWave();
         for (Player player : arena.getPlayers()) {
             player.getInventory().clear();
             getkit(player);
@@ -233,10 +234,9 @@ public class Game {
                     z = (1-t) * z1 + t * z2;
                     if (t > 1){
                         for (Player otherPlayer : arena.getPlayers()) {
-                                otherPlayer.showPlayer(Main.getInstance(), otherPlayer);
+                            otherPlayer.showPlayer(Main.getInstance(), otherPlayer);
                         }
                         preparePlayers();
-                        startNewWave();
                         cancel();
                     }
                     else

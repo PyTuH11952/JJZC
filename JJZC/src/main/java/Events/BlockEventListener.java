@@ -27,7 +27,7 @@ public class BlockEventListener implements Listener {
     public void onBlockPlace(BlockPlaceEvent event){
         Player player = event.getPlayer();
         for(Editor editor : editors){
-            if(editor.player.getUniqueId().equals(player.getUniqueId())){
+            if(editor.player.getUniqueId().toString().equals(player.getUniqueId().toString())){
                 editors.get(editors.indexOf(editor)).changes.put(event.getBlockPlaced().getLocation(), event.getBlockPlaced().getType());
             }
         }
