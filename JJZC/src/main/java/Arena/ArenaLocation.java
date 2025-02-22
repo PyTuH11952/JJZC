@@ -30,6 +30,7 @@ public class ArenaLocation {
     private final List<Location> chests = new ArrayList<>();
     private final List<Zombie> zombies = new ArrayList<>();
     private final List<Stage> stages = new ArrayList<>();
+    private final Map<Location, Location> doors = new HashMap<>();
 
     public ArenaLocation(LocationTypes locationType, World world){
         this.world = world;
@@ -142,6 +143,23 @@ public class ArenaLocation {
             doorsLocations.add(new Location(world, Double.parseDouble(doorsCordsStr[0]), Double.parseDouble(doorsCordsStr[1]), Double.parseDouble(doorsCordsStr[2]), Float.parseFloat(doorsCordsStr[3]), Float.parseFloat(doorsCordsStr[4])));
         }
         cutScene = new CutScene(locTitle, floorsTitle, doorsTitle, locShowLocation, floorsLocations, doorsLocations);
+
+        ConfigurationSection doorsSection = locationSection.getConfigurationSection("doors");
+        Set<String> doorsKeys = doorsSection.getKeys(false);
+        for(String section : doorsKeys){
+            String[] doorCordsStr = doorsSection.getString(section + ".doorLocation").split(" ");
+            double doorX = Double.parseDouble(doorCordsStr[0]);
+            double doorY = Double.parseDouble(doorCordsStr[1]);
+            double doorZ = Double.parseDouble(doorCordsStr[2]);
+            Location doorLocation = new Location(world, doorX, doorY, doorZ);
+
+            String[] artCordsStr = doorsSection.getString(section + ".doorLocation").split(" ");
+            double artX = Double.parseDouble(artCordsStr[0]);
+            double artY = Double.parseDouble(artCordsStr[1]);
+            double artZ = Double.parseDouble(artCordsStr[2]);
+            Location artLocation = new Location(world, artX, artY, artZ);
+            doors.put(doorLocation, artLocation);
+        }
     }
 
     public Location getSpawnLocation() {
@@ -158,6 +176,10 @@ public class ArenaLocation {
 
     public List<Location> getChests() {
         return chests;
+    }
+
+    public Map<Location, Location> getDoors() {
+        return doors;
     }
 
     public List<Zombie> getZombies() {

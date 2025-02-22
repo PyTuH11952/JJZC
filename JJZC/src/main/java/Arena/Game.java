@@ -22,8 +22,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.util.*;
 
@@ -47,7 +45,7 @@ public class Game {
 
     private int zombiesCount = 0;
 
-    private int life = 3;
+    public int lifesCount = 3;
 
     private int addZombie;
 
@@ -56,13 +54,11 @@ public class Game {
     public final List<Entity> mobs = new ArrayList<>();
     public int aliveZombies = 0;
 
-    BossBar bossbar = Bukkit.getServer().createBossBar("Осталось зомби: " + (aliveZombies - 2), BarColor.BLUE, BarStyle.SOLID);
-
+    BossBar bossbar = Bukkit.getServer().createBossBar("Осталось зомби: 0", BarColor.BLUE, BarStyle.SOLID);
 
     public Game(Arena arena) {
         this.arena = arena;
     }
-
 
 
     public void start() {
@@ -134,7 +130,7 @@ public class Game {
     }
 
     private void preparePlayers() {
-        for (Player player : arena.getPlayers()) {
+        for (Player player : arena.getPlayers().keySet()) {
             player.getInventory().clear();
             getkit(player);
             player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
@@ -151,11 +147,11 @@ public class Game {
     }
 
     private void showCutScene(String titleLoc, String titleStages, String titleDoors, Location showLoc, List<Location> showStages, List<Location> showDoors) {
-        for (Player player : arena.getPlayers()) {
+        for (Player player : arena.getPlayers().keySet()) {
             player.setGameMode(GameMode.SPECTATOR);
             TabPlayer tabPlayer = TabAPI.getInstance().getPlayer(player.getUniqueId());
             TabAPI.getInstance().getScoreboardManager().toggleScoreboard(tabPlayer, false);
-            for (Player otherPlayer : arena.getPlayers()) {
+            for (Player otherPlayer : arena.getPlayers().keySet()) {
                     otherPlayer.hidePlayer(Main.getInstance(), player);
                     player.hidePlayer(Main.getInstance(), otherPlayer);
 
@@ -172,7 +168,7 @@ public class Game {
             @Override
             public void run(){
                 if(!bob){
-                    for(Player player : arena.getPlayers()){
+                    for(Player player : arena.getPlayers().keySet()){
                         player.teleport(showLoc);
                     }
                     arena.sendArenaTitle(titleLoc, "");
@@ -192,7 +188,7 @@ public class Game {
             @Override
             public void run(){
                 if(i < showStages.size()){
-                    for(Player player : arena.getPlayers()){
+                    for(Player player : arena.getPlayers().keySet()){
                         player.teleport(showStages.get(i));
                         player.playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK,1,1);
                     }
@@ -213,16 +209,16 @@ public class Game {
             @Override
             public void run(){
                 if(i < showDoors.size()){
-                    for(Player player : arena.getPlayers()){
+                    for(Player player : arena.getPlayers().keySet()){
                         player.teleport(showDoors.get(i));
                         player.playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK, 1, 1);
                     }
                     i++;
                 }else{
-                    for (Player player : arena.getPlayers()){
+                    for (Player player : arena.getPlayers().keySet()){
                         player.playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_AMBIENT,1 ,1);
                     }
-                    smoothTeleport(arena.getPlayers().get(0).getLocation(), arena.getLocation().getSpawnLocation());
+                    smoothTeleport(new ArrayList<>(arena.getPlayers().keySet()).get(0).getLocation(), arena.getLocation().getSpawnLocation());
                     cancel();
                 }
             }
@@ -250,8 +246,8 @@ public class Game {
                     y = (1-t) * y1 + t * y2;
                     z = (1-t) * z1 + t * z2;
                     if (t > 1){
-                        for (Player player : arena.getPlayers()) {
-                            for (Player otherPlayer : arena.getPlayers()) {
+                        for (Player player : arena.getPlayers().keySet()) {
+                            for (Player otherPlayer : arena.getPlayers().keySet()) {
                                 otherPlayer.showPlayer(Main.getInstance(), player);
                                 player.showPlayer(Main.getInstance(), otherPlayer);
                             }
@@ -260,13 +256,13 @@ public class Game {
                         cancel();
                     }
                     else
-                        for (Player player : arena.getPlayers()){
+                        for (Player player : arena.getPlayers().keySet()){
                             SmoothTeleportUtil.teleport(player, new Location(world, x, y, z));
                         }
                 }
             }.runTaskTimer(Main.getInstance(), 0L, 1L);
     }
-    private void spawnMob(Location location, String name){
+    public void spawnMob(Location location, String name){
         new BukkitRunnable(){
             boolean isParticlesSpawned = false;
             @Override
@@ -276,8 +272,8 @@ public class Game {
                     arena.getArenaWorld().playSound(location, Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 1, 1);
                     isParticlesSpawned = true;
                 }else{
-                    ActiveMob mythicentity = MythicBukkit.inst().getMobManager().spawnMob(name, location, hardLevel);
-                    Entity entity = mythicentity.getEntity().getBukkitEntity();
+                    ActiveMob mythicEntity = MythicBukkit.inst().getMobManager().spawnMob(name, location, hardLevel);
+                    Entity entity = mythicEntity.getEntity().getBukkitEntity();
                     mobs.add(entity);
                     cancel();
                 }
@@ -291,7 +287,7 @@ public class Game {
             entity.setGlowing(true);
         }
     }
-    private void additems(Location location, ItemStack item) {
+    private void addItems(Location location, ItemStack item) {
         Block block = location.getBlock();
         Inventory inv;
         Random random = new Random();
@@ -307,7 +303,7 @@ public class Game {
 
     }
 
-    private ItemStack getitem (String itemid, int count) {
+    private ItemStack getItem(String itemid, int count) {
         ItemStack item = null;
         Optional<ExecutableItemInterface> eiOpt = ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(itemid);
         if (eiOpt.isPresent()) {
@@ -340,49 +336,49 @@ public class Game {
 
             if (d < 0.39) {
                 int tir1armor = random.nextInt(11) + 1;
-                additems(location, getitem("tir1armor" + tir1armor, 1));
+                addItems(location, getItem("tir1armor" + tir1armor, 1));
             } else if (d < 0.78) {
                 int tir1armor = random.nextInt(9) + 1;
-                additems(location, getitem("tir1weapon" + tir1armor, 1));
+                addItems(location, getItem("tir1weapon" + tir1armor, 1));
             } else if (d < 0.83) {
                 int tir2armor = random.nextInt(7) + 1;
-                additems(location, getitem("tir2armor" + tir2armor, 1));
+                addItems(location, getItem("tir2armor" + tir2armor, 1));
             } else if (d < 0.88) {
                 int tir2weapon = random.nextInt(3) + 1;
-                additems(location, getitem("tir2weapon" + tir2weapon, 1));
+                addItems(location, getItem("tir2weapon" + tir2weapon, 1));
             } else if (d < 0.91) {
                 int tir3armor = random.nextInt(7) + 1;
-                additems(location, getitem("tir3armor" + tir3armor, 1));
+                addItems(location, getItem("tir3armor" + tir3armor, 1));
             } else if (d < 0.94) {
                 int tir3weapon = random.nextInt(2) + 1;
-                additems(location, getitem("tir3weapon" + tir3weapon, 1));
+                addItems(location, getItem("tir3weapon" + tir3weapon, 1));
             } else if (d < 0.96) {
                 int tir4armor = random.nextInt(7) + 1;
-                additems(location, getitem("tir4armor" + tir4armor, 1));
+                addItems(location, getItem("tir4armor" + tir4armor, 1));
             } else if (d < 0.98) {
                 int tir4weapon = random.nextInt(2) + 1;
-                additems(location, getitem("tir4weapon" + tir4weapon, 1));
+                addItems(location, getItem("tir4weapon" + tir4weapon, 1));
             } else if (d < 0.99) {
                 int tir5armor = random.nextInt(7) + 1;
-                additems(location, getitem("tir5armor" + tir5armor, 1));
+                addItems(location, getItem("tir5armor" + tir5armor, 1));
             } else {
                 int tir5weapon = random.nextInt(2) + 1;
-                additems(location, getitem("tir5weapon" + tir5weapon, 1));
+                addItems(location, getItem("tir5weapon" + tir5weapon, 1));
             }
         }
         for (int i = 0; i <= materialCount; i++) {
             double d = Math.random();
             int matcount = random.nextInt(2) + 1;
             if (d < 0.5) {
-                additems(location, getitem("material1", matcount));
+                addItems(location, getItem("material1", matcount));
             } else if (d < 0.75) {
-                additems(location, getitem("material2", matcount));
+                addItems(location, getItem("material2", matcount));
             } else if (d < 0.9) {
-                additems(location, getitem("material3", matcount));
+                addItems(location, getItem("material3", matcount));
             } else if (d < 0.97) {
-                additems(location, getitem("material4", matcount));
+                addItems(location, getItem("material4", matcount));
             } else {
-                additems(location, getitem("material5", matcount));
+                addItems(location, getItem("material5", matcount));
             }
         }
         for (int i = 0; i <= differentCount; i++){
@@ -390,22 +386,22 @@ public class Game {
             int diffcount = random.nextInt(2) + 1;
             if (d < 0.7){
                 int eda = random.nextInt(4) + 1;
-                additems(location, getitem("eda" + eda, diffcount));
+                addItems(location, getItem("eda" + eda, diffcount));
             } else if (d < 0.77){
                 int bomba = random.nextInt(4) + 1;
-                additems(location, getitem("bomba" + bomba, 1));
+                addItems(location, getItem("bomba" + bomba, 1));
             } else if (d < 0.84){
-                additems(location, getitem("repair", 1));
+                addItems(location, getItem("repair", 1));
             } else if (d < 0.91){
-                additems(location, getitem("hpregen", 1));
+                addItems(location, getItem("hpregen", 1));
             } else if (d < 0.97){
-                additems(location, getitem("dopitem2", 1));
+                addItems(location, getItem("dopitem2", 1));
             } else if (d < 0.98){
-                additems(location, getitem("dopitem1", 1));
+                addItems(location, getItem("dopitem1", 1));
             } else if (d < 0.99){
-                additems(location, getitem("lom", 1));
+                addItems(location, getItem("lom", 1));
             } else {
-                additems(location, getitem("lom2", 1));
+                addItems(location, getItem("lom2", 1));
             }
         }
         for (int i = 0; i <= locItemCount; i++){
@@ -413,7 +409,7 @@ public class Game {
             int loccount = random.nextInt(2) + 1;
             int lootcount = random.nextInt(3) + 1;
             if (d < 0.02){
-                additems(location, getitem("loc"+locationNumber+"loot"+lootcount, loccount));
+                addItems(location, getItem("loc"+locationNumber+"loot"+lootcount, loccount));
             }
 
 
@@ -421,13 +417,13 @@ public class Game {
     }
 
     public void sendBossBar() {
-        for (Player player : arena.getPlayers()) {
+        for (Player player : arena.getPlayers().keySet()) {
             bossbar.addPlayer(player);
         }
-        if (wave == 1){
-            bossbarProgress = (double) aliveZombies / zombiesCount;
-        } else{
-            bossbarProgress = (double) (aliveZombies - addZombie) / zombiesCount;
+         if (wave == 1){
+            bossbarProgress = (double) mobs.size() / zombiesCount;
+        }else{
+            bossbarProgress = (double) (mobs.size() - addZombie) / zombiesCount;
         }
         if (bossbarProgress <= 0) {
             bossbar.removeAll();
@@ -450,13 +446,17 @@ public class Game {
 
         zombiesCount = (int)(wave*arena.getPlayers().size()*arena.getLocation().getLocationFactor()+addZombie+1);
         if(wave == wavesCount){
+            for(Map.Entry<Location, Material> entry : arena.getLocation().getStages().get(stage).structureChanges.entrySet()){
+                arena.getArenaWorld().getBlockAt(entry.getKey()).setType(entry.getValue());
+            }
             zombiesCount *= 2;
         }
         aliveZombies += zombiesCount;
         if (wave == wavesCount){
             arena.sendArenaTitle("&cВолна: " + wave, "&cКол-во зомби: " + zombiesCount);
-        } else
-        {arena.sendArenaTitle("Волна: " + wave, "Кол-во зомби: " + zombiesCount);}
+        } else {
+            arena.sendArenaTitle("Волна: " + wave, "Кол-во зомби: " + zombiesCount);
+        }
         sendBossBar();
         new BukkitRunnable(){
             int spawnedZombies = 0;
@@ -511,7 +511,7 @@ public class Game {
             entity.remove();
         }
         arena.sendArenaTitle("&aПобеда!", "");
-        for (Player player : arena.getPlayers()){
+        for (Player player : arena.getPlayers().keySet()){
             ChatUtil.sendMessage(player, "&c&lАрена перезагрузиться через 10 секунд...");
         }
         new BukkitRunnable() {

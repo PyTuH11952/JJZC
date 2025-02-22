@@ -1,8 +1,14 @@
 package Events;
 
+import Arena.Arena;
+import Arena.ArenaList;
 import Utils.ChatUtil;
 import Utils.KeyUtil;
+import com.mimikcraft.mcc.ExecutableApi;
 import com.mimikcraft.mcc.Main;
+import com.ssomar.score.api.executableitems.ExecutableItemsAPI;
+import com.ssomar.score.api.executableitems.config.ExecutableItemsManagerInterface;
+import com.ssomar.sevents.events.player.click.right.PlayerRightClickEvent;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -79,6 +85,30 @@ public class BlockEventListener implements Listener {
         for(Editor editor : editors){
             if(editor.player.getUniqueId().equals(player.getUniqueId())){
                 editors.get(editors.indexOf(editor)).changes.put(event.getBlock().getLocation(), Material.AIR);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onRightClikEvent(PlayerRightClickEvent e){
+        Location lowerBlockLocation = e.getBlock().getLocation();
+        lowerBlockLocation.setY(e.getBlock().getLocation().getBlockY() - 1);
+        if(ArenaList.get(e.getPlayer()).getLocation().getDoors().containsKey(e.getBlock().getLocation())
+                || ArenaList.get(e.getPlayer()).getLocation().getDoors().containsKey(lowerBlockLocation)){
+            if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(e.getPlayer().getInventory().getItemInMainHand()).isPresent()){
+                if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(e.getPlayer().getInventory().getItemInMainHand()).get().getId().equals("lom")){
+                    if(Math.random() * 10 > 5){
+                        e.getPlayer().getWorld().getBlockAt(e.getBlock().getLocation()).setType(Material.AIR);
+                        if(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(e.getBlock().getLocation()) != null){
+                            ArenaList.get(e.getPlayer()).getGame().spawnMob(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(e.getBlock().getLocation()), "art");
+                        }else if(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(lowerBlockLocation) != null){
+                            ArenaList.get(e.getPlayer()).getGame().spawnMob(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(lowerBlockLocation), "art");
+                        }
+                    }
+                    e.getPlayer().getInventory().remove(e.getPlayer().getInventory().getItemInMainHand());
+                }else if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(e.getPlayer().getInventory().getItemInMainHand()).get().getId().equals("lom2")){
+
+                }
             }
         }
     }

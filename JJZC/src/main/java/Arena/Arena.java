@@ -42,7 +42,7 @@ public class Arena {
     private final Game game;
     private ArenaLocation location;
 
-    private final List<Player> players = new ArrayList<>();
+    private final Map<Player, Map<ArtifactsTypes, Integer>> players = new HashMap<>();
     private final List<Player> ghosts = new ArrayList<>();
     private final List<Player> leavedPlayers = new ArrayList<>();
 
@@ -68,7 +68,7 @@ public class Arena {
 
     public void reset(){
         arenaStage = ArenaStages.RESET;
-        for (Player player : players){
+        for (Player player : players.keySet()){
             leave(player);
         }
         Bukkit.unloadWorld(Bukkit.getWorld(name), true);;
@@ -98,7 +98,7 @@ public class Arena {
             ChatUtil.sendMessage(player, "Вы уже сбежали с этой игры! Вернуться нельзя.");
             return;
         }
-        players.add(player);
+        players.put(player, new HashMap<>());
         playerExp.put(player,player.getExp());
         playerLvl.put(player,player.getLevel());
         player.setExp(0.0f);
@@ -150,7 +150,7 @@ public class Arena {
         players.remove(player);
         if(arenaStage == ArenaStages.IN_PROCESS){
             leavedPlayers.add(player);
-            sendArenaMessage(player.getDisplayName() + "сбежал!");
+            sendArenaMessage(player.getDisplayName() + " сбежал!");
         }else{
             sendArenaMessage(player.getDisplayName() + " отключился!");
         }
@@ -160,35 +160,47 @@ public class Arena {
         }
     }
 
+    public void playerDie(Player player){
+        ghosts.add(player);
+        player.setGameMode(GameMode.SPECTATOR);
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "effect give @a[distance=0..3] instant_health");
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "effect give @e[distance=0..3, tag=zombie] slowness");
+            }
+        }.runTaskTimer(Main.getInstance(), 0L, 20L);
+    }
+
     public void setLocationType(ArenaLocation.LocationTypes locationType){
         location = new ArenaLocation(locationType, arenaWorld);
     }
 
     public void sendArenaMessage(String message){
-        for (Player player : players){
+        for (Player player : players.keySet()){
             ChatUtil.sendMessage(player, message);
         }
     }
 
     public void sendArenaTitle (String message, String subMessage){
-        for (Player player : players){
+        for (Player player : players.keySet()){
             player.sendTitle(ChatColor.translateAlternateColorCodes('&', message), ChatColor.translateAlternateColorCodes('&', subMessage), 10, 40, 10);
         }
     }
 
     public void expTimerArena (int value){
-        for (Player player : players){
+        for (Player player : players.keySet()){
             player.setLevel(value);
         }
     }
     public void expSoundArena (){
-        for (Player player : players){
+        for (Player player : players.keySet()){
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1,1);
         }
     }
 
     public void setPlayerExp(){
-        for (Player player : players){
+        for (Player player : players.keySet()){
             if(playerExp.get(player) == 0 || playerLvl.get(player) == 0){
                 return;
             }
@@ -224,7 +236,7 @@ public class Arena {
     }
 
 
-    public List<Player> getPlayers() {
+    public Map<Player, Map<ArtifactsTypes, Integer>> getPlayers() {
         return players;
     }
 

@@ -22,8 +22,8 @@ public final class Main extends JavaPlugin {
         getServer().getPluginCommand("launch").setExecutor(new LaunchCMD());
         getServer().getPluginCommand("setspawns").setExecutor(new SetSpawnsCMD());
         getServer().getPluginCommand("getchest").setExecutor(new GetChestCMD());
-        getServer().getPluginCommand("choosestructurechanges").setExecutor(new ChooseStructureChanges());
-        getServer().getPluginCommand("setstructurechanges").setExecutor(new SetStructureChanges());
+        getServer().getPluginCommand("choosestructurechanges").setExecutor(new ChooseStructureChangesCMD());
+        getServer().getPluginCommand("setstructurechanges").setExecutor(new SetStructureChangesCMD());
         getServer().getPluginManager().registerEvents(new KillsEventListener(), this);
         getServer().getPluginManager().registerEvents(new BlockEventListener(), this);
         instance = this;

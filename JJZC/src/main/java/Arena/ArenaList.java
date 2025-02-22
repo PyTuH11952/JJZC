@@ -29,7 +29,7 @@ public class ArenaList {
     public static Arena get(Player player) {
 
         for (Arena arena : arenas) {
-            if (arena.getPlayers().contains(player)) {
+            if (arena.getPlayers().containsKey(player)) {
                 return arena;
             }
         }

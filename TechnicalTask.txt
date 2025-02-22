@@ -142,6 +142,9 @@ baseWorldName: <name>  - название мира базы
   lcationFactor: double  - коэффицент локации
   lobbyLocation: 'x y z'  - коориднаты комнаты ожидания
   spawnLocation: 'x y z'  - точка спавна на локации
+  addZombie: <кол-во добавленных зомби>
+  bossName: <название босса>
+  bossLocation: <координаты спавна босса>
   chests:  - координаты сундуков
     - 'x y z'
     - ...  
@@ -157,6 +160,11 @@ baseWorldName: <name>  - название мира базы
       structureChanges: 
         - 'x y z:blockType'
         - ...
+    ...
+  doors: 
+    door1:
+      doorLocation: 'x y z'
+      artifactSpawnLocation: 'x y z'
     ...
   cutScene:
     locTitle: <string>  - название локации
