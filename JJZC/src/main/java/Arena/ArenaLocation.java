@@ -21,9 +21,12 @@ public class ArenaLocation {
 
     private Location spawnLocation;
     private Location lobbyLocation;
+    private Location bossLocation;
     private World world;
     private CutScene cutScene;
     private double locationFactor;
+    private int addZombie;
+    private String bossName;
     private final List<Location> chests = new ArrayList<>();
     private final List<Zombie> zombies = new ArrayList<>();
     private final List<Stage> stages = new ArrayList<>();
@@ -63,7 +66,17 @@ public class ArenaLocation {
         double lobbyZ = Double.parseDouble(lobbyCoordinatesStr[2]);
         lobbyLocation = new Location(world, lobbyX, lobbyY, lobbyZ);
 
+        String[] bossCoordinatesStr = locationSection.getString("bossLocation").split(" ");
+        double bossX = Double.parseDouble(bossCoordinatesStr[0]);
+        double bossY = Double.parseDouble(bossCoordinatesStr[1]);
+        double bossZ = Double.parseDouble(bossCoordinatesStr[2]);
+        bossLocation = new Location(world, bossX, bossY, bossZ);
+
         locationFactor = Double.parseDouble(locationSection.getString("locationFactor"));
+
+        addZombie = Integer.parseInt(locationSection.getString("addZombie"));
+
+        bossName = (locationSection.getString("bossName"));
 
         List<String> chestsCoordinatesStr = locationSection.getStringList("chests");
         for(String chestCords : chestsCoordinatesStr){
@@ -139,6 +152,10 @@ public class ArenaLocation {
         return lobbyLocation;
     }
 
+    public Location getBossLocation(){
+        return bossLocation;
+    }
+
     public List<Location> getChests() {
         return chests;
     }
@@ -153,6 +170,14 @@ public class ArenaLocation {
 
     public double getLocationFactor(){
         return locationFactor;
+    }
+
+    public int getAddZombie(){
+        return addZombie;
+    }
+
+    public String getBossName(){
+        return bossName;
     }
 
     public LocationTypes getLocationType() {

@@ -39,13 +39,19 @@ public class Game {
 
     private int wavesCount;
 
-    private int infinityWave = 1;
+    private int infinityWave = 0;
+
+    private boolean isInfinity = false;
 
     private int stage = 0;
 
     private int zombiesCount = 0;
 
     private int life = 3;
+
+    private int addZombie;
+
+    private double bossbarProgress;
 
     public final List<Entity> mobs = new ArrayList<>();
     public int aliveZombies = 0;
@@ -140,7 +146,8 @@ public class Game {
             TabPlayer tabPlayer = TabAPI.getInstance().getPlayer(player.getUniqueId());
             TabAPI.getInstance().getScoreboardManager().toggleScoreboard(tabPlayer, true);
         }
-                startNewWave();
+        addZombie = arena.getLocation().getAddZombie();
+        startNewWave();
     }
 
     private void showCutScene(String titleLoc, String titleStages, String titleDoors, Location showLoc, List<Location> showStages, List<Location> showDoors) {
@@ -417,26 +424,31 @@ public class Game {
         for (Player player : arena.getPlayers()) {
             bossbar.addPlayer(player);
         }
-        double progress = (double) (aliveZombies - 2) / zombiesCount;
-        if (progress <= 0) {
+        if (wave == 1){
+            bossbarProgress = (double) aliveZombies / zombiesCount;
+        } else{
+            bossbarProgress = (double) (aliveZombies - addZombie) / zombiesCount;
+        }
+        if (bossbarProgress <= 0) {
             bossbar.removeAll();
             return;
         }
-        bossbar.setTitle("Осталось зомби: " + (aliveZombies - 2));
-        bossbar.setProgress(progress);
+        bossbar.setTitle("Осталось зомби: " + (aliveZombies - addZombie));
+        bossbar.setProgress(bossbarProgress);
     }
     public void startNewWave(){
         if(wavesCount == wave){
             stage++;
             if (stage == (arena.getLocation().getStages().size()+1)){
                 arena.sendArenaTitle("&cВолна: " + wave, "Босс!");
+                spawnMob(arena.getLocation().getBossLocation(), arena.getLocation().getBossName());
                 return;
             }
             wavesCount = wavesCount + arena.getLocation().getStages().get(stage - 1).wavesCount;
         }
         wave++;
 
-        zombiesCount = (int)(wave*arena.getPlayers().size()*arena.getLocation().getLocationFactor()+2+1);
+        zombiesCount = (int)(wave*arena.getPlayers().size()*arena.getLocation().getLocationFactor()+addZombie+1);
         if(wave == wavesCount){
             zombiesCount *= 2;
         }
@@ -491,6 +503,27 @@ public class Game {
                 spawnMob(arena.getLocation().getStages().get(stage - 1).spawners.get((int)(Math.random() * spawnersCount)), zombieName);
             }
         }.runTaskTimer(Main.getInstance(), 0L, 20L);
+    }
+
+    public void endGame() {
+        arena.setArenaStage(ArenaStages.GAME_ENDED);
+        for (Entity entity : mobs){
+            entity.remove();
+        }
+        arena.sendArenaTitle("&aПобеда!", "");
+        for (Player player : arena.getPlayers()){
+            ChatUtil.sendMessage(player, "&c&lАрена перезагрузиться через 10 секунд...");
+        }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                arena.reset();
+            }
+        }.runTaskLater(Main.getInstance(), 200);
+    }
+
+    public boolean isInfinity() {
+        return isInfinity;
     }
 }
 

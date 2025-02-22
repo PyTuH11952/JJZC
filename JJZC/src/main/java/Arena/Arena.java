@@ -29,8 +29,6 @@ public class Arena {
 
     private final int timeToStart = 10;
 
-    private boolean isInfinity = false;
-
     private World arenaWorld;
 
     private final Map<Player, Location> onJoinLocation = new HashMap<>();
@@ -70,6 +68,9 @@ public class Arena {
 
     public void reset(){
         arenaStage = ArenaStages.RESET;
+        for (Player player : players){
+            leave(player);
+        }
         Bukkit.unloadWorld(Bukkit.getWorld(name), true);;
         World source = Bukkit.getWorld("zombie");
         File sourceFolder = source.getWorldFolder();
@@ -247,10 +248,6 @@ public class Arena {
 
     public Game getGame(){
         return game;
-    }
-
-    public void setInfinity(boolean infinity) {
-        isInfinity = infinity;
     }
 
     public ArenaStages getArenaStage() {

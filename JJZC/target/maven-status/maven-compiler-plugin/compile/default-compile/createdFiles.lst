@@ -7,6 +7,7 @@ Arena\Game$5.class
 Events\MenuEvents.class
 Arena\EmptyChunkGenerator.class
 Events\PlayerJoinEvent.class
+Arena\Game$7.class
 Utils\KeyUtil.class
 Commands\SetStructureChanges.class
 Events\BlockEventListener.class
