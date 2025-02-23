@@ -462,6 +462,7 @@ public class Game {
             int spawnedZombies = 0;
             @Override
             public void run() {
+                sendBossBar();
                 if(spawnedZombies == (zombiesCount-1)){
                     cancel();
                 }

@@ -137,6 +137,14 @@ JustJoyZombierubkaCore functional list:
 Структура базового конфига "config.yml":
 baseWorldName: <name>  - название мира базы
 
+Структура конфига с артефктами "Artifacts.yml":
+Artifacts:
+  <Название артефакта>: 
+    levelsSpawnChances: 
+      - <шанс спавна>
+      - ...
+  ...
+
 Структруа конфига с локациями "Locations.yml":
 <Название локации>:
   lcationFactor: double  - коэффицент локации
