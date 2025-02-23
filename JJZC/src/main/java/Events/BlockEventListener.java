@@ -139,9 +139,8 @@ public class BlockEventListener implements Listener {
         Map<String, Double> artifacts = new HashMap<>();
         Set<String> artifactsNames = artifactsSection.getKeys(false);
         for(String artifact : artifactsNames){
-            ConfigurationSection artifactSection = artifactsSection.getConfigurationSection(artifact);
-            for(int i = 0; i < artifactSection.getDoubleList("levelsSpawnChances").size(); i++){
-                artifacts.put(artifact + "_" + i + 1, artifactSection.getDoubleList("levelsSpawnChances").get(i));
+            for(int i = 0; i < artifactsSection.getDoubleList(artifact).size(); i++){
+                artifacts.put(artifact + "_" + i + 1, artifactsSection.getDoubleList(artifact).get(i));
             }
         }
         int random = (int)(Math.random() * 10000);
