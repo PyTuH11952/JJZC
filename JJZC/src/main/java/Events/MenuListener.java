@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.persistence.PersistentDataType;
 
-public class MenuEvents implements Listener {
+public class MenuListener implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent e){

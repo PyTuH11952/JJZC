@@ -421,9 +421,9 @@ public class Game {
             bossbar.addPlayer(player);
         }
          if (wave == 1){
-            bossbarProgress = (double) mobs.size() / zombiesCount;
+            bossbarProgress = (double) (mobs.size() + addZombie) / zombiesCount;
         }else{
-            bossbarProgress = (double) (mobs.size() - addZombie) / zombiesCount;
+            bossbarProgress = (double) mobs.size() / zombiesCount;
         }
         if (bossbarProgress <= 0) {
             bossbar.removeAll();
@@ -446,7 +446,7 @@ public class Game {
 
         zombiesCount = (int)(wave*arena.getPlayers().size()*arena.getLocation().getLocationFactor()+addZombie+1);
         if(wave == wavesCount){
-            for(Map.Entry<Location, Material> entry : arena.getLocation().getStages().get(stage).structureChanges.entrySet()){
+            for(Map.Entry<Location, Material> entry : arena.getLocation().getStages().get(stage - 1).structureChanges.entrySet()){
                 arena.getArenaWorld().getBlockAt(entry.getKey()).setType(entry.getValue());
             }
             zombiesCount *= 2;

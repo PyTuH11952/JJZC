@@ -140,7 +140,7 @@ public class BlockEventListener implements Listener {
         Set<String> artifactsNames = artifactsSection.getKeys(false);
         for(String artifact : artifactsNames){
             for(int i = 0; i < artifactsSection.getDoubleList(artifact).size(); i++){
-                artifacts.put(artifact + "_" + i + 1, artifactsSection.getDoubleList(artifact).get(i));
+                artifacts.put(artifact + "_" + (i + 1), artifactsSection.getDoubleList(artifact).get(i));
             }
         }
         int random = (int)(Math.random() * 10000);

@@ -26,6 +26,12 @@ public final class Main extends JavaPlugin {
         getServer().getPluginCommand("setstructurechanges").setExecutor(new SetStructureChangesCMD());
         getServer().getPluginManager().registerEvents(new KillsEventListener(), this);
         getServer().getPluginManager().registerEvents(new BlockEventListener(), this);
+        getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
+        getServer().getPluginManager().registerEvents(new MenuListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+
         instance = this;
         for(int i = 0; i <= maxArenas; i++){
             Arena arena = new Arena("arena"+i);
