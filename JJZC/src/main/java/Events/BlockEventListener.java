@@ -9,6 +9,7 @@ import com.mimikcraft.mcc.Main;
 import com.ssomar.score.api.executableitems.ExecutableItemsAPI;
 import com.ssomar.score.api.executableitems.config.ExecutableItemsManagerInterface;
 import com.ssomar.sevents.events.player.click.right.PlayerRightClickEvent;
+import net.milkbowl.vault.chat.Chat;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -91,7 +92,7 @@ public class BlockEventListener implements Listener {
 
     @EventHandler
     public void onRightClikEvent(PlayerRightClickEvent e){
-        if(e.getBlock().getType().isAir()){
+        if(e.getBlock() == null){
             return;
         }
         Location lowerBlockLocation = e.getBlock().getLocation();
@@ -107,16 +108,20 @@ public class BlockEventListener implements Listener {
                         }else if(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(lowerBlockLocation) != null){
                             spawnRandomArtifact(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(lowerBlockLocation), ArenaList.get(e.getPlayer()));
                         }
+                    }else{
+                        ChatUtil.sendMessage(e.getPlayer(), "&cНе удалось открыть дверб");
                     }
-                    e.getPlayer().getInventory().remove(e.getPlayer().getInventory().getItemInMainHand());
+                    ItemStack air = new ItemStack(Material.AIR, 1);
+                    e.getPlayer().getInventory().setItemInMainHand(air);
                 }else if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(e.getPlayer().getInventory().getItemInMainHand()).get().getId().equals("lom2")){
                     e.getPlayer().getWorld().getBlockAt(e.getBlock().getLocation()).setType(Material.AIR);
                     if(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(e.getBlock().getLocation()) != null){
-                        ArenaList.get(e.getPlayer()).getGame().spawnMob(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(e.getBlock().getLocation()), "art");
+                        spawnRandomArtifact(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(e.getBlock().getLocation()), ArenaList.get(e.getPlayer()));
                     }else if(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(lowerBlockLocation) != null){
-                        ArenaList.get(e.getPlayer()).getGame().spawnMob(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(lowerBlockLocation), "art");
+                        spawnRandomArtifact(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(lowerBlockLocation), ArenaList.get(e.getPlayer()));
                     }
-                    e.getPlayer().getInventory().remove(e.getPlayer().getInventory().getItemInMainHand());
+                    ItemStack air = new ItemStack(Material.AIR, 1);
+                    e.getPlayer().getInventory().setItemInMainHand(air);
                 }
             }
         }

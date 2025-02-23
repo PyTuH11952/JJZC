@@ -13,13 +13,12 @@ Events\KillsEventListener.class
 Commands\SetSpawnsCMD.class
 Events\PlayerInteractListener$1.class
 Arena\ArenaStages.class
-Events\MenuEvents.class
 Arena\EmptyChunkGenerator.class
 Events\PlayerDeathListener.class
-Events\PlayerJoinEvent.class
 Arena\ArtifactsTypes.class
 Arena\Game$7.class
 Events\PlayerInteractListener$2.class
+Events\MenuListener.class
 Arena\Game$2.class
 Arena\Game$4.class
 Arena\Arena$2.class
@@ -27,4 +26,5 @@ Commands\GetChestCMD.class
 Utils\SmoothTeleportUtil.class
 Commands\ChooseStructureChangesCMD.class
 Utils\WorldUtil.class
+Events\PlayerJoinListener.class
 Arena\CutScene.class

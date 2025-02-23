@@ -13,6 +13,15 @@ public class MenuListener implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent e){
+        if(e.getInventory().getItem(e.getSlot()) == null){
+            return;
+        }
+        if(!e.getInventory().getItem(e.getSlot()).hasItemMeta()){
+            return;
+        }
+        if(e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.buttonKey, PersistentDataType.STRING) == null){
+            return;
+        }
         if(e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.buttonKey, PersistentDataType.STRING).equals("exit")){
             e.setCancelled(true);
             Player player = (Player)e.getWhoClicked();
