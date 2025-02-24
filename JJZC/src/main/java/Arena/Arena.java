@@ -8,14 +8,14 @@ import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 import static Utils.WorldUtil.copyWorld;
 
@@ -172,6 +172,7 @@ public class Arena {
         }.runTaskTimer(Main.getInstance(), 0L, 20L);
     }
 
+
     public void setLocationType(ArenaLocation.LocationTypes locationType){
         location = new ArenaLocation(locationType, arenaWorld);
     }
@@ -228,6 +229,40 @@ public class Arena {
         }
         ChatUtil.sendMessage(player, "&cНе удалось определить локацию");
         return true;
+    }
+
+    public void spawnRandomArtifact(Location location){
+        File folder = new File(Main.getInstance().getDataFolder().getAbsolutePath());
+
+        File file = new File(folder.getAbsolutePath() + "/Artifacts.yml");
+
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+        ConfigurationSection artifactsSection = config.getConfigurationSection("Artifacts");
+        Map<String, Double> artifacts = new HashMap<>();
+        Set<String> artifactsNames = artifactsSection.getKeys(false);
+        for(String artifact : artifactsNames){
+            for(int i = 0; i < artifactsSection.getDoubleList(artifact).size(); i++){
+                artifacts.put(artifact + "_" + (i + 1), artifactsSection.getDoubleList(artifact).get(i));
+            }
+        }
+        int random = (int)(Math.random() * 10000);
+        int temp = 0;
+        String artifactName = "";
+        for(Map.Entry<String, Double> entry : artifacts.entrySet()){
+            temp += (int) (entry.getValue() * 100);
+            if(random <= temp){
+                artifactName = entry.getKey();
+                break;
+            }
+        }
+        getGame().spawnMythicEntity(location, artifactName);
     }
 
 

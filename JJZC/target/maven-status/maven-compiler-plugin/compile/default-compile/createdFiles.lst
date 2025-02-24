@@ -1,5 +1,7 @@
+Arena\Game$8.class
 Arena\Game$5.class
 Utils\KeyUtil.class
+Arena\Game$9.class
 Events\BlockEventListener.class
 Commands\SetStructureChangesCMD.class
 Arena\Zombie.class
@@ -11,6 +13,7 @@ Events\Editor.class
 Arena\Game$3.class
 Events\KillsEventListener.class
 Commands\SetSpawnsCMD.class
+Events\MobSpawnEventListener.class
 Events\PlayerInteractListener$1.class
 Arena\ArenaStages.class
 Arena\EmptyChunkGenerator.class

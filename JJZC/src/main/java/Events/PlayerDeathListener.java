@@ -15,6 +15,8 @@ public class PlayerDeathListener implements Listener {
         if(arena.getGame().lifesCount > 0){
             if(arena.getPlayers().get(e.getEntity()).containsKey(ArtifactsTypes.CONTRACT)){
                 if((int)(Math.random() * 10) <= arena.getPlayers().get(e.getEntity()).get(ArtifactsTypes.CONTRACT)){
+                    e.getEntity().getPlayer().sendTitle("Вас спасла сила контракта!", "");
+                    arena.sendArenaMessage("&aИгрок &e" + e.getEntity().getPlayer() + " &aизбежал смерти благодаря &eконтракту");
                     return;
                 }
             }

@@ -12,6 +12,7 @@ import com.ssomar.sevents.events.player.click.right.PlayerRightClickEvent;
 import net.milkbowl.vault.chat.Chat;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -103,62 +104,36 @@ public class BlockEventListener implements Listener {
                 if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(e.getPlayer().getInventory().getItemInMainHand()).get().getId().equals("lom")){
                     if(Math.random() * 10 > 5){
                         e.getPlayer().getWorld().getBlockAt(e.getBlock().getLocation()).setType(Material.AIR);
+                        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_IRON_DOOR_OPEN, 1, 1);
+                        ChatUtil.sendMessage(e.getPlayer(), "&eДверь открыта!");
                         if(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(e.getBlock().getLocation()) != null){
-                            spawnRandomArtifact(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(e.getBlock().getLocation()), ArenaList.get(e.getPlayer()));
+                            ArenaList.get(e.getPlayer()).spawnRandomArtifact(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(e.getBlock().getLocation()));
                         }else if(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(lowerBlockLocation) != null){
-                            spawnRandomArtifact(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(lowerBlockLocation), ArenaList.get(e.getPlayer()));
+                            ArenaList.get(e.getPlayer()).spawnRandomArtifact(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(lowerBlockLocation));
                         }
                     }else{
-                        ChatUtil.sendMessage(e.getPlayer(), "&cНе удалось открыть дверб");
+                        e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_IRON_TRAPDOOR_CLOSE, 1, 1);
+                        ChatUtil.sendMessage(e.getPlayer(), "&cНе удалось открыть дверь");
                     }
                     ItemStack air = new ItemStack(Material.AIR, 1);
                     e.getPlayer().getInventory().setItemInMainHand(air);
                 }else if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(e.getPlayer().getInventory().getItemInMainHand()).get().getId().equals("lom2")){
                     e.getPlayer().getWorld().getBlockAt(e.getBlock().getLocation()).setType(Material.AIR);
                     if(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(e.getBlock().getLocation()) != null){
-                        spawnRandomArtifact(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(e.getBlock().getLocation()), ArenaList.get(e.getPlayer()));
+                        ArenaList.get(e.getPlayer()).spawnRandomArtifact(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(e.getBlock().getLocation()));
                     }else if(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(lowerBlockLocation) != null){
-                        spawnRandomArtifact(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(lowerBlockLocation), ArenaList.get(e.getPlayer()));
+                        ArenaList.get(e.getPlayer()).spawnRandomArtifact(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(lowerBlockLocation));
                     }
                     ItemStack air = new ItemStack(Material.AIR, 1);
                     e.getPlayer().getInventory().setItemInMainHand(air);
+                    e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_IRON_DOOR_OPEN, 1, 1);
+                    ChatUtil.sendMessage(e.getPlayer(), "&eДверь открыта!");
                 }
+            }else {
+                ChatUtil.sendMessage(e.getPlayer(), "&cНеобходим лом!");
             }
         }
     }
 
-    private void spawnRandomArtifact(Location location, Arena arena){
-        File folder = new File(Main.getInstance().getDataFolder().getAbsolutePath());
-
-        File file = new File(folder.getAbsolutePath() + "/Artifacts.yml");
-
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        ConfigurationSection artifactsSection = config.getConfigurationSection("Artifacts");
-        Map<String, Double> artifacts = new HashMap<>();
-        Set<String> artifactsNames = artifactsSection.getKeys(false);
-        for(String artifact : artifactsNames){
-            for(int i = 0; i < artifactsSection.getDoubleList(artifact).size(); i++){
-                artifacts.put(artifact + "_" + (i + 1), artifactsSection.getDoubleList(artifact).get(i));
-            }
-        }
-        int random = (int)(Math.random() * 10000);
-        int temp = 0;
-        String artifactName = "";
-        for(Map.Entry<String, Double> entry : artifacts.entrySet()){
-            temp += (int) (entry.getValue() * 100);
-            if(random <= temp){
-                artifactName = entry.getKey();
-                break;
-            }
-        }
-        arena.getGame().spawnMob(location, artifactName);
-    }
 }
 

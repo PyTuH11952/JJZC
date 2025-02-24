@@ -21,6 +21,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -51,14 +53,19 @@ public class Game {
 
     private double bossbarProgress;
 
+    private int spawnersCount;
+
     public final List<Entity> mobs = new ArrayList<>();
+
     public int aliveZombies = 0;
+
 
     BossBar bossbar = Bukkit.getServer().createBossBar("Осталось зомби: 0", BarColor.BLUE, BarStyle.SOLID);
 
     public Game(Arena arena) {
         this.arena = arena;
     }
+
 
 
     public void start() {
@@ -263,25 +270,22 @@ public class Game {
             }.runTaskTimer(Main.getInstance(), 0L, 1L);
     }
     public void spawnMob(Location location, String name){
+        arena.getArenaWorld().spawnParticle(Particle.FLAME, location,10, 0.3, 0.3, 0.3, 0);
+        arena.getArenaWorld().playSound(location, Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 1, 1);
         new BukkitRunnable(){
-            boolean isParticlesSpawned = false;
             @Override
             public void run(){
-                if(!isParticlesSpawned){
-                    arena.getArenaWorld().spawnParticle(Particle.FLAME, location,10, 0.3, 0.3, 0.3, 0);
-                    arena.getArenaWorld().playSound(location, Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 1, 1);
-                    isParticlesSpawned = true;
-                }else{
-                    ActiveMob mythicEntity = MythicBukkit.inst().getMobManager().spawnMob(name, location, hardLevel);
-                    Entity entity = mythicEntity.getEntity().getBukkitEntity();
-                    mobs.add(entity);
-                    cancel();
+                 ActiveMob mythicEntity = MythicBukkit.inst().getMobManager().spawnMob(name, location, hardLevel);
+                 Entity entity = mythicEntity.getEntity().getBukkitEntity();
+                 cancel();
                 }
-            }
-
-        }.runTaskTimer(Main.getInstance(), 0L, 20L);
-
+        }.runTaskLater(Main.getInstance(),20L);
     }
+
+    public void spawnMythicEntity(Location location, String name){
+                ActiveMob mythicEntity = MythicBukkit.inst().getMobManager().spawnMob(name, location, hardLevel);
+    }
+
     private void glowing(){
         for (Entity entity : mobs) {
             entity.setGlowing(true);
@@ -420,12 +424,12 @@ public class Game {
         for (Player player : arena.getPlayers().keySet()) {
             bossbar.addPlayer(player);
         }
-         if (wave == 1){
-            bossbarProgress = (double) (mobs.size() + addZombie) / zombiesCount;
-        }else{
-            bossbarProgress = (double) mobs.size() / zombiesCount;
+        if (wave == 1){
+            bossbarProgress = (double)(mobs.size()-addZombie)/(double)(zombiesCount-addZombie);
+        } else{
+            bossbarProgress = (double)(mobs.size()-addZombie)/(double)zombiesCount;
         }
-        if (bossbarProgress <= 0) {
+        if (bossbarProgress <= 0.0) {
             bossbar.removeAll();
             return;
         }
@@ -433,13 +437,14 @@ public class Game {
         bossbar.setProgress(bossbarProgress);
     }
     public void startNewWave(){
+        if (wavesCount == (wave+1) && stage == arena.getLocation().getStages().size()){
+            arena.sendArenaTitle("Босс!", "");
+            clearMobs();
+            spawnMythicEntity(arena.getLocation().getBossLocation(), arena.getLocation().getBossName());
+            return;
+        }
         if(wavesCount == wave){
             stage++;
-            if (stage == (arena.getLocation().getStages().size()+1)){
-                arena.sendArenaTitle("&cВолна: " + wave, "Босс!");
-                spawnMob(arena.getLocation().getBossLocation(), arena.getLocation().getBossName());
-                return;
-            }
             wavesCount = wavesCount + arena.getLocation().getStages().get(stage - 1).wavesCount;
         }
         wave++;
@@ -457,17 +462,15 @@ public class Game {
         } else {
             arena.sendArenaTitle("Волна: " + wave, "Кол-во зомби: " + zombiesCount);
         }
-        sendBossBar();
         new BukkitRunnable(){
             int spawnedZombies = 0;
             @Override
             public void run() {
-                sendBossBar();
                 if(spawnedZombies == (zombiesCount-1)){
                     cancel();
                 }
                 spawnedZombies++;
-                int spawnersCount = arena.getLocation().getStages().get(stage - 1).spawners.size();
+                spawnersCount = arena.getLocation().getStages().get(stage - 1).spawners.size();
 
                 String zombieName = "";
                 List<Zombie> tempZombies = arena.getLocation().getZombies();
@@ -506,6 +509,58 @@ public class Game {
         }.runTaskTimer(Main.getInstance(), 0L, 20L);
     }
 
+    public void dopWave(){
+        int randomMiniGame = (int)(1 + Math.random() * 4);
+        spawnersCount = arena.getLocation().getStages().get(stage - 1).spawners.size();
+        clearMobs();
+        switch (randomMiniGame){
+            case 1:
+                arena.sendArenaTitle("Дополнительная волна!","Минибосс");
+                int randomValue = (int) (1 + Math.random() * 3);
+                spawnMob(arena.getLocation().getBossLocation(), "miniboss"+randomValue);
+                break;
+            case 2:
+                arena.sendArenaTitle("Дополнительная волна!","Пеньята");
+                spawnMob(arena.getLocation().getBossLocation(), "peniata");
+                break;
+            case 3:
+                arena.sendArenaTitle("Дополнительная волна!","Загрязнение");
+                addZombie *= 3;
+                zombiesCount = (int)(wave*arena.getPlayers().size()*arena.getLocation().getLocationFactor()*10+addZombie+1);
+                aliveZombies += zombiesCount/10;
+                new BukkitRunnable(){
+                    int spawnedZombies = 0;
+                    @Override
+                    public void run(){
+                        if(spawnedZombies == (zombiesCount/10-1)){
+                            cancel();
+                        }
+                        spawnedZombies++;
+                        spawnMob(arena.getLocation().getStages().get(stage - 1).spawners.get((int)(Math.random() * spawnersCount)), "kaka");
+                    }
+                }.runTaskTimer(Main.getInstance(), 0, 20);
+                break;
+            case 4:
+                arena.sendArenaTitle("Дополнительная волна!","Тротиловые зомби");
+                addZombie = 0;
+                zombiesCount = (int)(wave*arena.getPlayers().size()*arena.getLocation().getLocationFactor()/2+addZombie+1);
+                aliveZombies += zombiesCount;
+                new BukkitRunnable(){
+                    int spawnedZombies = 0;
+                    @Override
+                    public void run(){
+                        if(spawnedZombies == (zombiesCount-1)){
+                            cancel();
+                        }
+                        spawnedZombies++;
+                        spawnMob(arena.getLocation().getStages().get(stage - 1).spawners.get((int)(Math.random() * spawnersCount)), "bombzombie");
+                    }
+                }.runTaskTimer(Main.getInstance(), 0, 20);
+                break;
+        }
+
+    }
+
     public void endGame() {
         arena.setArenaStage(ArenaStages.GAME_ENDED);
         for (Entity entity : mobs){
@@ -519,12 +574,29 @@ public class Game {
             @Override
             public void run() {
                 arena.reset();
+                cancel();
             }
         }.runTaskLater(Main.getInstance(), 200);
     }
 
+    public void clearMobs(){
+        for (Entity entity : mobs){
+            entity.remove();
+        }
+        mobs.clear();
+        aliveZombies = 0;
+    }
+
     public boolean isInfinity() {
         return isInfinity;
+    }
+
+    public void setAddZombie(int addZombie) {
+        this.addZombie = addZombie;
+    }
+
+    public int getAddZombie() {
+        return addZombie;
     }
 }
 
