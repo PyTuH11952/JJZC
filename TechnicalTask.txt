@@ -134,6 +134,15 @@ JustJoyZombierubkaCore functional list:
 3. 3 станция
 4. 4 станция
 
+Плейсхолдеры:
+
+%JJZC_zombieKills% - убийства зомби в игре
+%JJZC_lifesCount% - кол-во жизней
+%JJZC_hardLevel% - уровень сложности
+%JJZC_gameProgress% - прогресс прохождения (в %)
+%JJZC_glowingTime% - время до подсветки зомби (в сек.)
+
+
 Структура базового конфига "config.yml":
 baseWorldName: <name>  - название мира базы
 

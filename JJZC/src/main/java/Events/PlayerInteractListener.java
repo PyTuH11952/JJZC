@@ -99,7 +99,7 @@ public class PlayerInteractListener implements Listener {
                     break;
                 case "totem":
                     arena.sendArenaMessage("&aИгрок &e" + player.getDisplayName() + " &aполучил артефакт" + " &eтотем бессмертия " + artefactLevelString);
-                    arena.getGame().lifesCount += artefactLevel;
+                    arena.getGame().setLifesCount(arena.getGame().getLifesCount()+artefactLevel);
                     break;
             }
             arena.getPlayers().get(player).put(ArtifactsTypes.valueOf(artefactName.toUpperCase()), artefactLevel);

@@ -3,6 +3,7 @@ package com.mimikcraft.mcc;
 import Arena.Arena;
 import Commands.*;
 import Events.*;
+import org.bukkit.Bukkit;
 import org.bukkit.WorldCreator;
 import org.bukkit.plugin.java.JavaPlugin;
 import Arena.ArenaList;
@@ -12,6 +13,7 @@ public final class Main extends JavaPlugin {
     private static Main instance;
 
     private final int maxArenas = 3;
+
 
     @Override
     public void onEnable() {
@@ -32,6 +34,10 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getServer().getPluginManager().registerEvents(new MobSpawnEventListener(), this);
+
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) { //
+            new Expansion(this).register(); //
+        }
 
         instance = this;
         for(int i = 0; i <= maxArenas; i++){

@@ -2,12 +2,15 @@ package Events;
 
 import Arena.Arena;
 import Arena.ArenaList;
+import Utils.ChatUtil;
 import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+
+import java.util.HashMap;
 
 import static com.mimikcraft.mcc.ExecutableApi.giveExecutableItem;
 
@@ -21,6 +24,20 @@ public class KillsEventListener implements Listener {
                 arena.getGame().mobs.remove(e.getEntity());
                 arena.getGame().aliveZombies -= 1;
                 arena.getGame().sendBossBar();
+                if (e.getKiller() != null){
+                    if (e.getKiller() instanceof Player){
+                        Player player = ((Player) e.getKiller()).getPlayer();
+                        if (arena.getGame().getPlayerKills().get(player) != null){
+                            int kills = (arena.getGame().getPlayerKills().get(player)+1);
+                            arena.getGame().getPlayerKills().put(player, kills);
+                        } else{
+                            arena.getGame().getPlayerKills().put(player, 1);
+                        }
+                    }
+                }
+                if (arena.getGame().aliveZombies == (arena.getLocation().getAddZombie()*2) && !arena.getGame().isGlowingTimer()){
+                    arena.getGame().glowing();
+                }
                 if(arena.getGame().aliveZombies <= arena.getLocation().getAddZombie()){
                     arena.getGame().startNewWave();
                 }

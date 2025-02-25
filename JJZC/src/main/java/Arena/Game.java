@@ -47,7 +47,7 @@ public class Game {
 
     private int zombiesCount = 0;
 
-    public int lifesCount = 3;
+    private int lifesCount = 3;
 
     private int addZombie;
 
@@ -58,6 +58,16 @@ public class Game {
     public final List<Entity> mobs = new ArrayList<>();
 
     public int aliveZombies = 0;
+
+    private int gameProgress = 0;
+
+    private int glowingTime = 60;
+
+    private boolean glowingTimer = false;
+
+    private double maxWave = 0;
+
+    private Map<Player, Integer> playerKills = new HashMap<>();
 
 
     BossBar bossbar = Bukkit.getServer().createBossBar("Осталось зомби: 0", BarColor.BLUE, BarStyle.SOLID);
@@ -286,10 +296,27 @@ public class Game {
                 ActiveMob mythicEntity = MythicBukkit.inst().getMobManager().spawnMob(name, location, hardLevel);
     }
 
-    private void glowing(){
-        for (Entity entity : mobs) {
-            entity.setGlowing(true);
-        }
+    public void glowing(){
+        glowingTime = 60;
+        glowingTimer = true;
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                if (!glowingTimer){
+                    cancel();
+                }
+                if (glowingTime == 0){
+                    for (Entity entity : mobs) {
+                        entity.setGlowing(true);
+                    }
+                    glowingTimer = false;
+                    cancel();
+                } else{
+                    glowingTime--;
+                }
+
+            }
+        }.runTaskTimer(Main.getInstance(), 0, 20);
     }
     private void addItems(Location location, ItemStack item) {
         Block block = location.getBlock();
@@ -437,10 +464,17 @@ public class Game {
         bossbar.setProgress(bossbarProgress);
     }
     public void startNewWave(){
+        glowingTimer = false;
+        if (wave == 0){
+            for (int i = 0; i < arena.getLocation().getStages().size(); i++){
+                maxWave += arena.getLocation().getStages().get(i).wavesCount;
+            }
+        }
         if (wavesCount == (wave+1) && stage == arena.getLocation().getStages().size()){
             arena.sendArenaTitle("Босс!", "");
             clearMobs();
             spawnMythicEntity(arena.getLocation().getBossLocation(), arena.getLocation().getBossName());
+            wave++;
             return;
         }
         if(wavesCount == wave){
@@ -449,6 +483,7 @@ public class Game {
         }
         wave++;
 
+        gameProgress = (int)((double)wave/maxWave*(double)100);
         zombiesCount = (int)(wave*arena.getPlayers().size()*arena.getLocation().getLocationFactor()+addZombie+1);
         if(wave == wavesCount){
             for(Map.Entry<Location, Material> entry : arena.getLocation().getStages().get(stage - 1).structureChanges.entrySet()){
@@ -597,6 +632,42 @@ public class Game {
 
     public int getAddZombie() {
         return addZombie;
+    }
+
+    public Map<Player, Integer> getPlayerKills() {
+        return playerKills;
+    }
+
+    public int getLifesCount() {
+        return lifesCount;
+    }
+
+    public int getHardLevel() {
+        return hardLevel;
+    }
+
+    public void setLifesCount(int lifesCount) {
+        this.lifesCount = lifesCount;
+    }
+
+    public void setHardLevel(int hardLevel) {
+        this.hardLevel = hardLevel;
+    }
+
+    public int getGameProgress() {
+        return gameProgress;
+    }
+
+    public int getGlowingTime() {
+        return glowingTime;
+    }
+
+    public boolean isGlowingTimer() {
+        return glowingTimer;
+    }
+
+    public void setGlowingTimer(boolean glowingTimer) {
+        this.glowingTimer = glowingTimer;
     }
 }
 

@@ -12,7 +12,7 @@ public class PlayerDeathListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e){
         Arena arena = ArenaList.get(e.getEntity());
-        if(arena.getGame().lifesCount > 0){
+        if(arena.getGame().getLifesCount() > 0){
             if(arena.getPlayers().get(e.getEntity()).containsKey(ArtifactsTypes.CONTRACT)){
                 if((int)(Math.random() * 10) <= arena.getPlayers().get(e.getEntity()).get(ArtifactsTypes.CONTRACT)){
                     e.getEntity().getPlayer().sendTitle("Вас спасла сила контракта!", "");
@@ -20,7 +20,7 @@ public class PlayerDeathListener implements Listener {
                     return;
                 }
             }
-            arena.getGame().lifesCount -= 1;
+            arena.getGame().setLifesCount(arena.getGame().getLifesCount()-1);;
         }else{
             arena.playerDie(e.getEntity());
         }

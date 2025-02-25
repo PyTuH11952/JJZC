@@ -38,5 +38,6 @@ depend:
 softdepend:
   - ExecutableItems
   - SCore
+  - PlaceholderAPI
 
 
