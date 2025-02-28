@@ -47,4 +47,16 @@ public class ArenaList {
         return  false;
     }
 
+    public static List<Arena> getAvailable(Player player){
+        List<Arena> temp = new ArrayList<>();
+        for(Arena arena : arenas){
+            if(arena.getArenaStage() == ArenaStages.IN_PROCESS || arena.getArenaStage() == ArenaStages.STARTING){
+                if(arena.canJoin(player)){
+                    temp.add(arena);
+                }
+            }
+        }
+        return temp;
+    }
+
 }

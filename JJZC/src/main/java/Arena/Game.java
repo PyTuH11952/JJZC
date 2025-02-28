@@ -35,7 +35,7 @@ public class Game {
 
     private int hardLevel = 1;
 
-    private int wave = 0;
+    public int wave = 0;
 
     private int wavesCount;
 
@@ -43,7 +43,7 @@ public class Game {
 
     private boolean isInfinity = false;
 
-    private int stage = 0;
+    public int stage = 0;
 
     private int zombiesCount = 0;
 

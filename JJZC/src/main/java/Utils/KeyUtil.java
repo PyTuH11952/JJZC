@@ -6,4 +6,5 @@ import org.bukkit.NamespacedKey;
 public class KeyUtil {
     public static final NamespacedKey locationKey = new NamespacedKey(Main.getInstance(), "location");
     public static final NamespacedKey buttonKey = new NamespacedKey(Main.getInstance(), "button");
+    public static final NamespacedKey arenaKey = new NamespacedKey(Main.getInstance(), "arena");
 }

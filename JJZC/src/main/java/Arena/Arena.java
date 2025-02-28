@@ -212,21 +212,19 @@ public class Arena {
 
     public boolean canJoin(Player player) {
 
-        if (getLocation().getLocationType() == ArenaLocation.LocationTypes.HOSPITAL) {
-            return true;
-        } else if (getLocation().getLocationType() == ArenaLocation.LocationTypes.MALL) {
-            if (player.hasPermission("loc1.1")) {return true;}
-            else {return false;}
-        } else if (getLocation().getLocationType() == ArenaLocation.LocationTypes.GARAGE) {
-            if (player.hasPermission("loc2.1")) {return true;}
-            else {return false;}
-        } else if (getLocation().getLocationType() == ArenaLocation.LocationTypes.FACTORY) {
-            if (player.hasPermission("loc3.1")) {return true;}
-            else {return false;}
-        } else if (getLocation().getLocationType() == ArenaLocation.LocationTypes.METRO) {
-            if (player.hasPermission("loc4.1")) {return true;}
-            else {return false;}
+        switch(getLocation().getLocationType()){
+            case HOSPITAL:
+                return true;
+            case MALL:
+                return player.hasPermission("loc1.1");
+            case GARAGE:
+                return player.hasPermission("loc2.1");
+            case FACTORY:
+                return player.hasPermission("loc3.1");
+            case METRO:
+                return player.hasPermission("loc4.1");
         }
+
         ChatUtil.sendMessage(player, "&cНе удалось определить локацию");
         return true;
     }

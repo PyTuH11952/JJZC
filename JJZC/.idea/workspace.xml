@@ -10,34 +10,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="826ec8dd-69ce-4dea-9d10-7bbbf4b43755" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/mimikcraft/mcc/Expansion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dependency-reduced-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dependency-reduced-pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/ArenaList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/ArenaList.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Arena/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Events/KillsEventListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Events/KillsEventListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Events/PlayerDeathListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Events/PlayerDeathListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Events/PlayerInteractListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Events/PlayerInteractListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mimikcraft/mcc/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mimikcraft/mcc/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Commands/JoinCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands/JoinCMD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Events/MenuListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Events/MenuListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Utils/KeyUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Utils/KeyUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/MCC-1.0.0-shaded.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/MCC-1.0.0-shaded.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/MCC-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/MCC-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Game$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Game$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Game$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Game$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Game$5.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Game$6.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Game$7.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Game$8.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Game$9.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Arena.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Arena.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Arena/ArenaList.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/ArenaList.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Game.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Events/KillsEventListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Events/KillsEventListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Events/PlayerDeathListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Events/PlayerDeathListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Events/PlayerInteractListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Events/PlayerInteractListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/mimikcraft/mcc/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mimikcraft/mcc/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/plugin.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/original-MCC-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/original-MCC-1.0.0.jar" afterDir="false" />
     </list>
@@ -140,16 +124,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/Arena/Arena.java</url>
-          <line>44</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
