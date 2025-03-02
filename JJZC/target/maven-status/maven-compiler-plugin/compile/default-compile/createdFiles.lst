@@ -1,3 +1,4 @@
+Events\PlayerConnectionEventListener.class
 Arena\Game$8.class
 Arena\Arena$3.class
 Arena\Game$5.class
@@ -28,6 +29,7 @@ Arena\Game$2.class
 Arena\Game$4.class
 Arena\Arena$2.class
 com\mimikcraft\mcc\Expansion.class
+Arena\Game$11.class
 Commands\GetChestCMD.class
 Utils\SmoothTeleportUtil.class
 Commands\ChooseStructureChangesCMD.class

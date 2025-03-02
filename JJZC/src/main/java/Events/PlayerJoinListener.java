@@ -13,7 +13,6 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onJoin(PlayerChangedWorldEvent e){
         if(e.getFrom().getName().equals(Main.getInstance().getConfig().getString("baseWorldName"))){
-            e.getPlayer().teleport(Bukkit.getWorld(Main.getInstance().getConfig().getString("baseWorldName")).getSpawnLocation());
             if(ArenaList.get(e.getPlayer()) != null){
                 Arena arena = ArenaList.get(e.getPlayer());
                 arena.join(e.getPlayer());

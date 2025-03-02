@@ -80,8 +80,9 @@ public class Arena {
         copyWorld(sourceFolder, file);
         WorldCreator wc = new WorldCreator(name).generator(new EmptyChunkGenerator());
         wc.createWorld();
-        arenaStage = ArenaStages.CLOSED;
         game = new Game(this);
+        players.clear();
+        arenaStage = ArenaStages.CLOSED;
     }
 
     public void join(Player player){
@@ -101,13 +102,13 @@ public class Arena {
             ChatUtil.sendMessage(player, "Вы уже сбежали с этой игры! Вернуться нельзя.");
             return;
         }
-        players.put(player, new HashMap<>());
         playerExp.put(player,player.getExp());
         playerLvl.put(player,player.getLevel());
         player.setExp(0.0f);
         onJoinLocation.put(player, player.getLocation());
         sendArenaMessage(player.getDisplayName() + " присоединился!");
         player.getInventory().clear();
+        player.getActivePotionEffects().clear();
         if (arenaStage == ArenaStages.WAITING){
             player.teleport(new Location(Bukkit.getWorld(name), location.getLobbyLocation().getX(),location.getLobbyLocation().getY(), location.getLobbyLocation().getZ()));
         } else{
@@ -125,6 +126,7 @@ public class Arena {
         if (players.size() == 1 && arenaStage != ArenaStages.CLOSED) {
             startGame();
         }
+        players.put(player, new HashMap<>());
 
     }
 
@@ -175,7 +177,9 @@ public class Arena {
             reset();
         }
         player.teleport(onJoinLocation.get(player));
-        game.removeBossBar();
+        game.removeBossBar(player);
+        player.getInventory().clear();
+        player.getActivePotionEffects().clear();
     }
 
     public void playerDie(Player player){
@@ -188,6 +192,9 @@ public class Arena {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "effect give @e[distance=0..3, tag=zombie] slowness");
             }
         }.runTaskTimer(Main.getInstance(), 0L, 20L);
+        if (ghosts.size() >= players.size()){
+            game.endGameBad();
+        }
     }
 
 

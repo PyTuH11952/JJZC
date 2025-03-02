@@ -449,8 +449,8 @@ public class Game {
 
         }
     }
-    public void removeBossBar() {
-        bossbar.removeAll();
+    public void removeBossBar(Player player) {
+        bossbar.removePlayer(player);
         }
     public void sendBossBar() {
         for (Player player : arena.getPlayers().keySet()) {
@@ -665,6 +665,24 @@ public class Game {
             entity.remove();
         }
         arena.sendArenaTitle("&aПобеда!", "");
+        for (Player player : arena.getPlayers().keySet()){
+            ChatUtil.sendMessage(player, "&c&lАрена перезагрузиться через 10 секунд...");
+        }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                arena.reset();
+                cancel();
+            }
+        }.runTaskLater(Main.getInstance(), 200);
+    }
+
+    public void endGameBad() {
+        arena.setArenaStage(ArenaStages.GAME_ENDED);
+        for (Entity entity : mobs){
+            entity.remove();
+        }
+        arena.sendArenaTitle("&cПоражение!", "");
         for (Player player : arena.getPlayers().keySet()){
             ChatUtil.sendMessage(player, "&c&lАрена перезагрузиться через 10 секунд...");
         }

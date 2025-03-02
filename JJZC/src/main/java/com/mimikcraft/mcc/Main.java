@@ -34,6 +34,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getServer().getPluginManager().registerEvents(new MobSpawnEventListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerConnectionEventListener(), this);
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) { //
             new Expansion(this).register(); //
