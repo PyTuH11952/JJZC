@@ -71,7 +71,7 @@ public class KillsEventListener implements Listener {
             if(e.getMob().getFaction().equals("MiniBoss")){
                 arena.getGame().startNewWave();
                 Location location = new Location(Bukkit.getWorld(e.getMob().getLocation().getWorld().getName()), e.getMob().getLocation().getX(), e.getMob().getLocation().getY(),e.getMob().getLocation().getZ());
-                arena.spawnRandomArtifact(location);
+                arena.getGame().spawnRandomArtifact(location);
             }
 
             if(e.getMob().getFaction().equals("Peniata")){
@@ -82,7 +82,7 @@ public class KillsEventListener implements Listener {
                 if (arena.getGame().isInfinity()){
                     arena.getGame().startNewWave();
                 } else{
-                    arena.getGame().endGame();
+                    arena.getGame().win();
                 }
 
             }

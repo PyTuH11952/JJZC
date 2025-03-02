@@ -111,9 +111,9 @@ public class BlockEventListener implements Listener {
                         e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_IRON_DOOR_OPEN, 1, 1);
                         ChatUtil.sendMessage(e.getPlayer(), "&eДверь открыта!");
                         if(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(e.getBlock().getLocation()) != null){
-                            ArenaList.get(e.getPlayer()).spawnRandomArtifact(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(e.getBlock().getLocation()));
+                            ArenaList.get(e.getPlayer()).getGame().spawnRandomArtifact(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(e.getBlock().getLocation()));
                         }else if(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(lowerBlockLocation) != null){
-                            ArenaList.get(e.getPlayer()).spawnRandomArtifact(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(lowerBlockLocation));
+                            ArenaList.get(e.getPlayer()).getGame().spawnRandomArtifact(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(lowerBlockLocation));
                         }
                     }else{
                         e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.BLOCK_IRON_TRAPDOOR_CLOSE, 1, 1);
@@ -124,9 +124,9 @@ public class BlockEventListener implements Listener {
                 }else if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(e.getPlayer().getInventory().getItemInMainHand()).get().getId().equals("lom2")){
                     e.getPlayer().getWorld().getBlockAt(e.getBlock().getLocation()).setType(Material.AIR);
                     if(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(e.getBlock().getLocation()) != null){
-                        ArenaList.get(e.getPlayer()).spawnRandomArtifact(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(e.getBlock().getLocation()));
+                        ArenaList.get(e.getPlayer()).getGame().spawnRandomArtifact(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(e.getBlock().getLocation()));
                     }else if(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(lowerBlockLocation) != null){
-                        ArenaList.get(e.getPlayer()).spawnRandomArtifact(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(lowerBlockLocation));
+                        ArenaList.get(e.getPlayer()).getGame().spawnRandomArtifact(ArenaList.get(e.getPlayer()).getLocation().getDoors().get(lowerBlockLocation));
                     }
                     ItemStack air = new ItemStack(Material.AIR, 1);
                     e.getPlayer().getInventory().setItemInMainHand(air);

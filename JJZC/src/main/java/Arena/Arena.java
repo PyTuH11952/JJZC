@@ -193,8 +193,27 @@ public class Arena {
             }
         }.runTaskTimer(Main.getInstance(), 0L, 20L);
         if (ghosts.size() >= players.size()){
-            game.endGameBad();
+            game.loose();
         }
+    }
+
+    public boolean canJoin(Player player) {
+
+        switch(getLocation().getLocationType()){
+            case HOSPITAL:
+                return true;
+            case MALL:
+                return player.hasPermission("loc1.1");
+            case GARAGE:
+                return player.hasPermission("loc2.1");
+            case FACTORY:
+                return player.hasPermission("loc3.1");
+            case METRO:
+                return player.hasPermission("loc4.1");
+        }
+
+        ChatUtil.sendMessage(player, "&cНе удалось определить локацию");
+        return true;
     }
 
 
@@ -234,60 +253,6 @@ public class Arena {
             player.setLevel(playerLvl.get(player));
         }
     }
-
-    public boolean canJoin(Player player) {
-
-        switch(getLocation().getLocationType()){
-            case HOSPITAL:
-                return true;
-            case MALL:
-                return player.hasPermission("loc1.1");
-            case GARAGE:
-                return player.hasPermission("loc2.1");
-            case FACTORY:
-                return player.hasPermission("loc3.1");
-            case METRO:
-                return player.hasPermission("loc4.1");
-        }
-
-        ChatUtil.sendMessage(player, "&cНе удалось определить локацию");
-        return true;
-    }
-
-    public void spawnRandomArtifact(Location location){
-        File folder = new File(Main.getInstance().getDataFolder().getAbsolutePath());
-
-        File file = new File(folder.getAbsolutePath() + "/Artifacts.yml");
-
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        ConfigurationSection artifactsSection = config.getConfigurationSection("Artifacts");
-        Map<String, Double> artifacts = new HashMap<>();
-        Set<String> artifactsNames = artifactsSection.getKeys(false);
-        for(String artifact : artifactsNames){
-            for(int i = 0; i < artifactsSection.getDoubleList(artifact).size(); i++){
-                artifacts.put(artifact + "_" + (i + 1), artifactsSection.getDoubleList(artifact).get(i));
-            }
-        }
-        int random = (int)(Math.random() * 10000);
-        int temp = 0;
-        String artifactName = "";
-        for(Map.Entry<String, Double> entry : artifacts.entrySet()){
-            temp += (int) (entry.getValue() * 100);
-            if(random <= temp){
-                artifactName = entry.getKey();
-                break;
-            }
-        }
-        getGame().spawnMythicEntity(location, artifactName);
-    }
-
 
     public String getName() {
         return name;

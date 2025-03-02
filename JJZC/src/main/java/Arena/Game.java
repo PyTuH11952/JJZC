@@ -17,14 +17,16 @@ import org.bukkit.block.Chest;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 import static com.mimikcraft.mcc.ExecutableApi.giveExecutableItem;
@@ -282,21 +284,54 @@ public class Game {
                 }
             }.runTaskTimer(Main.getInstance(), 0L, 1L);
     }
-    public void spawnMob(Location location, String name){
-        arena.getArenaWorld().spawnParticle(Particle.FLAME, location,10, 0.3, 0.3, 0.3, 0);
-        arena.getArenaWorld().playSound(location, Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 1, 1);
+    public void spawnMob(Location location, String name, Particle particle){
+        if(particle != null){
+            arena.getArenaWorld().spawnParticle(particle, location,10, 0.3, 0.3, 0.3, 0);
+            arena.getArenaWorld().playSound(location, Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 1, 1);
+        }
         new BukkitRunnable(){
             @Override
             public void run(){
                  ActiveMob mythicEntity = MythicBukkit.inst().getMobManager().spawnMob(name, location, hardLevel);
                  Entity entity = mythicEntity.getEntity().getBukkitEntity();
+                 mobs.add(entity);
                  cancel();
                 }
         }.runTaskLater(Main.getInstance(),20L);
     }
 
-    public void spawnMythicEntity(Location location, String name){
-                ActiveMob mythicEntity = MythicBukkit.inst().getMobManager().spawnMob(name, location, hardLevel);
+    public void spawnRandomArtifact(Location location){
+        File folder = new File(Main.getInstance().getDataFolder().getAbsolutePath());
+
+        File file = new File(folder.getAbsolutePath() + "/Artifacts.yml");
+
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+        ConfigurationSection artifactsSection = config.getConfigurationSection("Artifacts");
+        Map<String, Double> artifacts = new HashMap<>();
+        Set<String> artifactsNames = artifactsSection.getKeys(false);
+        for(String artifact : artifactsNames){
+            for(int i = 0; i < artifactsSection.getDoubleList(artifact).size(); i++){
+                artifacts.put(artifact + "_" + (i + 1), artifactsSection.getDoubleList(artifact).get(i));
+            }
+        }
+        int random = (int)(Math.random() * 10000);
+        int temp = 0;
+        String artifactName = "";
+        for(Map.Entry<String, Double> entry : artifacts.entrySet()){
+            temp += (int) (entry.getValue() * 100);
+            if(random <= temp){
+                artifactName = entry.getKey();
+                break;
+            }
+        }
+        spawnMob(location, artifactName, null);
     }
 
     public void glowing(){
@@ -491,16 +526,16 @@ public class Game {
         if (wave >= 5){
             double random = Math.random();
             if (random <= 0.875){
-                commonWave();
+                startUsualWave();
             } else {
-                dopWave();
+                startAdditionalWave();
             }
         } else {
-            commonWave();
+            startUsualWave();
         }
     }
 
-    public void commonWave(){
+    public void startUsualWave(){
         if (wave == 0){
             for (int i = 0; i < arena.getLocation().getStages().size(); i++){
                 maxWave += arena.getLocation().getStages().get(i).wavesCount;
@@ -509,7 +544,7 @@ public class Game {
         if (wavesCount == (wave+1) && stage == arena.getLocation().getStages().size()){
             arena.sendArenaTitle("Босс!", "");
             clearMobs();
-            spawnMythicEntity(arena.getLocation().getBossLocation(), arena.getLocation().getBossName());
+            spawnMob(arena.getLocation().getBossLocation(), arena.getLocation().getBossName(), Particle.FLAME);
             wave++;
             return;
         }
@@ -575,12 +610,12 @@ public class Game {
                         break;
                     }
                 }
-                spawnMob(arena.getLocation().getStages().get(stage - 1).spawners.get((int)(Math.random() * spawnersCount)), zombieName);
+                spawnMob(arena.getLocation().getStages().get(stage - 1).spawners.get((int)(Math.random() * spawnersCount)), zombieName, Particle.FLAME);
             }
         }.runTaskTimer(Main.getInstance(), 0L, 20L);
     }
 
-    public void dopWave(){
+    public void startAdditionalWave(){
         int randomMiniGame = (int)(1 + Math.random() * 4);
         spawnersCount = arena.getLocation().getStages().get(stage - 1).spawners.size();
         clearMobs();
@@ -588,11 +623,11 @@ public class Game {
             case 1:
                 arena.sendArenaTitle("Дополнительная волна!","Минибосс");
                 int randomValue = (int) (1 + Math.random() * 3);
-                spawnMob(arena.getLocation().getBossLocation(), "miniboss"+randomValue);
+                spawnMob(arena.getLocation().getBossLocation(), "miniboss"+randomValue, Particle.FLAME);
                 break;
             case 2:
                 arena.sendArenaTitle("Дополнительная волна!","Пеньята");
-                spawnMob(arena.getLocation().getBossLocation(), "peniata");
+                spawnMob(arena.getLocation().getBossLocation(), "peniata", Particle.FLAME);
                 break;
             case 3:
                 arena.sendArenaTitle("Дополнительная волна!","Загрязнение");
@@ -607,7 +642,7 @@ public class Game {
                             cancel();
                         }
                         spawnedZombies++;
-                        spawnMob(arena.getLocation().getStages().get(stage - 1).spawners.get((int)(Math.random() * spawnersCount)), "kaka");
+                        spawnMob(arena.getLocation().getStages().get(stage - 1).spawners.get((int)(Math.random() * spawnersCount)), "kaka", Particle.FLAME);
                     }
                 }.runTaskTimer(Main.getInstance(), 0, 20);
                 break;
@@ -624,7 +659,7 @@ public class Game {
                             cancel();
                         }
                         spawnedZombies++;
-                        spawnMob(arena.getLocation().getStages().get(stage - 1).spawners.get((int)(Math.random() * spawnersCount)), "bombzombie");
+                        spawnMob(arena.getLocation().getStages().get(stage - 1).spawners.get((int)(Math.random() * spawnersCount)), "bombzombie", Particle.FLAME);
                     }
                 }.runTaskTimer(Main.getInstance(), 0, 20);
                 break;
@@ -659,12 +694,22 @@ public class Game {
         }
     }
 
-    public void endGame() {
+
+    public void win(){
+        arena.sendArenaTitle("&aПобеда!", "");
+        endGame();
+    }
+
+    public void loose(){
+        arena.sendArenaTitle("&cПоражение!", "");
+        endGame();
+    }
+
+    private void endGame() {
         arena.setArenaStage(ArenaStages.GAME_ENDED);
         for (Entity entity : mobs){
             entity.remove();
         }
-        arena.sendArenaTitle("&aПобеда!", "");
         for (Player player : arena.getPlayers().keySet()){
             ChatUtil.sendMessage(player, "&c&lАрена перезагрузиться через 10 секунд...");
         }
@@ -677,23 +722,6 @@ public class Game {
         }.runTaskLater(Main.getInstance(), 200);
     }
 
-    public void endGameBad() {
-        arena.setArenaStage(ArenaStages.GAME_ENDED);
-        for (Entity entity : mobs){
-            entity.remove();
-        }
-        arena.sendArenaTitle("&cПоражение!", "");
-        for (Player player : arena.getPlayers().keySet()){
-            ChatUtil.sendMessage(player, "&c&lАрена перезагрузиться через 10 секунд...");
-        }
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                arena.reset();
-                cancel();
-            }
-        }.runTaskLater(Main.getInstance(), 200);
-    }
 
     public void clearMobs(){
         for (Entity entity : mobs){
