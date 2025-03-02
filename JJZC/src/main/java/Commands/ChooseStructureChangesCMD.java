@@ -19,9 +19,11 @@ public class ChooseStructureChangesCMD implements CommandExecutor {
         Player player = (Player) commandSender;
         if(args.length == 0){
             ChatUtil.sendMessage(player, "&cВведите название локации!");
+             return true;
         }
         if(args.length == 1){
             ChatUtil.sendMessage(player, "&cВведите номер стадии!");
+            return true;
         }
         BlockEventListener.editors.add(new Editor(player, args[0], Integer.parseInt(args[1])));
         return true;

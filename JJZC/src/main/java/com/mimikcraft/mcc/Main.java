@@ -43,7 +43,6 @@ public final class Main extends JavaPlugin {
         for(int i = 0; i <= maxArenas; i++){
             Arena arena = new Arena("arena"+i);
             ArenaList.addarena(arena);
-
         }
     }
 

@@ -23,7 +23,6 @@ public class KillsEventListener implements Listener {
             if(e.getMob().getFaction().equals("Zombie")){
                 arena.getGame().mobs.remove(e.getEntity());
                 arena.getGame().aliveZombies -= 1;
-                arena.getGame().sendBossBar();
                 if (e.getKiller() != null){
                     if (e.getKiller() instanceof Player){
                         Player player = ((Player) e.getKiller()).getPlayer();
@@ -39,17 +38,15 @@ public class KillsEventListener implements Listener {
                     arena.getGame().glowing();
                 }
                 if(arena.getGame().aliveZombies <= arena.getLocation().getAddZombie()){
+                    arena.getGame().setBossbarProgress(0);
                     arena.getGame().startNewWave();
                 }
+                arena.getGame().sendBossBar();
             }
 
             if(e.getMob().getFaction().equals("Kaka")){
                 arena.getGame().mobs.remove(e.getEntity());
-                if (e.getMob().getType().getInternalName().equals("kaka")){
-                    arena.getGame().aliveZombies += 9;
-                } else {
-                    arena.getGame().aliveZombies -= 1;
-                }
+                arena.getGame().aliveZombies -= 1;
                 arena.getGame().sendBossBar();
                 if(arena.getGame().aliveZombies <= arena.getGame().getAddZombie()){
                     for (Player player : arena.getPlayers().keySet()){

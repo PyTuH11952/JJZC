@@ -4,6 +4,8 @@ import Utils.ChatUtil;
 import com.mimikcraft.mcc.Main;
 import io.lumine.mythic.bukkit.utils.bossbar.BossBarColor;
 import io.lumine.mythic.bukkit.utils.bossbar.BossBarStyle;
+import me.neznamy.tab.api.TabAPI;
+import me.neznamy.tab.api.TabPlayer;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -27,7 +29,7 @@ public class Arena {
 
     private final int maxPlayers = 8;
 
-    private final int timeToStart = 10;
+    private final int timeToStart = 60;
 
     private World arenaWorld;
 
@@ -39,7 +41,7 @@ public class Arena {
 
     private ArenaStages arenaStage = ArenaStages.CLOSED;
 
-    private final Game game;
+    private Game game;
     private ArenaLocation location;
 
     private final Map<Player, Map<ArtifactsTypes, Integer>> players = new HashMap<>();
@@ -79,6 +81,7 @@ public class Arena {
         WorldCreator wc = new WorldCreator(name).generator(new EmptyChunkGenerator());
         wc.createWorld();
         arenaStage = ArenaStages.CLOSED;
+        game = new Game(this);
     }
 
     public void join(Player player){
@@ -86,11 +89,11 @@ public class Arena {
             ChatUtil.sendMessage(player, "Вы уже на арене!");
             return;
         }
-        if (arenaStage == ArenaStages.CLOSED) {
+        if (arenaStage == ArenaStages.CLOSED || arenaStage == ArenaStages.RESET || arenaStage == ArenaStages.GAME_ENDED) {
             ChatUtil.sendMessage(player, "Арена закрыта!");
             return;
         }
-        if (players.size() == maxPlayers){
+        if (players.size() >= maxPlayers){
             ChatUtil.sendMessage(player, "Арена заполнена!");
             return;
         }
@@ -103,8 +106,22 @@ public class Arena {
         playerLvl.put(player,player.getLevel());
         player.setExp(0.0f);
         onJoinLocation.put(player, player.getLocation());
-        player.teleport(new Location(Bukkit.getWorld(name), location.getLobbyLocation().getX(),location.getLobbyLocation().getY(), location.getLobbyLocation().getZ()));
         sendArenaMessage(player.getDisplayName() + " присоединился!");
+        player.getInventory().clear();
+        if (arenaStage == ArenaStages.WAITING){
+            player.teleport(new Location(Bukkit.getWorld(name), location.getLobbyLocation().getX(),location.getLobbyLocation().getY(), location.getLobbyLocation().getZ()));
+        } else{
+            player.teleport(new Location(Bukkit.getWorld(name), location.getSpawnLocation().getX(),location.getSpawnLocation().getY(), location.getSpawnLocation().getZ()));
+        }
+        if (arenaStage == ArenaStages.CUTSCENE){
+            player.setGameMode(GameMode.SPECTATOR);
+            TabPlayer tabPlayer = TabAPI.getInstance().getPlayer(player.getUniqueId());
+            TabAPI.getInstance().getScoreboardManager().toggleScoreboard(tabPlayer, false);
+            for (Player otherPlayer : getPlayers().keySet()) {
+                otherPlayer.hidePlayer(Main.getInstance(), player);
+                player.hidePlayer(Main.getInstance(), otherPlayer);
+            }
+        }
         if (players.size() == 1 && arenaStage != ArenaStages.CLOSED) {
             startGame();
         }
@@ -154,10 +171,11 @@ public class Arena {
         }else{
             sendArenaMessage(player.getDisplayName() + " отключился!");
         }
-        player.teleport(onJoinLocation.get(player));
         if (players.isEmpty() && arenaStage == ArenaStages.STARTING){
             reset();
         }
+        player.teleport(onJoinLocation.get(player));
+        game.removeBossBar();
     }
 
     public void playerDie(Player player){
@@ -185,7 +203,7 @@ public class Arena {
 
     public void sendArenaTitle (String message, String subMessage){
         for (Player player : players.keySet()){
-            player.sendTitle(ChatColor.translateAlternateColorCodes('&', message), ChatColor.translateAlternateColorCodes('&', subMessage), 10, 40, 10);
+            player.sendTitle(ChatColor.translateAlternateColorCodes('&', message), ChatColor.translateAlternateColorCodes('&', subMessage));
         }
     }
 

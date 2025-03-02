@@ -38,7 +38,7 @@ public class GetChestCMD implements CommandExecutor {
         ItemStack item = new ItemStack(Material.valueOf(args[0].toUpperCase()));
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.setDisplayName("Локация: " + args[1]);
-        itemMeta.getPersistentDataContainer().set(KeyUtil.locationKey, PersistentDataType.STRING, "location");
+        itemMeta.getPersistentDataContainer().set(KeyUtil.locationKey, PersistentDataType.STRING, args[1]);
         item.setItemMeta(itemMeta);
         player.getInventory().setItemInMainHand(item);
 

@@ -10,6 +10,7 @@ import com.ssomar.score.api.executableitems.ExecutableItemsAPI;
 import com.ssomar.score.api.executableitems.config.ExecutableItemsManagerInterface;
 import com.ssomar.sevents.events.player.click.right.PlayerRightClickEvent;
 import net.milkbowl.vault.chat.Chat;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -64,11 +65,11 @@ public class BlockEventListener implements Listener {
                 if(config.getConfigurationSection(locationName) == null){
                     config.createSection(locationName);
                 }
+                ConfigurationSection locationSection = config.getConfigurationSection(locationName);
                 List<String> tempList = new ArrayList<>();
-                if(config.getConfigurationSection(locationName + ".chests") == null){
-                    config.createSection(locationName + ".chests");
-                }else{
-                    tempList.addAll(config.getStringList(locationName + ".chests"));
+                List<String> tempList2 = locationSection.getStringList("chests");
+                for(String chestCords : tempList2){
+                    tempList.add(chestCords);
                 }
                 tempList.add(res);
                 config.set(locationName + ".chests", tempList);
@@ -94,6 +95,9 @@ public class BlockEventListener implements Listener {
     @EventHandler
     public void onRightClikEvent(PlayerRightClickEvent e){
         if(e.getBlock() == null){
+            return;
+        }
+        if (ArenaList.get(e.getPlayer()) == null){
             return;
         }
         Location lowerBlockLocation = e.getBlock().getLocation();

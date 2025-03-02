@@ -39,6 +39,8 @@ public class Game {
 
     private int wavesCount;
 
+    private int spawnedZombies;
+
     private int infinityWave = 0;
 
     private boolean isInfinity = false;
@@ -164,6 +166,7 @@ public class Game {
     }
 
     private void showCutScene(String titleLoc, String titleStages, String titleDoors, Location showLoc, List<Location> showStages, List<Location> showDoors) {
+        arena.setArenaStage(ArenaStages.CUTSCENE);
         for (Player player : arena.getPlayers().keySet()) {
             player.setGameMode(GameMode.SPECTATOR);
             TabPlayer tabPlayer = TabAPI.getInstance().getPlayer(player.getUniqueId());
@@ -171,7 +174,6 @@ public class Game {
             for (Player otherPlayer : arena.getPlayers().keySet()) {
                     otherPlayer.hidePlayer(Main.getInstance(), player);
                     player.hidePlayer(Main.getInstance(), otherPlayer);
-
             }
             player.getInventory().clear();
             player.playSound(player.getLocation(), Sound.AMBIENT_CAVE, 1, 1);
@@ -263,6 +265,7 @@ public class Game {
                     y = (1-t) * y1 + t * y2;
                     z = (1-t) * z1 + t * z2;
                     if (t > 1){
+                        arena.setArenaStage(ArenaStages.IN_PROCESS);
                         for (Player player : arena.getPlayers().keySet()) {
                             for (Player otherPlayer : arena.getPlayers().keySet()) {
                                 otherPlayer.showPlayer(Main.getInstance(), player);
@@ -343,7 +346,7 @@ public class Game {
         return item;
     }
 
-    private void fillСhest(Location location, int locationNumber){
+    private void fillСhest(Location location, String locationType){
         Random random = new Random();
         int armorWeaponCount = random.nextInt(3);
         int materialCount = random.nextInt(3);
@@ -440,13 +443,15 @@ public class Game {
             int loccount = random.nextInt(2) + 1;
             int lootcount = random.nextInt(3) + 1;
             if (d < 0.02){
-                addItems(location, getItem("loc"+locationNumber+"loot"+lootcount, loccount));
+                addItems(location, getItem("loc_"+locationType+"_loot"+lootcount, loccount));
             }
 
 
         }
     }
-
+    public void removeBossBar() {
+        bossbar.removeAll();
+        }
     public void sendBossBar() {
         for (Player player : arena.getPlayers().keySet()) {
             bossbar.addPlayer(player);
@@ -460,11 +465,42 @@ public class Game {
             bossbar.removeAll();
             return;
         }
+        if (bossbarProgress > 1){
+            bossbarProgress = 1;
+        }
         bossbar.setTitle("Осталось зомби: " + (aliveZombies - addZombie));
         bossbar.setProgress(bossbarProgress);
     }
+
     public void startNewWave(){
         glowingTimer = false;
+        giveItems();
+        if (wave == 0){
+            for (int i = 0; i<=5; i++){
+                List<Location> chests = arena.getLocation().getChests();
+                int randomChest = (int)(Math.random() * chests.size());
+                fillСhest(arena.getLocation().getChests().get(randomChest),arena.getLocation().getLocationType().name().toLowerCase());
+            }
+        } else {
+            for (int i = 0; i<=3; i++){
+                List<Location> chests = arena.getLocation().getChests();
+                int randomChest = (int)(Math.random() * chests.size());
+                fillСhest(arena.getLocation().getChests().get(randomChest), arena.getLocation().getLocationType().name().toLowerCase());
+            }
+        }
+        if (wave >= 5){
+            double random = Math.random();
+            if (random <= 0.875){
+                commonWave();
+            } else {
+                dopWave();
+            }
+        } else {
+            commonWave();
+        }
+    }
+
+    public void commonWave(){
         if (wave == 0){
             for (int i = 0; i < arena.getLocation().getStages().size(); i++){
                 maxWave += arena.getLocation().getStages().get(i).wavesCount;
@@ -497,8 +533,8 @@ public class Game {
         } else {
             arena.sendArenaTitle("Волна: " + wave, "Кол-во зомби: " + zombiesCount);
         }
+        spawnedZombies = 0;
         new BukkitRunnable(){
-            int spawnedZombies = 0;
             @Override
             public void run() {
                 if(spawnedZombies == (zombiesCount-1)){
@@ -580,8 +616,8 @@ public class Game {
                 addZombie = 0;
                 zombiesCount = (int)(wave*arena.getPlayers().size()*arena.getLocation().getLocationFactor()/2+addZombie+1);
                 aliveZombies += zombiesCount;
+                spawnedZombies = 0;
                 new BukkitRunnable(){
-                    int spawnedZombies = 0;
                     @Override
                     public void run(){
                         if(spawnedZombies == (zombiesCount-1)){
@@ -594,6 +630,33 @@ public class Game {
                 break;
         }
 
+    }
+
+    public void giveItems(){
+        double random = Math.random();
+        List<Player> players = new ArrayList<>();
+        int randomPlayer = (int)(Math.random() * arena.getPlayers().size());
+        for (Player player : arena.getPlayers().keySet()){
+            players.add(player);
+        }
+        if (random <= 0.07){
+            giveExecutableItem(players.get(randomPlayer), "lom", 1);
+        }
+
+        for (int i = 0; i <= players.size(); i++){
+            double random2 = Math.random();
+            if (random <= 0.05){
+                giveExecutableItem(players.get(randomPlayer), "case5", 1);
+            } else if (random <= 0.15) {
+                giveExecutableItem(players.get(randomPlayer), "case4", 1);
+            } else if (random <= 0.3){
+                giveExecutableItem(players.get(randomPlayer), "case3", 1);
+            } else if (random <= 0.5){
+                giveExecutableItem(players.get(randomPlayer), "case2", 1);
+            } else {
+                giveExecutableItem(players.get(randomPlayer), "case1", 1);
+            }
+        }
     }
 
     public void endGame() {
@@ -668,6 +731,26 @@ public class Game {
 
     public void setGlowingTimer(boolean glowingTimer) {
         this.glowingTimer = glowingTimer;
+    }
+
+    public int getZombiesCount() {
+        return zombiesCount;
+    }
+
+    public void setZombiesCount(int zombiesCount) {
+        this.zombiesCount = zombiesCount;
+    }
+
+    public void setBossbarProgress(double bossbarProgress) {
+        this.bossbarProgress = bossbarProgress;
+    }
+
+    public int getSpawnedZombies() {
+        return spawnedZombies;
+    }
+
+    public void setSpawnedZombies(int spawnedZombies) {
+        this.spawnedZombies = spawnedZombies;
     }
 }
 
