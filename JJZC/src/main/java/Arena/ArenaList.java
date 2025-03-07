@@ -38,9 +38,16 @@ public class ArenaList {
 
     }
     public static boolean hasArena(String name) {
-
         for (Arena arena : arenas) {
             if (arena.getName().equals(name)) {
+                return true;
+            }
+        }
+        return  false;
+    }
+    public static boolean hasArena(Player player) {
+        for (Arena arena : arenas) {
+            if (arena.getPlayers().containsKey(player)) {
                 return true;
             }
         }

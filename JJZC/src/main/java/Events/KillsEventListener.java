@@ -82,7 +82,7 @@ public class KillsEventListener implements Listener {
                 if (arena.getGame().isInfinity()){
                     arena.getGame().startNewWave();
                 } else{
-                    arena.getGame().win();
+                    arena.getGame().endGame(true);
                 }
 
             }

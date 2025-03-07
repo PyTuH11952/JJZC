@@ -1,7 +1,9 @@
 package Arena;
 
 import Utils.ChatUtil;
+import com.mimikcraft.mcc.ExecutableApi;
 import com.mimikcraft.mcc.Main;
+import com.ssomar.score.api.executableitems.ExecutableItemsAPI;
 import io.lumine.mythic.bukkit.utils.bossbar.BossBarColor;
 import io.lumine.mythic.bukkit.utils.bossbar.BossBarStyle;
 import me.neznamy.tab.api.TabAPI;
@@ -13,6 +15,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -44,7 +47,7 @@ public class Arena {
     private Game game;
     private ArenaLocation location;
 
-    private final Map<Player, Map<ArtifactsTypes, Integer>> players = new HashMap<>();
+    private final Map<Player, List<Artifact>> players = new HashMap<>();
     private final List<Player> ghosts = new ArrayList<>();
     private final List<Player> leavedPlayers = new ArrayList<>();
 
@@ -126,7 +129,7 @@ public class Arena {
         if (players.size() == 1 && arenaStage != ArenaStages.CLOSED) {
             startGame();
         }
-        players.put(player, new HashMap<>());
+        players.put(player, new ArrayList<>());
 
     }
 
@@ -185,16 +188,48 @@ public class Arena {
     public void playerDie(Player player){
         ghosts.add(player);
         player.setGameMode(GameMode.SPECTATOR);
+        player.sendTitle(ChatColor.translateAlternateColorCodes('&', "&cВы умерли!"), "");
         new BukkitRunnable(){
             @Override
             public void run(){
+                if(!ghosts.contains(player)){
+                    cancel();
+                }
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "effect give @a[distance=0..3] instant_health");
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "effect give @e[distance=0..3, tag=zombie] slowness");
             }
         }.runTaskTimer(Main.getInstance(), 0L, 20L);
-        if (ghosts.size() >= players.size()){
-            game.loose();
+        if (ghosts.size() == players.size()){
+            game.endGame(false);
         }
+    }
+
+    public void reviveRandom(Player buyer){
+        if(ghosts.isEmpty()){
+            ChatUtil.sendMessage(buyer, "&cВсе игроки живы!");
+            buyer.closeInventory();
+            return;
+        }
+
+        int materialCount = 0;
+        for(ItemStack itemStack : buyer.getInventory()){
+            if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(itemStack).isPresent()){
+                if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(itemStack).get().getId().equals("material4")){
+                    materialCount += itemStack.getAmount();
+                    if(materialCount >= 7){
+                        ItemStack itemToRemove = new ItemStack(itemStack);
+                        itemToRemove.setAmount(7);
+                        buyer.getInventory().remove(itemToRemove);
+                        ghosts.remove(ghosts.get((int)(Math.random() * ghosts.size())));
+                        buyer.setGameMode(GameMode.ADVENTURE);
+                        buyer.teleport(location.getSpawnLocation());
+                        return;
+                    }
+                }
+            }
+        }
+        ChatUtil.sendMessage(buyer, "&cНедостаточно материала!");
+        buyer.closeInventory();
     }
 
     public boolean canJoin(Player player) {
@@ -259,7 +294,7 @@ public class Arena {
     }
 
 
-    public Map<Player, Map<ArtifactsTypes, Integer>> getPlayers() {
+    public Map<Player, List<Artifact>> getPlayers() {
         return players;
     }
 

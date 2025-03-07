@@ -23,6 +23,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -73,13 +74,12 @@ public class Game {
 
     private Map<Player, Integer> playerKills = new HashMap<>();
 
-
     BossBar bossbar = Bukkit.getServer().createBossBar("Осталось зомби: 0", BarColor.BLUE, BarStyle.SOLID);
+
 
     public Game(Arena arena) {
         this.arena = arena;
     }
-
 
 
     public void start() {
@@ -203,6 +203,7 @@ public class Game {
 
         }.runTaskTimer(Main.getInstance(), 0L, 80L);
     }
+
     private void showStages(List<Location> showStages, String titleDoors, List<Location> showDoors){
         new BukkitRunnable(){
             int i = 0;
@@ -224,6 +225,7 @@ public class Game {
 
         }.runTaskTimer(Main.getInstance(), 0L, 20L);
     }
+
     private void showDoors(List<Location> showDoors){
         new BukkitRunnable(){
             int i = 0;
@@ -246,6 +248,7 @@ public class Game {
 
         }.runTaskTimer(Main.getInstance(), 0L, 20L);
     }
+
     private void smoothTeleport(Location loc1, Location loc2) {
             new BukkitRunnable() {
                 double x1 = loc1.getX();
@@ -284,6 +287,7 @@ public class Game {
                 }
             }.runTaskTimer(Main.getInstance(), 0L, 1L);
     }
+
     public void spawnMob(Location location, String name, Particle particle){
         if(particle != null){
             arena.getArenaWorld().spawnParticle(particle, location,10, 0.3, 0.3, 0.3, 0);
@@ -356,6 +360,7 @@ public class Game {
             }
         }.runTaskTimer(Main.getInstance(), 0, 20);
     }
+
     private void addItems(Location location, ItemStack item) {
         Block block = location.getBlock();
         Inventory inv;
@@ -484,9 +489,11 @@ public class Game {
 
         }
     }
+
     public void removeBossBar(Player player) {
         bossbar.removePlayer(player);
         }
+
     public void sendBossBar() {
         for (Player player : arena.getPlayers().keySet()) {
             bossbar.addPlayer(player);
@@ -694,23 +701,53 @@ public class Game {
         }
     }
 
-
-    public void win(){
-        arena.sendArenaTitle("&aПобеда!", "");
-        endGame();
-    }
-
-    public void loose(){
-        arena.sendArenaTitle("&cПоражение!", "");
-        endGame();
-    }
-
-    private void endGame() {
-        arena.setArenaStage(ArenaStages.GAME_ENDED);
-        for (Entity entity : mobs){
-            entity.remove();
+    public void endGame(boolean isWon) {
+        if(isWon){
+            arena.sendArenaTitle("&aПобеда!", "");
+        }else{
+            arena.sendArenaTitle("&cПоражение!", "");
         }
+        arena.setArenaStage(ArenaStages.GAME_ENDED);
+
+        clearMobs();
+
         for (Player player : arena.getPlayers().keySet()){
+            if(!arena.getPlayers().get(player).isEmpty()){
+                for(int i = arena.getPlayers().get(player).size() - 1; i > 0; i--){
+                    ArtifactsTypes artifactType = arena.getPlayers().get(player).get(i).artifactType;
+                    int artefactLevel = arena.getPlayers().get(player).get(i).level;
+
+                    switch (artifactType){
+                        case STRENGTH:
+                            player.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+                            break;
+                        case SPEED:
+                            player.removePotionEffect(PotionEffectType.SPEED);
+                            break;
+                        case JUMPBOOST:
+                            player.removePotionEffect(PotionEffectType.JUMP);
+                            break;
+                        case REGENERATION:
+                            player.removePotionEffect(PotionEffectType.REGENERATION);
+                            break;
+                        case KACHUMBER:
+                            player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue() - 2*artefactLevel);
+                            break;
+                        case BREAD:
+                            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() - player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.1 * artefactLevel);
+                            break;
+                        case OIL:
+                            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() - player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.2 * artefactLevel);
+                            break;
+                        case DOUBLEJUMP:
+                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tdj " + player.getName() + " disable");
+                            break;
+                        case BONES:
+                            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 2);
+                            break;
+                    }
+                }
+            }
             ChatUtil.sendMessage(player, "&c&lАрена перезагрузиться через 10 секунд...");
         }
         new BukkitRunnable() {
@@ -721,7 +758,6 @@ public class Game {
             }
         }.runTaskLater(Main.getInstance(), 200);
     }
-
 
     public void clearMobs(){
         for (Entity entity : mobs){

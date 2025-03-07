@@ -2,6 +2,8 @@ package Events;
 
 import Arena.Arena;
 import Arena.ArenaList;
+import Arena.ArenaStages;
+import Arena.Artifact;
 import Arena.ArtifactsTypes;
 import com.mimikcraft.mcc.Main;
 import io.lumine.mythic.bukkit.events.MythicMobInteractEvent;
@@ -45,6 +47,9 @@ public class PlayerInteractListener implements Listener {
                     new BukkitRunnable(){
                         @Override
                         public void run(){
+                            if(arena.getArenaStage() != ArenaStages.IN_PROCESS){
+                                cancel();
+                            }
                             if(player.getHealth() <= 5 + artefactLevel){
                                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "effect give @e[distance=0..3,tag=zombie,type=zombie] instant_health");
                                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "effect give @e[distance=0..3,tag=zombie,type=!zombie] instant_damage");
@@ -78,7 +83,7 @@ public class PlayerInteractListener implements Listener {
                     break;
                 case "doublejump":
                     arena.sendArenaMessage("&aИгрок &e" + player.getDisplayName() + " &aполучил артефакт" + " &eдвойной прыжок");
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tdj" + player.getName() + " enable");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tdj " + player.getName() + " enable");
                     break;
                 case "regeneration":
                     arena.sendArenaMessage("&aИгрок &e" + player.getDisplayName() + " &aполучил артефакт" + " &eрегенерация " + artefactLevelString);
@@ -89,6 +94,9 @@ public class PlayerInteractListener implements Listener {
                     new BukkitRunnable(){
                         @Override
                         public void run(){
+                            if(arena.getArenaStage() != ArenaStages.IN_PROCESS){
+                                cancel();
+                            }
                             player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, Integer.MAX_VALUE, artefactLevel));
                         }
                     }.runTaskTimer(Main.getInstance(), 0L, 600L);
@@ -102,7 +110,7 @@ public class PlayerInteractListener implements Listener {
                     arena.getGame().setLifesCount(arena.getGame().getLifesCount()+artefactLevel);
                     break;
             }
-            arena.getPlayers().get(player).put(ArtifactsTypes.valueOf(artefactName.toUpperCase()), artefactLevel);
+            arena.getPlayers().get(player).add(new Artifact(ArtifactsTypes.valueOf(artefactName.toUpperCase()), artefactLevel));
         }
     }
 }
