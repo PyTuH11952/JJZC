@@ -10,19 +10,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="826ec8dd-69ce-4dea-9d10-7bbbf4b43755" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/Arena/Artifact.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Commands/AddLifeCMD.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Commands/ReviveCMD.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Arena/CustomBlock.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/ArenaList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/ArenaList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/ArenaLocation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/ArenaLocation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Arena/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Events/EntityDamageListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Events/EntityDamageListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Events/KillsEventListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Events/KillsEventListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Events/PlayerDeathListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Events/PlayerDeathListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Events/PlayerInteractListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Events/PlayerInteractListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mimikcraft/mcc/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mimikcraft/mcc/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Commands/AddLifeCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands/AddLifeCMD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Commands/JoinCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands/JoinCMD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Events/BlockEventListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Events/BlockEventListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Events/MenuListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Events/MenuListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../TechnicalTask.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../TechnicalTask.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

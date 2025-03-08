@@ -834,5 +834,9 @@ public class Game {
     public void setSpawnedZombies(int spawnedZombies) {
         this.spawnedZombies = spawnedZombies;
     }
+
+    public boolean isGameInfinity(){
+        return isInfinity;
+    }
 }
 

@@ -1,6 +1,8 @@
 package Arena;
 
+import Utils.ChatUtil;
 import com.mimikcraft.mcc.Main;
+import com.ssomar.score.api.executableitems.ExecutableItemsAPI;
 import com.sun.tools.javac.file.Locations;
 import org.bukkit.Bukkit;
 import org.bukkit.Bukkit.*;
@@ -10,6 +12,8 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +23,7 @@ public class ArenaLocation {
 
     private LocationTypes locationType;
 
+    private String name;
     private Location spawnLocation;
     private Location lobbyLocation;
     private Location bossLocation;
@@ -31,6 +36,7 @@ public class ArenaLocation {
     private final List<Zombie> zombies = new ArrayList<>();
     private final List<Stage> stages = new ArrayList<>();
     private final Map<Location, Location> doors = new HashMap<>();
+    private final List<CustomBlock> customBlocks = new ArrayList<>();
 
     public ArenaLocation(LocationTypes locationType, World world){
         this.world = world;
@@ -54,6 +60,8 @@ public class ArenaLocation {
         }
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         ConfigurationSection locationSection = config.getConfigurationSection(locationType.name().toLowerCase());
+
+        name = locationSection.getString("name");
 
         String[] spawnCoordinatesStr = locationSection.getString("spawnLocation").split(" ");
         double spawnX = Double.parseDouble(spawnCoordinatesStr[0]);
@@ -160,6 +168,23 @@ public class ArenaLocation {
             Location artLocation = new Location(world, artX, artY, artZ);
             doors.put(doorLocation, artLocation);
         }
+        ConfigurationSection customBlocksSection = locationSection.getConfigurationSection("customBlocks");
+        Set<String> customBlocksCoordStr = customBlocksSection.getKeys(false);
+        for(String customBlockCoordStr: customBlocksCoordStr){
+            String[] customBlockCoordsStr = customBlockCoordStr.split(" ");
+            double doorX = Double.parseDouble(customBlockCoordsStr[0]);
+            double doorY = Double.parseDouble(customBlockCoordsStr[1]);
+            double doorZ = Double.parseDouble(customBlockCoordsStr[2]);
+            Location customBlockLocation = new Location(world, doorX, doorY, doorZ);
+            if(customBlocksSection.getString(customBlockCoordStr).equals("anvil")){
+                Anvil anvil = new Anvil(customBlockLocation, "anvil");
+                customBlocks.add(anvil);
+            }else{
+                CustomBlock customBlock = new CustomBlock(customBlockLocation, customBlocksSection.getString(customBlockCoordStr));
+                customBlocks.add(customBlock);
+            }
+        }
+
     }
 
     public Location getSpawnLocation() {
@@ -208,6 +233,14 @@ public class ArenaLocation {
 
     public CutScene getCutScene() {
         return cutScene;
+    }
+
+    public List<CustomBlock> getCustomBlocks() {
+        return customBlocks;
+    }
+
+    public String getName(){
+        return name;
     }
 
     public enum LocationTypes {
@@ -259,5 +292,37 @@ class CutScene {
         this.locShowLocation = locShowLocation;
         this.floorsLocations = floorsLocations;
         this.doorsLocationcs = doorsLocationcs;
+    }
+}
+
+class Anvil extends CustomBlock {
+    int level = 1;
+    public Anvil(Location location, String action) {
+        super(location, action);
+    }
+    @Override
+    public void onClick(Player player){
+        int materialCount = 0;
+        for(ItemStack itemStack : player.getInventory()){
+            if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(itemStack).isPresent()){
+                if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(itemStack).get().getId().equals("material5")){
+                    materialCount += itemStack.getAmount();
+                    if(materialCount >= 5 * level){
+                        ItemStack itemToRemove = new ItemStack(itemStack);
+                        itemToRemove.setAmount(5);
+                        player.getInventory().remove(itemToRemove);
+                        Location artLocation = location;
+                        artLocation.setY(artLocation.getY() + 1);
+                        ArenaList.get(player).getGame().spawnRandomArtifact(artLocation);
+                        return;
+                    }
+                }
+            }
+        }
+        ChatUtil.sendMessage(player, "&cНедостаточно материалов!");
+    }
+
+    public void onBreak(){
+        level++;
     }
 }

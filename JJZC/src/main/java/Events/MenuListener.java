@@ -2,8 +2,10 @@ package Events;
 
 import Arena.Arena;
 import Arena.ArenaList;
+import Arena.ArenaStages;
 import Utils.KeyUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,13 +32,12 @@ public class MenuListener implements Listener {
         if(e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.buttonKey, PersistentDataType.STRING) == null){
             return;
         }
+        e.setCancelled(true);
         if(e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.buttonKey, PersistentDataType.STRING).equals("exit")){
-            e.setCancelled(true);
             Player player = (Player)e.getWhoClicked();
             Arena arena = ArenaList.get(player);
             arena.leave(player);
         }else if(e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.buttonKey, PersistentDataType.STRING).equals("join")){
-            e.setCancelled(true);
             if(e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.arenaKey, PersistentDataType.STRING) == null){
                 return;
             }
@@ -46,20 +47,43 @@ public class MenuListener implements Listener {
             List<Arena> availableArenas = ArenaList.getAvailable((Player) e.getWhoClicked());
             int offset = availableArenas.size() % 2 == 0 ? (9 - availableArenas.size() + 1) / 2  + 18: (9 - availableArenas.size()) / 2 + 18;
             for(int i = 0; i < availableArenas.size(); i++){
-                ItemStack joinBtn = new ItemStack(Material.GREEN_STAINED_GLASS, 1);
+                ItemStack joinBtn = new ItemStack(Material.GREEN_STAINED_GLASS_PANE, 1);
                 ItemMeta joinBtnItemMeta = joinBtn.getItemMeta();
                 joinBtnItemMeta.getPersistentDataContainer().set(KeyUtil.buttonKey, PersistentDataType.STRING, "join");
                 joinBtnItemMeta.getPersistentDataContainer().set(KeyUtil.arenaKey, PersistentDataType.STRING, availableArenas.get(i).getName());
-                joinBtnItemMeta.setDisplayName("Арена " + (i + 1));
+                joinBtnItemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&lАрена " + (i + 1)));
                 List<String> lore = new ArrayList<>();
-                lore.add("Локация: " + availableArenas.get(i).getLocation().getLocationType().name());
-                lore.add("Этап: " + availableArenas.get(i).getGame().stage);
-                lore.add("Волна: " + availableArenas.get(i).getGame().wave);
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&7Игроки: &6" + availableArenas.get(i).getPlayers().size()));
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&7Локация: &6" + availableArenas.get(i).getLocation().getName()));
+                String hardLevelStr = "";
+                switch (availableArenas.get(i).getGame().getHardLevel()){
+                    case 1:
+                        hardLevelStr = "&aлёгкий";
+                        break;
+                    case 2:
+                        hardLevelStr = "&eнормальный";
+                        break;
+                    case 3:
+                        hardLevelStr = "&cсложный";
+                        break;
+                    default:
+                        hardLevelStr = "&5экстримальный";
+                }
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&7Уровень сложности: &6" + hardLevelStr));
+                String gameType = availableArenas.get(i).getGame().isGameInfinity() ? "обычный" : "бесконечный";
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&7Режим: &6" + gameType));
+
+                if(availableArenas.get(i).getArenaStage() == ArenaStages.IN_PROCESS){
+                    lore.add(ChatColor.translateAlternateColorCodes('&', "&7Этап: &6" + availableArenas.get(i).getGame().stage));
+                    lore.add(ChatColor.translateAlternateColorCodes('&', "&7Волна: &6" + availableArenas.get(i).getGame().wave));
+                }else{
+                    lore.add(ChatColor.translateAlternateColorCodes('&', "&7&oИгра ещё не началась!"));
+                }
                 joinBtnItemMeta.setLore(lore);
                 joinBtn.setItemMeta(joinBtnItemMeta);
                 menu.setItem(offset + i, joinBtn);
             }
-            ItemStack refreshBtn = new ItemStack(Material.GRAY_STAINED_GLASS, 1);
+            ItemStack refreshBtn = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
             ItemMeta refreshBtnItemMeta = refreshBtn.getItemMeta();
             refreshBtnItemMeta.setDisplayName("Обновить");
             refreshBtnItemMeta.getPersistentDataContainer().set(KeyUtil.buttonKey, PersistentDataType.STRING, "refresh");

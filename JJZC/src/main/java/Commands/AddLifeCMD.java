@@ -18,7 +18,7 @@ public class AddLifeCMD implements CommandExecutor {
 
         if(ArenaList.hasArena(player)){
             Arena arena = ArenaList.get(player);
-            arena.getGame().setLifesCount(arena.getGame().getLifesCount() + 1);
+            arena.addLife(player);
             return true;
         }else{
             ChatUtil.sendMessage(player, "&CВы находитесь не на арене!");

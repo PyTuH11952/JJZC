@@ -220,9 +220,31 @@ public class Arena {
                         ItemStack itemToRemove = new ItemStack(itemStack);
                         itemToRemove.setAmount(7);
                         buyer.getInventory().remove(itemToRemove);
-                        ghosts.remove(ghosts.get((int)(Math.random() * ghosts.size())));
-                        buyer.setGameMode(GameMode.ADVENTURE);
-                        buyer.teleport(location.getSpawnLocation());
+                        Player player = ghosts.get((int)(Math.random() * ghosts.size()));
+                        ghosts.remove(player);
+                        player.setGameMode(GameMode.ADVENTURE);
+                        player.teleport(location.getSpawnLocation());
+                        player.sendTitle(ChatColor.translateAlternateColorCodes('&', "&aВы воскрешены!"), "");
+                        return;
+                    }
+                }
+            }
+        }
+        ChatUtil.sendMessage(buyer, "&cНедостаточно материала!");
+        buyer.closeInventory();
+    }
+
+    public void addLife(Player buyer){
+        int materialCount = 0;
+        for(ItemStack itemStack : buyer.getInventory()){
+            if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(itemStack).isPresent()){
+                if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(itemStack).get().getId().equals("material5")){
+                    materialCount += itemStack.getAmount();
+                    if(materialCount >= 5){
+                        ItemStack itemToRemove = new ItemStack(itemStack);
+                        itemToRemove.setAmount(5);
+                        buyer.getInventory().remove(itemToRemove);
+                        game.setLifesCount(game.getLifesCount() + 1);
                         return;
                     }
                 }

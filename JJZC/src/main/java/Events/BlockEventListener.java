@@ -1,6 +1,7 @@
 package Events;
 
 import Arena.Arena;
+import Arena.CustomBlock;
 import Arena.ArenaList;
 import Utils.ChatUtil;
 import Utils.KeyUtil;
@@ -97,9 +98,16 @@ public class BlockEventListener implements Listener {
         if(e.getBlock() == null){
             return;
         }
-        if (ArenaList.get(e.getPlayer()) == null){
+        if (!ArenaList.hasArena(e.getPlayer())){
             return;
         }
+
+        for(CustomBlock customBlock : ArenaList.get(e.getPlayer()).getLocation().getCustomBlocks()){
+            if(customBlock.location.equals(e.getBlock().getLocation())){
+                customBlock.onClick(e.getPlayer());
+            }
+        }
+
         Location lowerBlockLocation = e.getBlock().getLocation();
         lowerBlockLocation.setY(e.getBlock().getLocation().getBlockY() - 1);
         if(ArenaList.get(e.getPlayer()).getLocation().getDoors().containsKey(e.getBlock().getLocation())
