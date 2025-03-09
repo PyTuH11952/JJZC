@@ -212,14 +212,32 @@ public class Arena {
         }
 
         int materialCount = 0;
-        for(ItemStack itemStack : buyer.getInventory()){
+        List<Integer> indexes = new ArrayList<>();
+        for(int i = 0; i < buyer.getInventory().getSize(); i++){
+            ItemStack itemStack = buyer.getInventory().getItem(i);
             if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(itemStack).isPresent()){
                 if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(itemStack).get().getId().equals("material4")){
                     materialCount += itemStack.getAmount();
+                    if(itemStack.getAmount() > 7){
+                        itemStack.setAmount(itemStack.getAmount() - 7);
+                        Player player = ghosts.get((int)(Math.random() * ghosts.size()));
+                        ghosts.remove(player);
+                        player.setGameMode(GameMode.ADVENTURE);
+                        player.teleport(location.getSpawnLocation());
+                        player.sendTitle(ChatColor.translateAlternateColorCodes('&', "&aВы воскрешены!"), "");
+                        break;
+                    }
+                    indexes.add(i);
                     if(materialCount >= 7){
-                        ItemStack itemToRemove = new ItemStack(itemStack);
-                        itemToRemove.setAmount(7);
-                        buyer.getInventory().remove(itemToRemove);
+                        int removedItemsCount = 0;
+                        for(int index : indexes){
+                            ItemStack itemToRemove = buyer.getInventory().getItem(index);
+                            if(buyer.getInventory().getItem(index).getAmount() <= 7 - removedItemsCount) {
+                                itemToRemove.setType(Material.AIR);
+                            }else{
+                                itemToRemove.setAmount(itemToRemove.getAmount() - 7 + removedItemsCount);
+                            }
+                        }
                         Player player = ghosts.get((int)(Math.random() * ghosts.size()));
                         ghosts.remove(player);
                         player.setGameMode(GameMode.ADVENTURE);
@@ -237,18 +255,27 @@ public class Arena {
     public void addLife(Player buyer){
         int materialCount = 0;
         List<Integer> indexes = new ArrayList<>();
-        for(ItemStack itemStack : buyer.getInventory()){
+        for(int i = 0; i < buyer.getInventory().getSize(); i++){
+            ItemStack itemStack = buyer.getInventory().getItem(i);
             if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(itemStack).isPresent()){
                 if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(itemStack).get().getId().equals("material5")){
                     materialCount += itemStack.getAmount();
                     if(itemStack.getAmount() > 5){
                         itemStack.setAmount(itemStack.getAmount() - 5);
+                        game.setLifesCount(game.getLifesCount() + 1);
+                        break;
                     }
-                    indexes.add(buyer.getInventory().)
+                    indexes.add(i);
                     if(materialCount >= 5){
-                        ItemStack itemToRemove = new ItemStack(itemStack);
-                        itemToRemove.setAmount(5);
-                        buyer.getInventory().remove(itemToRemove);
+                        int removedItemsCount = 0;
+                        for(int index : indexes){
+                            ItemStack itemToRemove = buyer.getInventory().getItem(index);
+                            if(buyer.getInventory().getItem(index).getAmount() <= 5 - removedItemsCount) {
+                                itemToRemove.setType(Material.AIR);
+                            }else{
+                                itemToRemove.setAmount(itemToRemove.getAmount() - 5 + removedItemsCount);
+                            }
+                        }
                         game.setLifesCount(game.getLifesCount() + 1);
                         return;
                     }
@@ -353,5 +380,9 @@ public class Arena {
 
     public void setArenaStage(ArenaStages arenaStage) {
         this.arenaStage = arenaStage;
+    }
+
+    public List<Player> getGhosts(){
+        return ghosts;
     }
 }

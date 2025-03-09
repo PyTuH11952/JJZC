@@ -104,7 +104,7 @@ public class BlockEventListener implements Listener {
                 if(customBlock.action == "anvil"){
                     CustomAnvil customAnvil = (CustomAnvil) customBlock;
                     if((int)(Math.random() * 2) > 0){
-                        switch(customAnvil.level){
+                        switch(customAnvil.getLevel()){
                             case 1:
                                 e.getBlock().setType(Material.CHIPPED_ANVIL);
                                 break;
@@ -115,7 +115,7 @@ public class BlockEventListener implements Listener {
                                 e.getBlock().setType(Material.AIR);
                                 Bukkit.getWorld(e.getPlayer().getUniqueId()).playSound(e.getBlock().getLocation(), Sound.BLOCK_ANVIL_PLACE ,1, 1);
                         }
-                        customAnvil.level++;
+                        customAnvil.onBreak();
                     }
                 }
                 customBlock.onClick(e.getPlayer());

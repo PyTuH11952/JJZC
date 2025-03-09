@@ -10,15 +10,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="826ec8dd-69ce-4dea-9d10-7bbbf4b43755" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/Arena/CustomAnvil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/ArenaLocation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/ArenaLocation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/CustomBlock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/CustomBlock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/CustomAnvil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/CustomAnvil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Events/BlockEventListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Events/BlockEventListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/MCC-1.0.0-shaded.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/MCC-1.0.0-shaded.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/MCC-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/MCC-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/original-MCC-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/original-MCC-1.0.0.jar" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
