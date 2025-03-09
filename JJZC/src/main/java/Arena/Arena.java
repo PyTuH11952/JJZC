@@ -225,7 +225,16 @@ public class Arena {
                         player.setGameMode(GameMode.ADVENTURE);
                         player.teleport(location.getSpawnLocation());
                         player.sendTitle(ChatColor.translateAlternateColorCodes('&', "&aВы воскрешены!"), "");
-                        break;
+                        return;
+                    }
+                    if(itemStack.getAmount() == 7){
+                        buyer.getInventory().getItem(i).setType(Material.AIR);
+                        Player player = ghosts.get((int)(Math.random() * ghosts.size()));
+                        ghosts.remove(player);
+                        player.setGameMode(GameMode.ADVENTURE);
+                        player.teleport(location.getSpawnLocation());
+                        player.sendTitle(ChatColor.translateAlternateColorCodes('&', "&aВы воскрешены!"), "");
+                        return;
                     }
                     indexes.add(i);
                     if(materialCount >= 7){
@@ -263,7 +272,12 @@ public class Arena {
                     if(itemStack.getAmount() > 5){
                         itemStack.setAmount(itemStack.getAmount() - 5);
                         game.setLifesCount(game.getLifesCount() + 1);
-                        break;
+                        return;
+                    }
+                    if(itemStack.getAmount() == 5){
+                        buyer.getInventory().getItem(i).setType(Material.AIR);
+                        game.setLifesCount(game.getLifesCount() + 1);
+                        return;
                     }
                     indexes.add(i);
                     if(materialCount >= 5){

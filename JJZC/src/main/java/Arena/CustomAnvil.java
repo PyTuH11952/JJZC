@@ -28,9 +28,13 @@ public class CustomAnvil extends CustomBlock {
                     materialCount += itemStack.getAmount();
                     if(itemStack.getAmount() > 5 * level){
                         itemStack.setAmount(itemStack.getAmount() - 5 * level);
-                        ItemStack itemToRemove = new ItemStack(itemStack);
-                        itemToRemove.setAmount(5);
-                        buyer.getInventory().remove(itemToRemove);
+                        Location artLocation = location;
+                        artLocation.setY(artLocation.getY() + 1);
+                        ArenaList.get(buyer).getGame().spawnRandomArtifact(artLocation);
+                        return;
+                    }
+                    if(itemStack.getAmount() == 5 * level){
+                        buyer.getInventory().getItem(i).setType(Material.AIR);
                         Location artLocation = location;
                         artLocation.setY(artLocation.getY() + 1);
                         ArenaList.get(buyer).getGame().spawnRandomArtifact(artLocation);
