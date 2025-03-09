@@ -15,7 +15,7 @@ public class CustomBlock {
 
     public void onClick(Player player){
         if(action.startsWith("/")){
-            Bukkit.dispatchCommand(player, action);
+            player.performCommand(action.substring(1));
         }
     }
 }

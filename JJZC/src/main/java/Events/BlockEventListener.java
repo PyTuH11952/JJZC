@@ -1,16 +1,13 @@
 package Events;
 
-import Arena.Arena;
 import Arena.CustomBlock;
+import Arena.CustomAnvil;
 import Arena.ArenaList;
 import Utils.ChatUtil;
 import Utils.KeyUtil;
-import com.mimikcraft.mcc.ExecutableApi;
 import com.mimikcraft.mcc.Main;
 import com.ssomar.score.api.executableitems.ExecutableItemsAPI;
-import com.ssomar.score.api.executableitems.config.ExecutableItemsManagerInterface;
 import com.ssomar.sevents.events.player.click.right.PlayerRightClickEvent;
-import net.milkbowl.vault.chat.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -104,6 +101,23 @@ public class BlockEventListener implements Listener {
 
         for(CustomBlock customBlock : ArenaList.get(e.getPlayer()).getLocation().getCustomBlocks()){
             if(customBlock.location.equals(e.getBlock().getLocation())){
+                if(customBlock.action == "anvil"){
+                    CustomAnvil customAnvil = (CustomAnvil) customBlock;
+                    if((int)(Math.random() * 2) > 0){
+                        switch(customAnvil.level){
+                            case 1:
+                                e.getBlock().setType(Material.CHIPPED_ANVIL);
+                                break;
+                            case 2:
+                                e.getBlock().setType(Material.DAMAGED_ANVIL);
+                                break;
+                            case 3:
+                                e.getBlock().setType(Material.AIR);
+                                Bukkit.getWorld(e.getPlayer().getUniqueId()).playSound(e.getBlock().getLocation(), Sound.BLOCK_ANVIL_PLACE ,1, 1);
+                        }
+                        customAnvil.level++;
+                    }
+                }
                 customBlock.onClick(e.getPlayer());
             }
         }

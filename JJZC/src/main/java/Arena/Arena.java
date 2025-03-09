@@ -236,10 +236,15 @@ public class Arena {
 
     public void addLife(Player buyer){
         int materialCount = 0;
+        List<Integer> indexes = new ArrayList<>();
         for(ItemStack itemStack : buyer.getInventory()){
             if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(itemStack).isPresent()){
                 if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(itemStack).get().getId().equals("material5")){
                     materialCount += itemStack.getAmount();
+                    if(itemStack.getAmount() > 5){
+                        itemStack.setAmount(itemStack.getAmount() - 5);
+                    }
+                    indexes.add(buyer.getInventory().)
                     if(materialCount >= 5){
                         ItemStack itemToRemove = new ItemStack(itemStack);
                         itemToRemove.setAmount(5);

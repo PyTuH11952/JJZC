@@ -31,6 +31,10 @@ commands:
     usage: /chooseStructureChange
   setstructurechanges:
     usage: /setStructureChanges
+  revive:
+    usage: /revive
+  addlife:
+    usage: /addlife
 depend:
   - MythicMobs
   - Vault
