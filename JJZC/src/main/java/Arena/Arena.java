@@ -1,9 +1,11 @@
 package Arena;
 
 import Utils.ChatUtil;
+import Utils.RemoveItemUtil;
 import com.mimikcraft.mcc.ExecutableApi;
 import com.mimikcraft.mcc.Main;
 import com.ssomar.score.api.executableitems.ExecutableItemsAPI;
+import com.ssomar.score.api.executableitems.config.ExecutableItemInterface;
 import io.lumine.mythic.bukkit.utils.bossbar.BossBarColor;
 import io.lumine.mythic.bukkit.utils.bossbar.BossBarStyle;
 import me.neznamy.tab.api.TabAPI;
@@ -109,6 +111,7 @@ public class Arena {
         playerLvl.put(player,player.getLevel());
         player.setExp(0.0f);
         onJoinLocation.put(player, player.getLocation());
+        players.put(player, new ArrayList<>());
         sendArenaMessage(player.getDisplayName() + " присоединился!");
         player.getInventory().clear();
         player.getActivePotionEffects().clear();
@@ -126,10 +129,9 @@ public class Arena {
                 player.hidePlayer(Main.getInstance(), otherPlayer);
             }
         }
-        if (players.size() == 1 && arenaStage != ArenaStages.CLOSED) {
+        if (players.size() == 1 && arenaStage == ArenaStages.WAITING) {
             startGame();
         }
-        players.put(player, new ArrayList<>());
 
     }
 
@@ -261,43 +263,21 @@ public class Arena {
         buyer.closeInventory();
     }
 
-    public void addLife(Player buyer){
-        int materialCount = 0;
-        List<Integer> indexes = new ArrayList<>();
-        for(int i = 0; i < buyer.getInventory().getSize(); i++){
-            ItemStack itemStack = buyer.getInventory().getItem(i);
-            if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(itemStack).isPresent()){
-                if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(itemStack).get().getId().equals("material5")){
-                    materialCount += itemStack.getAmount();
-                    if(itemStack.getAmount() > 5){
-                        itemStack.setAmount(itemStack.getAmount() - 5);
-                        game.setLifesCount(game.getLifesCount() + 1);
-                        return;
-                    }
-                    if(itemStack.getAmount() == 5){
-                        buyer.getInventory().getItem(i).setType(Material.AIR);
-                        game.setLifesCount(game.getLifesCount() + 1);
-                        return;
-                    }
-                    indexes.add(i);
-                    if(materialCount >= 5){
-                        int removedItemsCount = 0;
-                        for(int index : indexes){
-                            ItemStack itemToRemove = buyer.getInventory().getItem(index);
-                            if(buyer.getInventory().getItem(index).getAmount() <= 5 - removedItemsCount) {
-                                itemToRemove.setType(Material.AIR);
-                            }else{
-                                itemToRemove.setAmount(itemToRemove.getAmount() - 5 + removedItemsCount);
-                            }
-                        }
-                        game.setLifesCount(game.getLifesCount() + 1);
-                        return;
-                    }
-                }
-            }
+    public void addLife(Player player){
+        Optional<ExecutableItemInterface> eiOpt = ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem("material5");
+        ItemStack item = new ItemStack(Material.AIR);
+        if (eiOpt.isPresent()) {
+            item = eiOpt.get().buildItem(5, Optional.empty(), Optional.of(player));
         }
-        ChatUtil.sendMessage(buyer, "&cНедостаточно материала!");
-        buyer.closeInventory();
+        if (player.getInventory().containsAtLeast(item,5)){
+            RemoveItemUtil.remove(player, item, 5);
+            getGame().setLifesCount(getGame().getLifesCount()+1);
+            player.closeInventory();
+            sendArenaMessage("&aИгрок &e" + player + " &aскрафтил дополнительную жизнь!");
+        } else{
+            ChatUtil.sendMessage(player, "&cНедостаточно материала!");
+            player.closeInventory();
+        }
     }
 
     public boolean canJoin(Player player) {

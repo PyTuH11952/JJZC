@@ -34,7 +34,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MenuListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        //getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getServer().getPluginManager().registerEvents(new MobSpawnEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerConnectionEventListener(), this);
 
