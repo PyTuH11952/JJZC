@@ -66,4 +66,13 @@ public class ArenaList {
         return temp;
     }
 
+    public static Arena getFreeArena(){
+        for(Arena arena: arenas){
+            if(arena.getArenaStage() == ArenaStages.FREE){
+                return arena;
+            }
+        }
+        return null;
+    }
+
 }

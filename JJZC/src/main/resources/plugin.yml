@@ -7,8 +7,8 @@ commands:
     usage: /join
   leave:
     usage: /leave
-  faststart:
-    usage: /faststart
+  forcestart:
+    usage: /forcestart
   gamesettings:
     usage: /gamesettings
   party:

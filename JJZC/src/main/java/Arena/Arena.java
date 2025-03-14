@@ -6,22 +6,15 @@ import com.mimikcraft.mcc.ExecutableApi;
 import com.mimikcraft.mcc.Main;
 import com.ssomar.score.api.executableitems.ExecutableItemsAPI;
 import com.ssomar.score.api.executableitems.config.ExecutableItemInterface;
-import io.lumine.mythic.bukkit.utils.bossbar.BossBarColor;
-import io.lumine.mythic.bukkit.utils.bossbar.BossBarStyle;
 import me.neznamy.tab.api.TabAPI;
 import me.neznamy.tab.api.TabPlayer;
 import org.bukkit.*;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 import static Utils.WorldUtil.copyWorld;
@@ -44,7 +37,9 @@ public class Arena {
 
     private final Map<Player, Integer> playerLvl = new HashMap<>();
 
-    private ArenaStages arenaStage = ArenaStages.CLOSED;
+    private final Map<Player, Map<Integer, ItemStack>> playerInventory = new HashMap<>();
+
+    private ArenaStages arenaStage = ArenaStages.FREE;
 
     private Game game;
     private ArenaLocation location;
@@ -52,6 +47,8 @@ public class Arena {
     private final Map<Player, List<Artifact>> players = new HashMap<>();
     private final List<Player> ghosts = new ArrayList<>();
     private final List<Player> leavedPlayers = new ArrayList<>();
+
+    private Player host;
 
     public Arena(String name) {
         if (Bukkit.getWorld(name) == null){
@@ -87,7 +84,7 @@ public class Arena {
         wc.createWorld();
         game = new Game(this);
         players.clear();
-        arenaStage = ArenaStages.CLOSED;
+        arenaStage = ArenaStages.FREE;
     }
 
     public void join(Player player){
@@ -95,7 +92,7 @@ public class Arena {
             ChatUtil.sendMessage(player, "Вы уже на арене!");
             return;
         }
-        if (arenaStage == ArenaStages.CLOSED || arenaStage == ArenaStages.RESET || arenaStage == ArenaStages.GAME_ENDED) {
+        if (arenaStage == ArenaStages.FREE || arenaStage == ArenaStages.RESET || arenaStage == ArenaStages.GAME_ENDED) {
             ChatUtil.sendMessage(player, "Арена закрыта!");
             return;
         }
@@ -111,11 +108,15 @@ public class Arena {
         playerLvl.put(player,player.getLevel());
         player.setExp(0.0f);
         onJoinLocation.put(player, player.getLocation());
+        playerInventory.put(player, new HashMap<>());
+        for(int i = 0; i < player.getInventory().getSize(); i++){
+            playerInventory.get(player).put(i, player.getInventory().getItem(i));
+        }
         players.put(player, new ArrayList<>());
         sendArenaMessage(player.getDisplayName() + " присоединился!");
         player.getInventory().clear();
         player.getActivePotionEffects().clear();
-        if (arenaStage == ArenaStages.WAITING){
+        if (arenaStage == ArenaStages.STARTING){
             player.teleport(new Location(Bukkit.getWorld(name), location.getLobbyLocation().getX(),location.getLobbyLocation().getY(), location.getLobbyLocation().getZ()));
         } else{
             player.teleport(new Location(Bukkit.getWorld(name), location.getSpawnLocation().getX(),location.getSpawnLocation().getY(), location.getSpawnLocation().getZ()));
@@ -129,9 +130,17 @@ public class Arena {
                 player.hidePlayer(Main.getInstance(), otherPlayer);
             }
         }
-        if (players.size() == 1 && arenaStage == ArenaStages.WAITING) {
+        if (players.size() == 1) {
+            host = player;
+            ExecutableApi.setExecutableItem(host, "hostitem1", 1, 8);
+            ExecutableApi.setExecutableItem(host, "hostitem2", 1, 7);
             startGame();
         }
+
+        ExecutableApi.giveExecutableItem(player, "hubitem1", 1);
+        ExecutableApi.giveExecutableItem(player, "hubitem2", 1);
+        ExecutableApi.giveExecutableItem(player, "hubitem3", 1);
+        ExecutableApi.giveExecutableItem(player, "hubitem4", 1);
 
     }
 
@@ -159,7 +168,7 @@ public class Arena {
                 }
                 ctr--;
                 if (players.isEmpty()){
-                    arenaStage = ArenaStages.WAITING;
+                    arenaStage = ArenaStages.FREE;
                     cancel();
                 }
             }
@@ -167,7 +176,7 @@ public class Arena {
     }
 
     public void leave(Player player){
-        if (arenaStage == ArenaStages.WAITING){
+        if (arenaStage == ArenaStages.STARTING){
             player.setExp(playerExp.get(player));
             player.setLevel(playerLvl.get(player));
         }
@@ -181,9 +190,19 @@ public class Arena {
         if (players.isEmpty() && arenaStage == ArenaStages.STARTING){
             reset();
         }
+        if(players.size() == 1){
+            for(Map.Entry<Player, List<Artifact>> entry : players.entrySet()){
+                host = entry.getKey();
+                ExecutableApi.setExecutableItem(host, "hostitem1", 1, 8);
+                ExecutableApi.setExecutableItem(host, "hostitem2", 1, 7);
+                break;
+            }
+        }
         player.teleport(onJoinLocation.get(player));
         game.removeBossBar(player);
-        player.getInventory().clear();
+        for(Map.Entry<Integer, ItemStack> entry : playerInventory.get(player).entrySet()){
+            player.getInventory().setItem(entry.getKey(), entry.getValue());
+        }
         player.getActivePotionEffects().clear();
     }
 
@@ -281,22 +300,11 @@ public class Arena {
     }
 
     public boolean canJoin(Player player) {
-
-        switch(getLocation().getLocationType()){
-            case HOSPITAL:
-                return true;
-            case MALL:
-                return player.hasPermission("loc1.1");
-            case GARAGE:
-                return player.hasPermission("loc2.1");
-            case FACTORY:
-                return player.hasPermission("loc3.1");
-            case METRO:
-                return player.hasPermission("loc4.1");
-        }
-
-        ChatUtil.sendMessage(player, "&cНе удалось определить локацию");
-        return true;
+        if(game.getHardLevel() == 1) return true;
+        if(!player.hasPermission("loc" + (location.getLocationType().ordinal() + 1) + "." + (game.getHardLevel() - 1))){
+            ChatUtil.sendMessage(player, "&cНе удалось определить локацию");
+            return false;
+        }else return true;
     }
 
 

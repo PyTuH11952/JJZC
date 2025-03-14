@@ -35,7 +35,7 @@ public class JoinCMD implements CommandExecutor {
             List<Arena> availableArenas = ArenaList.getAvailable(player);
             int offset = availableArenas.size() % 2 == 0 ? (9 - availableArenas.size() + 1) / 2 + 18 : (9 - availableArenas.size()) / 2 + 18;
             for(int i = 0; i < availableArenas.size(); i++){
-                ItemStack joinBtn = new ItemStack(Material.GREEN_STAINED_GLASS_PANE, 1);
+                ItemStack joinBtn = new ItemStack(Material.LIME_STAINED_GLASS_PANE, 1);
                 ItemMeta joinBtnItemMeta = joinBtn.getItemMeta();
                 joinBtnItemMeta.getPersistentDataContainer().set(KeyUtil.buttonKey, PersistentDataType.STRING, "join");
                 joinBtnItemMeta.getPersistentDataContainer().set(KeyUtil.arenaKey, PersistentDataType.STRING, availableArenas.get(i).getName());
@@ -77,6 +77,21 @@ public class JoinCMD implements CommandExecutor {
             refreshBtnItemMeta.getPersistentDataContainer().set(KeyUtil.buttonKey, PersistentDataType.STRING, "refresh");
             refreshBtn.setItemMeta(refreshBtnItemMeta);
             menu.setItem(36, refreshBtn);
+
+            ItemStack forceStartBtn = new ItemStack(Material.YELLOW_STAINED_GLASS_PANE, 1);
+            ItemMeta forceStartBtnItemMeta = forceStartBtn.getItemMeta();
+            forceStartBtnItemMeta.setDisplayName("&eБыстрый страт");
+            forceStartBtnItemMeta.getPersistentDataContainer().set(KeyUtil.buttonKey, PersistentDataType.STRING, "forceStart");
+            forceStartBtn.setItemMeta(forceStartBtnItemMeta);
+            menu.setItem(39, forceStartBtn);
+            player.openInventory(menu);
+
+            ItemStack createGameBtn = new ItemStack(Material.GREEN_STAINED_GLASS_PANE, 1);
+            ItemMeta createGameBtnItemMeta = createGameBtn.getItemMeta();
+            createGameBtnItemMeta.setDisplayName("&2Создать новую игру");
+            createGameBtnItemMeta.getPersistentDataContainer().set(KeyUtil.buttonKey, PersistentDataType.STRING, "createGame");
+            createGameBtn.setItemMeta(createGameBtnItemMeta);
+            menu.setItem(41, createGameBtn);
             player.openInventory(menu);
             return  true;
         }

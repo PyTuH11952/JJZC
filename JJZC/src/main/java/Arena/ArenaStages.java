@@ -1,8 +1,7 @@
 package Arena;
 
 public enum ArenaStages {
-    CLOSED,
-    WAITING,
+    FREE,
     CUTSCENE,
     STARTING,
     IN_PROCESS,

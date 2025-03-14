@@ -23,6 +23,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -712,6 +713,12 @@ public class Game {
         clearMobs();
 
         for (Player player : arena.getPlayers().keySet()){
+            if(!player.hasPermission("loc" + (arena.getLocation().getLocationType().ordinal() + 1) + "." + (hardLevel - 1))){
+                PermissionAttachment attachment = player.addAttachment(Main.getInstance());
+                attachment.setPermission("loc" + (arena.getLocation().getLocationType().ordinal() + 1) + "." + (hardLevel - 1), true);
+                player.removeAttachment(attachment);
+            }
+
             if(!arena.getPlayers().get(player).isEmpty()){
                 for(int i = arena.getPlayers().get(player).size() - 1; i > 0; i--){
                     ArtifactsTypes artifactType = arena.getPlayers().get(player).get(i).artifactType;

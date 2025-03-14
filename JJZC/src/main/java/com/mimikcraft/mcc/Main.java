@@ -26,6 +26,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginCommand("addlife").setExecutor(new AddLifeCMD());
         getServer().getPluginCommand("setspawns").setExecutor(new SetSpawnsCMD());
         getServer().getPluginCommand("getchest").setExecutor(new GetChestCMD());
+        getServer().getPluginCommand("forcestart").setExecutor(new ForceStartCMD());
         getServer().getPluginCommand("choosestructurechanges").setExecutor(new ChooseStructureChangesCMD());
         getServer().getPluginCommand("setstructurechanges").setExecutor(new SetStructureChangesCMD());
         getServer().getPluginManager().registerEvents(new KillsEventListener(), this);
@@ -34,7 +35,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MenuListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
-        //getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getServer().getPluginManager().registerEvents(new MobSpawnEventListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerConnectionEventListener(), this);
 

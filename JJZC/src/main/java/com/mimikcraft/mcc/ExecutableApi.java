@@ -22,4 +22,17 @@ public class ExecutableApi {
             player.getInventory().addItem(item);
         }
     }
+
+    public static void setExecutableItem(Player player, String executableItemId, int amount, int index) {
+        ItemStack item = null;
+        Optional<ExecutableItemInterface> eiOpt = ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(executableItemId);
+        if (eiOpt.isPresent()) {
+            item = eiOpt.get().buildItem(amount, Optional.empty(), Optional.of(player));
+        }
+        if (item != null) {
+            AddItemInPlayerInventoryEvent eventToCall = new AddItemInPlayerInventoryEvent(player, item, player.getInventory().firstEmpty());
+            Bukkit.getPluginManager().callEvent(eventToCall);
+            player.getInventory().setItem(index, item);
+        }
+    }
 }
