@@ -32,11 +32,10 @@ public class LaunchCMD implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (!(commandSender instanceof Player)) return true;
         Player player = (Player) commandSender;
-
         if(ArenaList.getFreeArena() == null){
             ChatUtil.sendMessage(player, "&Нет свободных арен!");
+            return true;
         }
-
         Arena arena = ArenaList.getFreeArena();
 
         File folder = new File(Main.getInstance().getDataFolder().getAbsolutePath());
@@ -53,7 +52,6 @@ public class LaunchCMD implements CommandExecutor {
             }
         }
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-
         Inventory menu = Bukkit.createInventory(null, 9);
         List<ArenaLocation> availableLocations = new ArrayList<>();
         for(String location: config.getKeys(false)){
@@ -62,7 +60,7 @@ public class LaunchCMD implements CommandExecutor {
             }
             availableLocations.add(new ArenaLocation(ArenaLocation.LocationTypes.valueOf(location.toUpperCase()), arena.getArenaWorld()));
         }
-        int offset = availableLocations.size() % 2 == 0 ? (9 - availableLocations.size() + 1) / 2 + 18 : (9 - availableLocations.size()) / 2 + 18;
+        int offset = availableLocations.size() % 2 == 0 ? (9 - availableLocations.size() + 1) / 2: (9 - availableLocations.size()) / 2;
         for(int i = 0; i < availableLocations.size(); i++){
             ConfigurationSection locationSection = config.getConfigurationSection(availableLocations.get(i).getLocationType().name().toLowerCase());
             ItemStack locationBtn = new ItemStack(Material.GREEN_STAINED_GLASS_PANE, 1);
@@ -74,7 +72,6 @@ public class LaunchCMD implements CommandExecutor {
             locationBtn.setItemMeta(locationItemMeta);
             menu.setItem(offset + i, locationBtn);
         }
-
         player.openInventory(menu);
         return true;
     }

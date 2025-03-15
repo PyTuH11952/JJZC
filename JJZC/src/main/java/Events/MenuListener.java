@@ -134,6 +134,7 @@ public class MenuListener implements Listener {
         else if (e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.buttonKey, PersistentDataType.STRING).equals("createGame")) {
             if(ArenaList.getFreeArena() == null){
                 ChatUtil.sendMessage(player, "&Нет свободных арен!");
+                return;
             }
 
             Arena arena = ArenaList.getFreeArena();
@@ -183,6 +184,7 @@ public class MenuListener implements Listener {
             if(ArenaList.getFreeArena() == null){
                 player.closeInventory();
                 ChatUtil.sendMessage(player, "&cАрену уже заняли!");
+                return;
             }
             Arena arena = ArenaList.getFreeArena();
             arena.setLocationType(ArenaLocation.LocationTypes.valueOf(e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.locationKey, PersistentDataType.STRING).toUpperCase()));

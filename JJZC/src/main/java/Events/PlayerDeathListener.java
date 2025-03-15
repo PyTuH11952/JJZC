@@ -18,6 +18,9 @@ public class PlayerDeathListener implements Listener {
         Arena arena = ArenaList.get(e.getEntity());
         Player player = e.getEntity();
         if(arena.getGame().getLifesCount() > 0){
+            if(ArenaList.get(player) == null){
+                return;
+            }
             for(Artifact artifact : ArenaList.get(player).getPlayers().get(player)){
                 if(artifact.artifactType == ArtifactsTypes.CONTRACT){
                     if((int)(Math.random() * 10) <= artifact.level){

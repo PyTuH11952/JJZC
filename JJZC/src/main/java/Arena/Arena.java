@@ -92,7 +92,7 @@ public class Arena {
             ChatUtil.sendMessage(player, "Вы уже на арене!");
             return;
         }
-        if (arenaStage == ArenaStages.FREE || arenaStage == ArenaStages.RESET || arenaStage == ArenaStages.GAME_ENDED) {
+        if (arenaStage == ArenaStages.RESET || arenaStage == ArenaStages.GAME_ENDED) {
             ChatUtil.sendMessage(player, "Арена закрыта!");
             return;
         }
@@ -116,7 +116,7 @@ public class Arena {
         sendArenaMessage(player.getDisplayName() + " присоединился!");
         player.getInventory().clear();
         player.getActivePotionEffects().clear();
-        if (arenaStage == ArenaStages.STARTING){
+        if (arenaStage == ArenaStages.STARTING || arenaStage == ArenaStages.FREE){
             player.teleport(new Location(Bukkit.getWorld(name), location.getLobbyLocation().getX(),location.getLobbyLocation().getY(), location.getLobbyLocation().getZ()));
         } else{
             player.teleport(new Location(Bukkit.getWorld(name), location.getSpawnLocation().getX(),location.getSpawnLocation().getY(), location.getSpawnLocation().getZ()));

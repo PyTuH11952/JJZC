@@ -26,9 +26,8 @@ public class KillsEventListener implements Listener {
                 if (e.getKiller() != null){
                     if (e.getKiller() instanceof Player){
                         Player player = ((Player) e.getKiller()).getPlayer();
-                        if (arena.getGame().getPlayerKills().get(player) != null){
-                            int kills = (arena.getGame().getPlayerKills().get(player)+1);
-                            arena.getGame().getPlayerKills().put(player, kills);
+                        if (arena.getGame().getPlayerKills().containsKey(player)){
+                            arena.getGame().getPlayerKills().replace(player, arena.getGame().getPlayerKills().get(player)+1);
                         } else{
                             arena.getGame().getPlayerKills().put(player, 1);
                         }

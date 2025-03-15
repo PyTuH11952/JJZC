@@ -1,7 +1,6 @@
 Events\PlayerConnectionEventListener.class
 Commands\ReviveCMD.class
 Arena\Game$8.class
-Arena\Arena$3.class
 Arena\Game$5.class
 Utils\KeyUtil.class
 Arena\Game$9.class
@@ -22,6 +21,7 @@ Arena\Artifact.class
 Events\PlayerInteractListener$1.class
 Arena\ArenaStages.class
 Arena\Game$10.class
+Utils\RemoveItemUtil.class
 Arena\EmptyChunkGenerator.class
 Events\PlayerDeathListener.class
 Arena\ArtifactsTypes.class
@@ -31,6 +31,7 @@ Events\MenuListener.class
 Arena\Game$2.class
 Arena\Game$4.class
 Arena\CustomBlock.class
+Commands\ForceStartCMD.class
 Arena\Arena$2.class
 com\mimikcraft\mcc\Expansion.class
 Arena\Game$11.class
