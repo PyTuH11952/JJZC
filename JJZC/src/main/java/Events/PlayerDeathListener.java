@@ -31,6 +31,7 @@ public class PlayerDeathListener implements Listener {
                 }
             }
             arena.getGame().setLifesCount(arena.getGame().getLifesCount()-1);;
+            arena.getGame().setLifesSpent(arena.getGame().getLifesSpent()+1);
         }else{
             arena.playerDie(player);
         }

@@ -53,7 +53,9 @@ public class Game {
 
     private int zombiesCount = 0;
 
-    private int lifesCount = 3;
+    private int lifesCount = 2;
+
+    private int lifesSpent = 0;
 
     private int addZombie;
 
@@ -499,11 +501,7 @@ public class Game {
         for (Player player : arena.getPlayers().keySet()) {
             bossbar.addPlayer(player);
         }
-        if (wave == 1){
-            bossbarProgress = (double)(mobs.size()-addZombie)/(double)(zombiesCount-addZombie);
-        } else{
-            bossbarProgress = (double)(mobs.size()-addZombie)/(double)zombiesCount;
-        }
+        bossbarProgress = (double)mobs.size()/(double)(zombiesCount-1);
         if (bossbarProgress <= 0.0) {
             bossbar.removeAll();
             return;
@@ -703,11 +701,28 @@ public class Game {
     }
 
     public void endGame(boolean isWon) {
+        int stars = 0;
+        String starsSubTitle = "&7☆☆☆";
+        switch (lifesSpent) {
+            case 0:
+                stars = 3;
+                starsSubTitle = "&e☆☆☆";
+                break;
+            case 1:
+                stars = 2;
+                starsSubTitle = "&e☆☆&7☆";
+                break;
+            case 2:
+                stars = 1;
+                starsSubTitle = "&e☆&7☆☆";
+                break;
+        }
         if(isWon){
-            arena.sendArenaTitle("&aПобеда!", "");
+            arena.sendArenaTitle("&aПобеда!", starsSubTitle);
         }else{
             arena.sendArenaTitle("&cПоражение!", "");
         }
+
         arena.setArenaStage(ArenaStages.GAME_ENDED);
 
         clearMobs();
@@ -844,6 +859,14 @@ public class Game {
 
     public boolean isGameInfinity(){
         return isInfinity;
+    }
+
+    public int getLifesSpent() {
+        return lifesSpent;
+    }
+
+    public void setLifesSpent(int lifesSpent) {
+        this.lifesSpent = lifesSpent;
     }
 }
 

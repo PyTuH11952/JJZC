@@ -23,6 +23,7 @@ Arena\ArenaStages.class
 Arena\Game$10.class
 Utils\RemoveItemUtil.class
 Arena\EmptyChunkGenerator.class
+Commands\KickCMD.class
 Events\PlayerDeathListener.class
 Arena\ArtifactsTypes.class
 Arena\Game$7.class

@@ -225,62 +225,30 @@ public class Arena {
         }
     }
 
-    public void reviveRandom(Player buyer){
+    public void reviveRandom(Player player){
         if(ghosts.isEmpty()){
-            ChatUtil.sendMessage(buyer, "&cВсе игроки живы!");
-            buyer.closeInventory();
+            ChatUtil.sendMessage(player, "&cВсе игроки живы!");
+            player.closeInventory();
             return;
         }
-
-        int materialCount = 0;
-        List<Integer> indexes = new ArrayList<>();
-        for(int i = 0; i < buyer.getInventory().getSize(); i++){
-            ItemStack itemStack = buyer.getInventory().getItem(i);
-            if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(itemStack).isPresent()){
-                if(ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(itemStack).get().getId().equals("material4")){
-                    materialCount += itemStack.getAmount();
-                    if(itemStack.getAmount() > 7){
-                        itemStack.setAmount(itemStack.getAmount() - 7);
-                        Player player = ghosts.get((int)(Math.random() * ghosts.size()));
-                        ghosts.remove(player);
-                        player.setGameMode(GameMode.ADVENTURE);
-                        player.teleport(location.getSpawnLocation());
-                        player.sendTitle(ChatColor.translateAlternateColorCodes('&', "&aВы воскрешены!"), "");
-                        return;
-                    }
-                    if(itemStack.getAmount() == 7){
-                        buyer.getInventory().getItem(i).setType(Material.AIR);
-                        Player player = ghosts.get((int)(Math.random() * ghosts.size()));
-                        ghosts.remove(player);
-                        player.setGameMode(GameMode.ADVENTURE);
-                        player.teleport(location.getSpawnLocation());
-                        player.sendTitle(ChatColor.translateAlternateColorCodes('&', "&aВы воскрешены!"), "");
-                        return;
-                    }
-                    indexes.add(i);
-                    if(materialCount >= 7){
-                        int removedItemsCount = 0;
-                        for(int index : indexes){
-                            ItemStack itemToRemove = buyer.getInventory().getItem(index);
-                            if(buyer.getInventory().getItem(index).getAmount() <= 7 - removedItemsCount) {
-                                itemToRemove.setType(Material.AIR);
-                            }else{
-                                itemToRemove.setAmount(itemToRemove.getAmount() - 7 + removedItemsCount);
-                            }
-                        }
-                        Player player = ghosts.get((int)(Math.random() * ghosts.size()));
-                        ghosts.remove(player);
-                        player.setGameMode(GameMode.ADVENTURE);
-                        player.teleport(location.getSpawnLocation());
-                        player.sendTitle(ChatColor.translateAlternateColorCodes('&', "&aВы воскрешены!"), "");
-                        return;
-                    }
-                }
-            }
+        ItemStack item = new ItemStack(Material.AIR);
+        Optional<ExecutableItemInterface> eiOpt = ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem("material4");
+        if (eiOpt.isPresent()) {
+            item = eiOpt.get().buildItem(5, Optional.empty(), Optional.of(player));
         }
-        ChatUtil.sendMessage(buyer, "&cНедостаточно материала!");
-        buyer.closeInventory();
+        if(player.getInventory().containsAtLeast(item, 7)){
+            RemoveItemUtil.remove(player, item, 7);
+            Player ghost = ghosts.get((int)(Math.random() * ghosts.size()));
+            ghosts.remove(ghost);
+            ghost.setGameMode(GameMode.ADVENTURE);
+            ghost.teleport(location.getSpawnLocation());
+            ghost.sendTitle(ChatColor.translateAlternateColorCodes('&', "&aВы воскрешены!"), "");
+        } else {
+            ChatUtil.sendMessage(player, "&cНедостаточно материала!");
+            player.closeInventory();
+        }
     }
+
 
     public void addLife(Player player){
         Optional<ExecutableItemInterface> eiOpt = ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem("material5");
@@ -386,5 +354,9 @@ public class Arena {
 
     public List<Player> getGhosts(){
         return ghosts;
+    }
+
+    public Player getHost() {
+        return host;
     }
 }

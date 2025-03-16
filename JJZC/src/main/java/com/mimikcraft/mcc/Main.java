@@ -29,6 +29,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginCommand("forcestart").setExecutor(new ForceStartCMD());
         getServer().getPluginCommand("choosestructurechanges").setExecutor(new ChooseStructureChangesCMD());
         getServer().getPluginCommand("setstructurechanges").setExecutor(new SetStructureChangesCMD());
+        getServer().getPluginCommand("arenakick").setExecutor(new KickCMD());
         getServer().getPluginManager().registerEvents(new KillsEventListener(), this);
         getServer().getPluginManager().registerEvents(new BlockEventListener(), this);
         getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);

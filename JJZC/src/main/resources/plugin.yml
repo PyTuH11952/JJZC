@@ -21,6 +21,8 @@ commands:
     usage: /bestiary
   prestige:
     usage: /prestige
+  arenakick:
+    usage: /arenakick
   launch:
     usage: /launch
     aliases:
