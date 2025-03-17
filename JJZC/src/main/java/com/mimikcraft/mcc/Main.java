@@ -22,6 +22,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginCommand("join").setExecutor(new JoinCMD());
         getServer().getPluginCommand("leave").setExecutor(new LeaveCMD());
         getServer().getPluginCommand("launch").setExecutor(new LaunchCMD());
+        getServer().getPluginCommand("gamesettings").setExecutor(new GameSettingsCMD());
         getServer().getPluginCommand("revive").setExecutor(new ReviveCMD());
         getServer().getPluginCommand("addlife").setExecutor(new AddLifeCMD());
         getServer().getPluginCommand("setspawns").setExecutor(new SetSpawnsCMD());

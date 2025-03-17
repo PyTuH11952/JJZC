@@ -36,7 +36,7 @@ public class MenuListener implements Listener {
         if (!e.getInventory().getItem(e.getSlot()).hasItemMeta()) {
             return;
         }
-        if (e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.buttonKey, PersistentDataType.STRING) == null) {
+        if (!e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().has(KeyUtil.buttonKey, PersistentDataType.STRING)) {
             return;
         }
         e.setCancelled(true);
@@ -46,7 +46,7 @@ public class MenuListener implements Listener {
             arena.leave(player);
         }
         else if (e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.buttonKey, PersistentDataType.STRING).equals("join")) {
-            if (e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.arenaKey, PersistentDataType.STRING) == null) {
+            if (e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().has(KeyUtil.arenaKey, PersistentDataType.STRING)) {
                 return;
             }
             ArenaList.get(e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.arenaKey, PersistentDataType.STRING)).join((Player) e.getWhoClicked());
@@ -178,7 +178,7 @@ public class MenuListener implements Listener {
             player.openInventory(menu);
         }
         else if (e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.buttonKey, PersistentDataType.STRING).equals("location")){
-            if (e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.locationKey, PersistentDataType.STRING) == null){
+            if (!e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().has(KeyUtil.locationKey, PersistentDataType.STRING)){
                 return;
             }
             if(ArenaList.getFreeArena() == null){
@@ -189,6 +189,30 @@ public class MenuListener implements Listener {
             Arena arena = ArenaList.getFreeArena();
             arena.setLocationType(ArenaLocation.LocationTypes.valueOf(e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.locationKey, PersistentDataType.STRING).toUpperCase()));
             arena.join(player);
+        }
+        else if (e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.buttonKey, PersistentDataType.STRING).equals("hardLevel")){
+            if(!e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().has(KeyUtil.hardLevelKey, PersistentDataType.INTEGER)){
+                return;
+            }
+            int hardLevel = e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.hardLevelKey, PersistentDataType.INTEGER);
+            Arena arena = ArenaList.get(player);
+            arena.getGame().setHardLevel(hardLevel);
+            String hardLevelStr = "";
+            switch (hardLevel){
+                case 1:
+                    hardLevelStr = "&aлёгкий";
+                    break;
+                case 2:
+                    hardLevelStr = "&eнормальный";
+                    break;
+                case 3:
+                    hardLevelStr = "&cсложный";
+                    break;
+                default:
+                    hardLevelStr = "&5экстримальный";
+            }
+            arena.sendArenaMessage("&Хост изменил уровень сложности на " + hardLevelStr);
+            player.closeInventory();
         }
     }
 }
