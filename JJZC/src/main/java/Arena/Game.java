@@ -49,6 +49,8 @@ public class Game {
 
     private boolean isInfinity = false;
 
+    private Map<Location, Material> changedBLocks = new HashMap<>();
+
     public int stage = 0;
 
     private int zombiesCount = 0;
@@ -555,24 +557,46 @@ public class Game {
             return;
         }
         if(wavesCount == wave){
+            if(stage == arena.getLocation().getStages().size() && isInfinity){
+                for(Map.Entry<Location, Material> entry : changedBLocks.entrySet()){
+                    arena.getArenaWorld().getBlockAt(entry.getKey()).setType(entry.getValue());
+                }
+                wave = 0;
+                stage = 0;
+                hardLevel++;
+                for(Player player : arena.getPlayers().keySet()){
+                    player.teleport(arena.getLocation().getSpawnLocation());
+                }
+            }
             stage++;
             wavesCount = wavesCount + arena.getLocation().getStages().get(stage - 1).wavesCount;
         }
         wave++;
 
+        int waveToShow;
+        if(isInfinity){
+            infinityWave++;
+            waveToShow = infinityWave;
+        }else{
+            waveToShow = wave;
+        }
+
         gameProgress = (int)((double)wave/maxWave*(double)100);
         zombiesCount = (int)(wave*arena.getPlayers().size()*arena.getLocation().getLocationFactor()+addZombie+1);
         if(wave == wavesCount){
             for(Map.Entry<Location, Material> entry : arena.getLocation().getStages().get(stage - 1).structureChanges.entrySet()){
+                changedBLocks.put(entry.getKey(), arena.getArenaWorld().getBlockAt(entry.getKey()).getType());
                 arena.getArenaWorld().getBlockAt(entry.getKey()).setType(entry.getValue());
             }
             zombiesCount *= 2;
         }
         aliveZombies += zombiesCount;
+
+
         if (wave == wavesCount){
-            arena.sendArenaTitle("&cВолна: " + wave, "&cКол-во зомби: " + zombiesCount);
+            arena.sendArenaTitle("&cВолна: " + waveToShow, "&cКол-во зомби: " + zombiesCount);
         } else {
-            arena.sendArenaTitle("Волна: " + wave, "Кол-во зомби: " + zombiesCount);
+            arena.sendArenaTitle("Волна: " + waveToShow, "Кол-во зомби: " + zombiesCount);
         }
         spawnedZombies = 0;
         new BukkitRunnable(){
@@ -791,6 +815,10 @@ public class Game {
 
     public boolean isInfinity() {
         return isInfinity;
+    }
+
+    public void changeInfinityMode(){
+        isInfinity = !isInfinity;
     }
 
     public void setAddZombie(int addZombie) {

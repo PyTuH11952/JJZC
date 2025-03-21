@@ -2,6 +2,7 @@ package Commands;
 
 import Arena.Arena;
 import Arena.ArenaList;
+import Arena.ArenaStages;
 import Utils.ChatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -22,6 +23,9 @@ public class KickCMD implements CommandExecutor {
         }
         if(ArenaList.hasArena(player)){
             Arena arena = ArenaList.get(player);
+            if(arena.getArenaStage() == ArenaStages.IN_PROCESS){
+                ChatUtil.sendMessage(player, "&cНельзя использовать эту команду во время игры!");
+            }
             if(arena.getHost() != player){
                 ChatUtil.sendMessage(player, "&cУ вас нет прав на эту команду!");
                 return true;

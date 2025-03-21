@@ -194,8 +194,11 @@ public class MenuListener implements Listener {
             if(!e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().has(KeyUtil.hardLevelKey, PersistentDataType.INTEGER)){
                 return;
             }
-            int hardLevel = e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.hardLevelKey, PersistentDataType.INTEGER);
             Arena arena = ArenaList.get(player);
+            int hardLevel = e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.hardLevelKey, PersistentDataType.INTEGER);
+            if(arena.getGame().getHardLevel() == hardLevel){
+                return;
+            }
             arena.getGame().setHardLevel(hardLevel);
             String hardLevelStr = "";
             switch (hardLevel){
@@ -211,7 +214,19 @@ public class MenuListener implements Listener {
                 default:
                     hardLevelStr = "&5экстримальный";
             }
-            arena.sendArenaMessage("&Хост изменил уровень сложности на " + hardLevelStr);
+            arena.sendArenaMessage("&aХост изменил уровень сложности на " + hardLevelStr);
+            player.closeInventory();
+        }
+        else if (e.getInventory().getItem(e.getSlot()).getItemMeta().getPersistentDataContainer().get(KeyUtil.buttonKey, PersistentDataType.STRING).equals("infinityMode")){
+            Arena arena = ArenaList.get(player);
+            arena.getGame().changeInfinityMode();
+            String tempStr;
+            if(arena.getGame().isInfinity()){
+                tempStr = "&5бесконечный";
+            }else{
+                tempStr = "&7Обычный";
+            }
+            arena.sendArenaMessage("&aХост изменил режим на " + tempStr);
             player.closeInventory();
         }
     }

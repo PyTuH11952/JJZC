@@ -2,9 +2,11 @@ package Commands;
 
 import Arena.ArenaList;
 import Arena.Arena;
+import Arena.ArenaStages;
 import Utils.ChatUtil;
 import Utils.KeyUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -31,6 +33,9 @@ public class GameSettingsCMD implements CommandExecutor {
         Arena arena = ArenaList.get(player);
         if(!arena.getHost().getUniqueId().toString().equals(player.getUniqueId().toString())){
             ChatUtil.sendMessage(player, "&cКоманда доступна только хосту!");
+        }
+        if(arena.getArenaStage() == ArenaStages.IN_PROCESS){
+            ChatUtil.sendMessage(player, "&cНельзя использовать эту команду во время игры!");
         }
 
         Inventory menu = Bukkit.createInventory(null, 9);
@@ -70,7 +75,7 @@ public class GameSettingsCMD implements CommandExecutor {
                     default:
                         if(arena.getGame().getHardLevel() == i + 1){
                             hardLevelStr = "&7Экстримальный";
-                            hardLevelBtnMaterial = Material.GRAY_STAINED_GLASS_PANE;
+                            hardLevelBtnMaterial = Material.PURPLE_STAINED_GLASS_PANE;
                             break;
                         }
                         hardLevelStr = "&5Экстримальный";
@@ -100,9 +105,18 @@ public class GameSettingsCMD implements CommandExecutor {
             menu.setItem(offset + i, hardLevelsBtns.get(i));
         }
 
-        ItemStack infinityModeBtn = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
+        String btnName;
+        Material btnMaterial;
+        if(arena.getGame().isGameInfinity()){
+            btnName = "&cВыключить бесконченый режим";
+            btnMaterial = Material.RED_STAINED_GLASS_PANE;
+        }else{
+            btnName = "&aВключить бесконечный режим";
+            btnMaterial = Material.GREEN_STAINED_GLASS_PANE;
+        }
+        ItemStack infinityModeBtn = new ItemStack(btnMaterial, 1);
         ItemMeta infinityModeBtnItemMeta = infinityModeBtn.getItemMeta();
-        infinityModeBtnItemMeta.setDisplayName("&5Бесконечныый режим");
+        infinityModeBtnItemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',  btnName));
         infinityModeBtnItemMeta.getPersistentDataContainer().set(KeyUtil.buttonKey, PersistentDataType.STRING, "infinityMode");
         infinityModeBtn.setItemMeta(infinityModeBtnItemMeta);
         menu.setItem(7, infinityModeBtn);

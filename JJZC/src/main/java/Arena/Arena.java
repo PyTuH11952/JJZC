@@ -75,7 +75,7 @@ public class Arena {
         for (Player player : players.keySet()){
             leave(player);
         }
-        Bukkit.unloadWorld(Bukkit.getWorld(name), true);;
+        Bukkit.unloadWorld(Bukkit.getWorld(name), true);
         World source = Bukkit.getWorld("zombie");
         File sourceFolder = source.getWorldFolder();
         File file = new File("/home/container/"+name);
