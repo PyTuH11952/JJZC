@@ -92,7 +92,6 @@ public class GameSettingsCMD implements CommandExecutor {
                 hardLevelBtnItemMeta.getPersistentDataContainer().set(KeyUtil.buttonKey, PersistentDataType.STRING, "hardLevel");
                 hardLevelBtnItemMeta.getPersistentDataContainer().set(KeyUtil.hardLevelKey, PersistentDataType.INTEGER, i + 1);
                 hardLevelBtn.setItemMeta(hardLevelBtnItemMeta);
-                menu.setItem(36, hardLevelBtn);
                 hardLevelsBtns.add(hardLevelBtn);
                 continue;
             }

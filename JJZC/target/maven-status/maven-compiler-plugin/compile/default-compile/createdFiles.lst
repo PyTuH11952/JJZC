@@ -37,6 +37,7 @@ Arena\Arena$2.class
 com\mimikcraft\mcc\Expansion.class
 Arena\Game$11.class
 Commands\AddLifeCMD.class
+Commands\GameSettingsCMD.class
 Commands\GetChestCMD.class
 Utils\SmoothTeleportUtil.class
 Commands\ChooseStructureChangesCMD.class
