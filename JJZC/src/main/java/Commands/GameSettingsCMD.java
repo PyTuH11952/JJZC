@@ -33,9 +33,11 @@ public class GameSettingsCMD implements CommandExecutor {
         Arena arena = ArenaList.get(player);
         if(!arena.getHost().getUniqueId().toString().equals(player.getUniqueId().toString())){
             ChatUtil.sendMessage(player, "&cКоманда доступна только хосту!");
+            return true;
         }
         if(arena.getArenaStage() == ArenaStages.IN_PROCESS){
             ChatUtil.sendMessage(player, "&cНельзя использовать эту команду во время игры!");
+            return true;
         }
 
         Inventory menu = Bukkit.createInventory(null, 9);
@@ -74,19 +76,19 @@ public class GameSettingsCMD implements CommandExecutor {
                         break;
                     default:
                         if(arena.getGame().getHardLevel() == i + 1){
-                            hardLevelStr = "&7Экстримальный";
+                            hardLevelStr = "&7Экстремальный";
                             hardLevelBtnMaterial = Material.PURPLE_STAINED_GLASS_PANE;
                             break;
                         }
-                        hardLevelStr = "&5Экстримальный";
+                        hardLevelStr = "&5Экстремальный";
                         hardLevelBtnMaterial = Material.PURPLE_STAINED_GLASS_PANE;
                 }
                 ItemStack hardLevelBtn = new ItemStack(hardLevelBtnMaterial, 1);
                 ItemMeta hardLevelBtnItemMeta = hardLevelBtn.getItemMeta();
-                hardLevelBtnItemMeta.setDisplayName(hardLevelStr);
+                hardLevelBtnItemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',hardLevelStr));
                 if(hardLevelStr.startsWith("&7")){
                     List<String> lore = new ArrayList<>();
-                    lore.add("&o&7Выбрана эта сложность");
+                    lore.add(ChatColor.translateAlternateColorCodes('&',"&o&7Выбрана эта сложность"));
                     hardLevelBtnItemMeta.setLore(lore);
                 }
                 hardLevelBtnItemMeta.getPersistentDataContainer().set(KeyUtil.buttonKey, PersistentDataType.STRING, "hardLevel");

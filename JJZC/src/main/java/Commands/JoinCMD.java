@@ -39,7 +39,7 @@ public class JoinCMD implements CommandExecutor {
                 ItemMeta joinBtnItemMeta = joinBtn.getItemMeta();
                 joinBtnItemMeta.getPersistentDataContainer().set(KeyUtil.buttonKey, PersistentDataType.STRING, "join");
                 joinBtnItemMeta.getPersistentDataContainer().set(KeyUtil.arenaKey, PersistentDataType.STRING, availableArenas.get(i).getName());
-                joinBtnItemMeta.setDisplayName("Арена " + (i + 1));
+                joinBtnItemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&7Арена " + (i + 1)));
                 List<String> lore = new ArrayList<>();
                 lore.add(ChatColor.translateAlternateColorCodes('&', "&7Игроки: &6" + availableArenas.get(i).getPlayers().size()));
                 lore.add(ChatColor.translateAlternateColorCodes('&', "&7Локация: &6" + availableArenas.get(i).getLocation().getName()));
@@ -58,7 +58,12 @@ public class JoinCMD implements CommandExecutor {
                         hardLevelStr = "&5экстримальный";
                 }
                 lore.add(ChatColor.translateAlternateColorCodes('&', "&7Уровень сложности: &6" + hardLevelStr));
-                String gameType = availableArenas.get(i).getGame().isGameInfinity() ? "обычный" : "бесконечный";
+                String gameType;
+                if (availableArenas.get(i).getGame().isGameInfinity()){
+                    gameType = "бесконечный";
+                } else {
+                    gameType = "обычный";
+                }
                 lore.add(ChatColor.translateAlternateColorCodes('&', "&7Режим: &6" + gameType));
 
                 if(availableArenas.get(i).getArenaStage() == ArenaStages.IN_PROCESS){
@@ -73,14 +78,14 @@ public class JoinCMD implements CommandExecutor {
             }
             ItemStack refreshBtn = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
             ItemMeta refreshBtnItemMeta = refreshBtn.getItemMeta();
-            refreshBtnItemMeta.setDisplayName("Обновить");
+            refreshBtnItemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aОбновить"));
             refreshBtnItemMeta.getPersistentDataContainer().set(KeyUtil.buttonKey, PersistentDataType.STRING, "refresh");
             refreshBtn.setItemMeta(refreshBtnItemMeta);
             menu.setItem(36, refreshBtn);
 
             ItemStack forceStartBtn = new ItemStack(Material.YELLOW_STAINED_GLASS_PANE, 1);
             ItemMeta forceStartBtnItemMeta = forceStartBtn.getItemMeta();
-            forceStartBtnItemMeta.setDisplayName("&eБыстрый страт");
+            forceStartBtnItemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&eБыстрый страт"));
             forceStartBtnItemMeta.getPersistentDataContainer().set(KeyUtil.buttonKey, PersistentDataType.STRING, "forceStart");
             forceStartBtn.setItemMeta(forceStartBtnItemMeta);
             menu.setItem(39, forceStartBtn);
@@ -88,7 +93,7 @@ public class JoinCMD implements CommandExecutor {
 
             ItemStack createGameBtn = new ItemStack(Material.GREEN_STAINED_GLASS_PANE, 1);
             ItemMeta createGameBtnItemMeta = createGameBtn.getItemMeta();
-            createGameBtnItemMeta.setDisplayName("&2Создать новую игру");
+            createGameBtnItemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&2Создать новую игру"));
             createGameBtnItemMeta.getPersistentDataContainer().set(KeyUtil.buttonKey, PersistentDataType.STRING, "createGame");
             createGameBtn.setItemMeta(createGameBtnItemMeta);
             menu.setItem(41, createGameBtn);

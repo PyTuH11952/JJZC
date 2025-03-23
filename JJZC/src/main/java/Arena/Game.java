@@ -303,7 +303,6 @@ public class Game {
             public void run(){
                  ActiveMob mythicEntity = MythicBukkit.inst().getMobManager().spawnMob(name, location, hardLevel);
                  Entity entity = mythicEntity.getEntity().getBukkitEntity();
-                 mobs.add(entity);
                  cancel();
                 }
         }.runTaskLater(Main.getInstance(),20L);
@@ -503,7 +502,8 @@ public class Game {
         for (Player player : arena.getPlayers().keySet()) {
             bossbar.addPlayer(player);
         }
-        bossbarProgress = (double)mobs.size()/(double)(zombiesCount-1);
+        bossbarProgress = (double)mobs.size()/(double)zombiesCount;
+        Bukkit.broadcastMessage("bossbarprogress: "+(double)mobs.size()/(double)zombiesCount+" mobs.size: "+(double)mobs.size()+" zombiecount: "+(double)zombiesCount);
         if (bossbarProgress <= 0.0) {
             bossbar.removeAll();
             return;
@@ -726,19 +726,19 @@ public class Game {
 
     public void endGame(boolean isWon) {
         int stars = 0;
-        String starsSubTitle = "&7☆☆☆";
+        String starsSubTitle = "&7✮✮✮";
         switch (lifesSpent) {
             case 0:
                 stars = 3;
-                starsSubTitle = "&e☆☆☆";
+                starsSubTitle = "&e✮✮✮";
                 break;
             case 1:
                 stars = 2;
-                starsSubTitle = "&e☆☆&7☆";
+                starsSubTitle = "&e✮✮&7✮";
                 break;
             case 2:
                 stars = 1;
-                starsSubTitle = "&e☆&7☆☆";
+                starsSubTitle = "&e✮&7✮✮";
                 break;
         }
         if(isWon){
