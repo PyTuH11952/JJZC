@@ -55,9 +55,9 @@ public class JoinCMD implements CommandExecutor {
                         hardLevelStr = "&cсложный";
                         break;
                     default:
-                        hardLevelStr = "&5экстримальный";
+                        hardLevelStr = "&5экстремальный&7(" + availableArenas.get(i).getGame().getHardLevel() + ")";
                 }
-                lore.add(ChatColor.translateAlternateColorCodes('&', "&7Уровень сложности: &6" + hardLevelStr));
+                lore.add(ChatColor.translateAlternateColorCodes('&', "&7Уровень сложности: " + hardLevelStr));
                 String gameType;
                 if (availableArenas.get(i).getGame().isGameInfinity()){
                     gameType = "бесконечный";

@@ -120,8 +120,19 @@ public class ArenaLocation {
                 structureChanges.put(new Location(world, x, y, z), Material.valueOf(line.split(":")[1].toUpperCase()));
             }
             int wavesCount = stageSection.getInt("wavesCount");
-
-            stages.add(new Stage(tempCordsList, structureChanges, wavesCount));
+            List<String> commands = stageSection.getStringList("commands");
+            List<String> mobsSpawnStr = stageSection.getStringList("mobsSpawn");
+            HashMap<Location, Integer> mobSpawn = new HashMap<>();
+            HashMap<String, HashMap<Location, Integer>> mobsSpawn = new HashMap<>();
+            for (String line : mobsSpawnStr){
+                String[] mobCordsStr = line.split(":")[1].split(" ");
+                double x = Double.parseDouble(mobCordsStr[0]);
+                double y = Double.parseDouble(mobCordsStr[1]);
+                double z = Double.parseDouble(mobCordsStr[2]);
+                mobSpawn.put(new Location(world, x, y, z), Integer.parseInt(line.split(":")[2]));
+                mobsSpawn.put(line.split(":")[0], mobSpawn);
+            }
+            stages.add(new Stage(tempCordsList, structureChanges, wavesCount, commands, mobsSpawn));
         }
 
         ConfigurationSection cutSceneSection = locationSection.getConfigurationSection("cutScene");
@@ -153,7 +164,7 @@ public class ArenaLocation {
             double doorZ = Double.parseDouble(doorCordsStr[2]);
             Location doorLocation = new Location(world, doorX, doorY, doorZ);
 
-            String[] artCordsStr = doorsSection.getString(section + ".doorLocation").split(" ");
+            String[] artCordsStr = doorsSection.getString(section + ".artifactSpawnLocation").split(" ");
             double artX = Double.parseDouble(artCordsStr[0]);
             double artY = Double.parseDouble(artCordsStr[1]);
             double artZ = Double.parseDouble(artCordsStr[2]);
@@ -249,10 +260,14 @@ class Stage{
     List<Location> spawners;
     HashMap<Location, Material> structureChanges;
     int wavesCount;
-    public Stage(List<Location> spawners, HashMap<Location, Material> structureChanges, int wavesCount){
+    List<String> commands;
+    HashMap<String, HashMap<Location, Integer>> mobsSpawn;
+    public Stage(List<Location> spawners, HashMap<Location, Material> structureChanges, int wavesCount, List<String> commands, HashMap<String, HashMap<Location, Integer>> mobsSpawn){
         this.spawners = spawners;
         this.structureChanges = structureChanges;
         this.wavesCount = wavesCount;
+        this.commands = commands;
+        this.mobsSpawn = mobsSpawn;
     }
 }
 

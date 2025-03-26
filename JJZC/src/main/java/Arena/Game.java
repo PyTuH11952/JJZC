@@ -302,7 +302,6 @@ public class Game {
             @Override
             public void run(){
                  ActiveMob mythicEntity = MythicBukkit.inst().getMobManager().spawnMob(name, location, hardLevel);
-                 Entity entity = mythicEntity.getEntity().getBukkitEntity();
                  cancel();
                 }
         }.runTaskLater(Main.getInstance(),20L);
@@ -503,7 +502,7 @@ public class Game {
             bossbar.addPlayer(player);
         }
         bossbarProgress = (double)mobs.size()/(double)zombiesCount;
-        Bukkit.broadcastMessage("bossbarprogress: "+(double)mobs.size()/(double)zombiesCount+" mobs.size: "+(double)mobs.size()+" zombiecount: "+(double)zombiesCount);
+//for test//        Bukkit.broadcastMessage("bossbarprogress: "+(double)mobs.size()/(double)zombiesCount+" mobs.size: "+(double)mobs.size()+" zombiecount: "+(double)zombiesCount);
         if (bossbarProgress <= 0.0) {
             bossbar.removeAll();
             return;
@@ -588,7 +587,18 @@ public class Game {
                 changedBLocks.put(entry.getKey(), arena.getArenaWorld().getBlockAt(entry.getKey()).getType());
                 arena.getArenaWorld().getBlockAt(entry.getKey()).setType(entry.getValue());
             }
+            for(String command : arena.getLocation().getStages().get(stage - 1).commands){
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute in " + arena.getName() + " run " + command);
+            }
             zombiesCount *= 2;
+            for(Map.Entry<String, HashMap<Location, Integer>> mobSpawn : arena.getLocation().getStages().get(stage - 1).mobsSpawn.entrySet()) {
+                for (Map.Entry<Location, Integer> entry : mobSpawn.getValue().entrySet()) {
+                    zombiesCount += entry.getValue();
+                    for (int i = 0; i < entry.getValue(); i++) {
+                        spawnMob(entry.getKey(), mobSpawn.getKey(), null);
+                    }
+                }
+            }
         }
         aliveZombies += zombiesCount;
 
@@ -598,7 +608,7 @@ public class Game {
         } else {
             arena.sendArenaTitle("Волна: " + waveToShow, "Кол-во зомби: " + zombiesCount);
         }
-        spawnedZombies = 0;
+        spawnedZombies = mobs.size();
         new BukkitRunnable(){
             @Override
             public void run() {

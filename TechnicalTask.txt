@@ -191,6 +191,11 @@ Artifacts:
       structureChanges: 
         - 'x y z:blockType'
         - ...
+      commands:
+        - command1
+        - command2 (Only vanilla)
+      mobsSpawn:
+      - zombiename:cords:count
     ...
   doors: 
     door1:
