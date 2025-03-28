@@ -26,6 +26,7 @@ public class ArenaLocation {
     private String bossName;
     private final List<Location> chests = new ArrayList<>();
     private final List<Zombie> zombies = new ArrayList<>();
+    private final List<SpawnMob> mobsSpawn = new ArrayList<>();
     private final List<Stage> stages = new ArrayList<>();
     private final Map<Location, Location> doors = new HashMap<>();
     private final List<CustomBlock> customBlocks = new ArrayList<>();
@@ -121,18 +122,34 @@ public class ArenaLocation {
             }
             int wavesCount = stageSection.getInt("wavesCount");
             List<String> commands = stageSection.getStringList("commands");
-            List<String> mobsSpawnStr = stageSection.getStringList("mobsSpawn");
-            HashMap<Location, Integer> mobSpawn = new HashMap<>();
-            HashMap<String, HashMap<Location, Integer>> mobsSpawn = new HashMap<>();
-            for (String line : mobsSpawnStr){
-                String[] mobCordsStr = line.split(":")[1].split(" ");
-                double x = Double.parseDouble(mobCordsStr[0]);
-                double y = Double.parseDouble(mobCordsStr[1]);
-                double z = Double.parseDouble(mobCordsStr[2]);
-                mobSpawn.put(new Location(world, x, y, z), Integer.parseInt(line.split(":")[2]));
-                mobsSpawn.put(line.split(":")[0], mobSpawn);
+
+            ConfigurationSection mobsSection = stageSection.getConfigurationSection("mobsSpawn");
+            if (mobsSection != null){
+                Set<String> mobsKeys = mobsSection.getKeys(false);
+                for(String mobKey : mobsKeys){
+                    String mobName = mobsSection.getString(mobKey + ".name");
+                    int loops = Integer.parseInt(mobsSection.getString(mobKey + ".loops"));
+                    int count = Integer.parseInt(mobsSection.getString(mobKey + ".count"));
+                    boolean randomZombie = Boolean.parseBoolean(mobsSection.getString(mobKey + ".randomZombie"));
+                    String[] mobCordsStr = mobsSection.getString(mobKey + ".location").split(" ");
+                    double mobX = Double.parseDouble(mobCordsStr[0]);
+                    double mobY = Double.parseDouble(mobCordsStr[1]);
+                    double mobZ = Double.parseDouble(mobCordsStr[2]);
+                    Location mobLocation = new Location(world, mobX, mobY, mobZ);
+                    SpawnMob mob = new SpawnMob(mobName, loops, count, mobLocation, randomZombie);
+                    mobsSpawn.add(mob);
+                }
             }
-            stages.add(new Stage(tempCordsList, structureChanges, wavesCount, commands, mobsSpawn));
+            List<String> collapseCoordinatesStr = stageSection.getStringList("collapse");
+            List<Location> collapseCords = new ArrayList<>();
+            for(String cords : collapseCoordinatesStr){
+                String[] collapseCordsStr = cords.split(" ");
+                double x = Double.parseDouble(collapseCordsStr[0]);
+                double y = Double.parseDouble(collapseCordsStr[1]);
+                double z = Double.parseDouble(collapseCordsStr[2]);
+                collapseCords.add(new Location(world, x, y, z));
+            }
+            stages.add(new Stage(tempCordsList, structureChanges, wavesCount, commands, mobsSpawn, collapseCords));
         }
 
         ConfigurationSection cutSceneSection = locationSection.getConfigurationSection("cutScene");
@@ -261,13 +278,16 @@ class Stage{
     HashMap<Location, Material> structureChanges;
     int wavesCount;
     List<String> commands;
-    HashMap<String, HashMap<Location, Integer>> mobsSpawn;
-    public Stage(List<Location> spawners, HashMap<Location, Material> structureChanges, int wavesCount, List<String> commands, HashMap<String, HashMap<Location, Integer>> mobsSpawn){
+    List<SpawnMob> mobsSpawn;
+    List<Location> collapseCords;
+    public Stage(List<Location> spawners, HashMap<Location, Material> structureChanges, int wavesCount, List<String> commands, List<SpawnMob> mobsSpawn, List<Location> collapseCords){
         this.spawners = spawners;
         this.structureChanges = structureChanges;
         this.wavesCount = wavesCount;
         this.commands = commands;
         this.mobsSpawn = mobsSpawn;
+        this.collapseCords = collapseCords;
+
     }
 }
 
@@ -280,6 +300,21 @@ class Zombie{
         this.name = name;
         this.spawnChance = spawnChance;
         this.hardLevel = hardLevel;
+    }
+}
+
+class SpawnMob{
+    String name;
+    int loops;
+    int count;
+    Location location;
+    boolean randomZombie;
+    public SpawnMob(String name, int loops, int count, Location location, boolean randomZombie){
+        this.name = name;
+        this.loops = loops;
+        this.count = count;
+        this.location = location;
+        this.randomZombie = randomZombie;
     }
 }
 

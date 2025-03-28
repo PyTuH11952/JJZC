@@ -553,6 +553,7 @@ public class Game {
             clearMobs();
             spawnMob(arena.getLocation().getBossLocation(), arena.getLocation().getBossName(), Particle.FLAME);
             wave++;
+            collapse();
             return;
         }
         if(wavesCount == wave){
@@ -591,14 +592,23 @@ public class Game {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute in " + arena.getName() + " run " + command);
             }
             zombiesCount *= 2;
-            for(Map.Entry<String, HashMap<Location, Integer>> mobSpawn : arena.getLocation().getStages().get(stage - 1).mobsSpawn.entrySet()) {
-                for (Map.Entry<Location, Integer> entry : mobSpawn.getValue().entrySet()) {
-                    zombiesCount += entry.getValue();
-                    for (int i = 0; i < entry.getValue(); i++) {
-                        spawnMob(entry.getKey(), mobSpawn.getKey(), null);
+            for (SpawnMob mob : arena.getLocation().getStages().get(stage - 1).mobsSpawn){
+                if (mob.randomZombie){
+                    String mobName;
+                    for (int i = 0;i < mob.loops; i++){
+                        mobName = getRandomZombie();
+                        for (int i2 = 0;i2< mob.count; i++){
+                            spawnMob(mob.location, mobName, null);
+                        }
+                    }
+                } else {
+                    for (int i = 0;i < mob.count; i++){
+                        spawnMob(mob.location, mob.name, null);
                     }
                 }
             }
+
+            collapse();
         }
         aliveZombies += zombiesCount;
 
@@ -618,41 +628,45 @@ public class Game {
                 spawnedZombies++;
                 spawnersCount = arena.getLocation().getStages().get(stage - 1).spawners.size();
 
-                String zombieName = "";
-                List<Zombie> tempZombies = arena.getLocation().getZombies();
-                double extraChances = 0;
-                int firstHardLevelZombiesCount = 0;
-                for(Zombie zombie : tempZombies){
-                    if(zombie.hardLevel > hardLevel){
-                        tempZombies.remove(zombie);
-                    }
-                    if(zombie.hardLevel > 1){
-                        extraChances += zombie.spawnChance;
-                    }else{
-                        firstHardLevelZombiesCount++;
-                    }
-                }
-                extraChances /= firstHardLevelZombiesCount;
-                for(Zombie zombie: tempZombies){
-                    if(extraChances == 0){
-                        break;
-                    }
-                    if(zombie.hardLevel == 1){
-                        tempZombies.get(tempZombies.indexOf(zombie)).spawnChance -= extraChances;
-                    }
-                }
-                int random = (int)(Math.random() * 10000);
-                int temp = 0;
-                for(Zombie zombie : tempZombies){
-                    temp += (int) (zombie.spawnChance * 100);
-                    if(random <= temp){
-                        zombieName = zombie.name;
-                        break;
-                    }
-                }
-                spawnMob(arena.getLocation().getStages().get(stage - 1).spawners.get((int)(Math.random() * spawnersCount)), zombieName, Particle.FLAME);
+                spawnMob(arena.getLocation().getStages().get(stage - 1).spawners.get((int)(Math.random() * spawnersCount)), getRandomZombie(), Particle.FLAME);
             }
         }.runTaskTimer(Main.getInstance(), 0L, 20L);
+    }
+
+    private String getRandomZombie(){
+        String zombieName = "";
+        List<Zombie> tempZombies = arena.getLocation().getZombies();
+        double extraChances = 0;
+        int firstHardLevelZombiesCount = 0;
+        for(Zombie zombie : tempZombies){
+            if(zombie.hardLevel > hardLevel){
+                tempZombies.remove(zombie);
+            }
+            if(zombie.hardLevel > 1){
+                extraChances += zombie.spawnChance;
+            }else{
+                firstHardLevelZombiesCount++;
+            }
+        }
+        extraChances /= firstHardLevelZombiesCount;
+        for(Zombie zombie: tempZombies){
+            if(extraChances == 0){
+                break;
+            }
+            if(zombie.hardLevel == 1){
+                tempZombies.get(tempZombies.indexOf(zombie)).spawnChance -= extraChances;
+            }
+        }
+        int random = (int)(Math.random() * 10000);
+        int temp = 0;
+        for(Zombie zombie : tempZombies){
+            temp += (int) (zombie.spawnChance * 100);
+            if(random <= temp){
+                zombieName = zombie.name;
+                break;
+            }
+        }
+        return zombieName;
     }
 
     public void startAdditionalWave(){
@@ -707,6 +721,22 @@ public class Game {
 
     }
 
+    private void collapse(){
+        if (arena.getLocation().getStages().get(stage - 1).collapseCords.size()==0){
+            return;
+        }
+        int collapseWave = wave;
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                if(collapseWave != wave){
+                    cancel();
+                }
+                spawnMob(arena.getLocation().getStages().get(stage - 1).collapseCords.get((int)(Math.random() * arena.getLocation().getStages().get(stage - 1).collapseCords.size())), "blockpad", null);
+            }
+        }.runTaskTimer(Main.getInstance(), 0, 30);
+    }
+
     public void giveItems(){
         double random = Math.random();
         List<Player> players = new ArrayList<>();
@@ -720,13 +750,13 @@ public class Game {
 
         for (int i = 0; i <= players.size(); i++){
             double random2 = Math.random();
-            if (random <= 0.05){
+            if (random2 <= 0.05){
                 giveExecutableItem(players.get(randomPlayer), "case5", 1);
-            } else if (random <= 0.15) {
+            } else if (random2 <= 0.15) {
                 giveExecutableItem(players.get(randomPlayer), "case4", 1);
-            } else if (random <= 0.3){
+            } else if (random2 <= 0.3){
                 giveExecutableItem(players.get(randomPlayer), "case3", 1);
-            } else if (random <= 0.5){
+            } else if (random2 <= 0.5){
                 giveExecutableItem(players.get(randomPlayer), "case2", 1);
             } else {
                 giveExecutableItem(players.get(randomPlayer), "case1", 1);
