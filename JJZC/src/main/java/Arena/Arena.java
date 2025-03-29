@@ -119,7 +119,11 @@ public class Arena {
         if (arenaStage == ArenaStages.STARTING || arenaStage == ArenaStages.FREE){
             player.teleport(new Location(Bukkit.getWorld(name), location.getLobbyLocation().getX(),location.getLobbyLocation().getY(), location.getLobbyLocation().getZ()));
         } else{
-            player.teleport(new Location(Bukkit.getWorld(name), location.getSpawnLocation().getX(),location.getSpawnLocation().getY(), location.getSpawnLocation().getZ()));
+            if(getGame().getTrain() == null){
+                player.teleport(new Location(Bukkit.getWorld(name), location.getSpawnLocation().getX(),location.getSpawnLocation().getY(), location.getSpawnLocation().getZ()));
+            } else{
+                player.teleport(getGame().getTrain().newSpawn);
+            }
         }
         if (arenaStage == ArenaStages.CUTSCENE){
             player.setGameMode(GameMode.SPECTATOR);
@@ -359,4 +363,5 @@ public class Arena {
     public Player getHost() {
         return host;
     }
+
 }

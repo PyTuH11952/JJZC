@@ -37,6 +37,8 @@ public class Game {
 
     private final Arena arena;
 
+    private Train train;
+
     private int hardLevel = 1;
 
     public int wave = 0;
@@ -65,7 +67,7 @@ public class Game {
 
     private int spawnersCount;
 
-    public final List<Entity> mobs = new ArrayList<>();
+    public List<Entity> mobs = new ArrayList<>();
 
     public int aliveZombies = 0;
 
@@ -609,6 +611,12 @@ public class Game {
             }
 
             collapse();
+
+            if (arena.getLocation().getStages().get(stage - 1).train != null){
+                arena.sendArenaMessage("&a&lПоезд открыт!");
+                train = arena.getLocation().getStages().get(stage - 1).train;
+                return;
+            }
         }
         aliveZombies += zombiesCount;
 
@@ -849,6 +857,9 @@ public class Game {
         for (Entity entity : mobs){
             entity.remove();
         }
+        for (Player player : arena.getPlayers().keySet()){
+            removeBossBar(player);
+        }
         mobs.clear();
         aliveZombies = 0;
     }
@@ -935,6 +946,18 @@ public class Game {
 
     public void setLifesSpent(int lifesSpent) {
         this.lifesSpent = lifesSpent;
+    }
+
+    public int getStage() {
+        return stage;
+    }
+
+    public Train getTrain() {
+        return train;
+    }
+
+    public void setTrain(Train train) {
+        this.train = train;
     }
 }
 

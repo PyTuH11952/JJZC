@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="MCC" />
+        <module name="MCC (1)" />
       </profile>
     </annotationProcessing>
   </component>

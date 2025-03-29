@@ -1,5 +1,6 @@
 package Arena;
 
+import Utils.StringToLocationUtil;
 import com.mimikcraft.mcc.Main;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,6 +31,7 @@ public class ArenaLocation {
     private final List<Stage> stages = new ArrayList<>();
     private final Map<Location, Location> doors = new HashMap<>();
     private final List<CustomBlock> customBlocks = new ArrayList<>();
+    private Train train;
 
     public ArenaLocation(LocationTypes locationType, World world){
         this.world = world;
@@ -100,11 +102,11 @@ public class ArenaLocation {
 
         ConfigurationSection stagesSection = locationSection.getConfigurationSection("stages");
         Set<String> stagesKeys = stagesSection.getKeys(false);
-        for(String section : stagesKeys){
+        for(String section : stagesKeys) {
             ConfigurationSection stageSection = stagesSection.getConfigurationSection(section);
             List<String> spawnersCoordinatesStr = stageSection.getStringList("spawners");
             List<Location> tempCordsList = new ArrayList<>();
-            for(String spawnerCords : spawnersCoordinatesStr){
+            for (String spawnerCords : spawnersCoordinatesStr) {
                 String[] spawnerCordsStr = spawnerCords.split(" ");
                 double x = Double.parseDouble(spawnerCordsStr[0]);
                 double y = Double.parseDouble(spawnerCordsStr[1]);
@@ -113,7 +115,7 @@ public class ArenaLocation {
             }
             List<String> structureChangesStr = stageSection.getStringList("structureChanges");
             HashMap<Location, Material> structureChanges = new HashMap<>();
-            for(String line : structureChangesStr){
+            for (String line : structureChangesStr) {
                 String[] blockCordsStr = line.split(":")[0].split(" ");
                 double x = Double.parseDouble(blockCordsStr[0]);
                 double y = Double.parseDouble(blockCordsStr[1]);
@@ -124,9 +126,9 @@ public class ArenaLocation {
             List<String> commands = stageSection.getStringList("commands");
 
             ConfigurationSection mobsSection = stageSection.getConfigurationSection("mobsSpawn");
-            if (mobsSection != null){
+            if (mobsSection != null) {
                 Set<String> mobsKeys = mobsSection.getKeys(false);
-                for(String mobKey : mobsKeys){
+                for (String mobKey : mobsKeys) {
                     String mobName = mobsSection.getString(mobKey + ".name");
                     int loops = Integer.parseInt(mobsSection.getString(mobKey + ".loops"));
                     int count = Integer.parseInt(mobsSection.getString(mobKey + ".count"));
@@ -142,14 +144,33 @@ public class ArenaLocation {
             }
             List<String> collapseCoordinatesStr = stageSection.getStringList("collapse");
             List<Location> collapseCords = new ArrayList<>();
-            for(String cords : collapseCoordinatesStr){
+            for (String cords : collapseCoordinatesStr) {
                 String[] collapseCordsStr = cords.split(" ");
                 double x = Double.parseDouble(collapseCordsStr[0]);
                 double y = Double.parseDouble(collapseCordsStr[1]);
                 double z = Double.parseDouble(collapseCordsStr[2]);
                 collapseCords.add(new Location(world, x, y, z));
             }
-            stages.add(new Stage(tempCordsList, structureChanges, wavesCount, commands, mobsSpawn, collapseCords));
+            if (stageSection.getConfigurationSection("train") != null) {
+                ConfigurationSection trainSection = stageSection.getConfigurationSection("train");
+                List<String> trainZoneStr = trainSection.getStringList("zone");
+                List<Location> trainZoneCords = new ArrayList<>();
+                for (String cords : trainZoneStr) {
+                    String[] trainZone = cords.split(" ");
+                    double x = Double.parseDouble(trainZone[0]);
+                    double y = Double.parseDouble(trainZone[1]);
+                    double z = Double.parseDouble(trainZone[2]);
+                    trainZoneCords.add(new Location(world, x, y, z));
+                }
+                Location trainLocation = StringToLocationUtil.getLocation(world, trainSection.getString("trainLocation").split(" "));
+                Location newTrainLocation = StringToLocationUtil.getLocation(world, trainSection.getString("newTrainLocation").split(" "));
+                Location newSpawn = StringToLocationUtil.getLocation(world, trainSection.getString("newSpawn").split(" "));
+
+                train = new Train(trainZoneCords, trainLocation, newTrainLocation, newSpawn);
+            } else {
+                train = null;
+            }
+            stages.add(new Stage(tempCordsList, structureChanges, wavesCount, commands, mobsSpawn, collapseCords, train));
         }
 
         ConfigurationSection cutSceneSection = locationSection.getConfigurationSection("cutScene");
@@ -280,13 +301,19 @@ class Stage{
     List<String> commands;
     List<SpawnMob> mobsSpawn;
     List<Location> collapseCords;
-    public Stage(List<Location> spawners, HashMap<Location, Material> structureChanges, int wavesCount, List<String> commands, List<SpawnMob> mobsSpawn, List<Location> collapseCords){
+    Train train;
+    public Stage(List<Location> spawners, HashMap<Location, Material> structureChanges, int wavesCount, List<String> commands, List<SpawnMob> mobsSpawn, List<Location> collapseCords, Train train){
         this.spawners = spawners;
         this.structureChanges = structureChanges;
         this.wavesCount = wavesCount;
         this.commands = commands;
         this.mobsSpawn = mobsSpawn;
         this.collapseCords = collapseCords;
+        this.train = train;
+
+    }
+    class WaveEvents{
+
 
     }
 }

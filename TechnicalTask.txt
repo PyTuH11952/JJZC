@@ -195,8 +195,25 @@ Artifacts:
         - command1
         - command2 (Only vanilla)
       mobsSpawn:
-      - zombiename:cords:count
+        mob1:
+          name: string
+          count: int
+          loops: int
+          location: x y z
+          randomZombie: true/false (если true, то спавнит одного из зомби локации)
+        mob2: ...
+      collaps: (обрушение потолка)
+      - x y z (координаты из которых будут падать блоки)
+      - x2 y2 z2
     ...
+     train:
+       zone: (триггер поезда) 
+       - x y z
+       - x2 y2 z2
+       ...
+       trainLocation: x y z (координаты спавна внутри поезда)
+       newTrainLocation: x y z (координаты спавна внутри поезда на новой станции)
+       newSpawn: x y z (координаты спавна игроков на новой станции)
   doors: 
     door1:
       doorLocation: 'x y z'

@@ -18,6 +18,9 @@ public class EntityDamageListener implements Listener {
             EntityDamageByEntityEvent entityEvent = (EntityDamageByEntityEvent) e;
             if(entityEvent.getEntity() instanceof Player){
                 Player player = (Player) entityEvent.getEntity();
+                if (ArenaList.get(player) == null){
+                    return;
+                }
                 for(Artifact artifact : ArenaList.get(player).getPlayers().get(player)){
                     if(artifact.artifactType == ArtifactsTypes.BONES){
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "effect give @e[distance=0..3,tag=zombie,type=zombie] instant_health");

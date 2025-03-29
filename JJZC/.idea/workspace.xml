@@ -10,85 +10,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="826ec8dd-69ce-4dea-9d10-7bbbf4b43755" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/MCC (1).iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Arena/Train.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Events/PlayerMoveEventListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Utils/StringToLocationUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MCC.iml" beforeDir="false" afterPath="$PROJECT_DIR$/MCC.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dependency-reduced-pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Arena/ArenaLocation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/ArenaLocation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Arena/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/MCC-1.0.0-shaded.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/MCC-1.0.0.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Arena$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Arena$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Arena.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/ArenaList.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/ArenaLocation$LocationTypes.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/ArenaLocation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/ArenaStage.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/ArenaStages.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Artifact.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/ArtifactsTypes.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/CustomAnvil.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/CustomBlock.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/CutScene.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/EmptyChunkGenerator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$10.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$11.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game$9.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Game.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Round.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Stage.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Team.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Zombie.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ChatControl.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Commands/AddLifeCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Commands/ChooseStructureChangesCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Commands/ForceStartCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Commands/GameSettingsCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Commands/GetChestCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Commands/JoinCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Commands/KickCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Commands/LaunchCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Commands/LeaveCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Commands/ReviveCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Commands/SetSpawnsCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Commands/SetStructureChangesCMD.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Events/BlockEventListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Events/Editor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Events/EntityDamageListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Events/KillsEventListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Events/MenuListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Events/MobSpawnEventListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Events/PlayerConnectionEventListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Events/PlayerDeathListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Events/PlayerInteractListener$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Events/PlayerInteractListener$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Events/PlayerInteractListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Events/PlayerJoinListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Handlers/PlayerHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SCore.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Structure/Arena.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Utils/ChatUtil.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Utils/KeyUtil.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Utils/RemoveItemUtil.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Utils/SmoothTeleportUtil.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Utils/WorldUtil.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/mimikcraft/mcc/ExecutableApi.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/mimikcraft/mcc/Expansion.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/mimikcraft/mcc/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/plugin.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/original-MCC-1.0.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Events/EntityDamageListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Events/EntityDamageListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/mimikcraft/mcc/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mimikcraft/mcc/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TechnicalTask.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../TechnicalTask.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
