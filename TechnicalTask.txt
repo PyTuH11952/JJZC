@@ -182,6 +182,13 @@ Artifacts:
   zombies:  - список зомби на локации
     <Название зомби>: <Шанс спавна>
     ...
+  waves:
+    wave(int):
+      structureChanges:
+      commands:
+      mobSpawn:
+      collaps:
+      train:
   stages:  - список этапов
     stage1:
       spawners:  - список координат спавнеров зомби

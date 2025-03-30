@@ -29,6 +29,7 @@ public class ArenaLocation {
     private final List<Zombie> zombies = new ArrayList<>();
     private final List<SpawnMob> mobsSpawn = new ArrayList<>();
     private final List<Stage> stages = new ArrayList<>();
+    private final HashMap<Integer, WaveEvents> waveEvents = new HashMap();
     private final Map<Location, Location> doors = new HashMap<>();
     private final List<CustomBlock> customBlocks = new ArrayList<>();
     private Train train;
@@ -40,70 +41,14 @@ public class ArenaLocation {
         }
     }
 
-    public void setLocationType(LocationTypes locationType) {
-        this.locationType = locationType;
-        File folder = new File(Main.getInstance().getDataFolder().getAbsolutePath());
-
-        File file = new File(folder.getAbsolutePath() + "/Locations.yml");
-
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+    public Events getEvents(ConfigurationSection configSection, String key){
+            ConfigurationSection stageSection = configSection.getConfigurationSection(key);
+            int waveEvent;
+            try{
+                waveEvent = Integer.parseInt(key);
+            } catch (NumberFormatException e){
+                waveEvent = 0;
             }
-        }
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-        ConfigurationSection locationSection = config.getConfigurationSection(locationType.name().toLowerCase());
-
-        name = locationSection.getString("name");
-
-        String[] spawnCoordinatesStr = locationSection.getString("spawnLocation").split(" ");
-        double spawnX = Double.parseDouble(spawnCoordinatesStr[0]);
-        double spawnY = Double.parseDouble(spawnCoordinatesStr[1]);
-        double spawnZ = Double.parseDouble(spawnCoordinatesStr[2]);
-        spawnLocation = new Location(world, spawnX, spawnY, spawnZ);
-
-        String[] lobbyCoordinatesStr = locationSection.getString("lobbyLocation").split(" ");
-        double lobbyX = Double.parseDouble(lobbyCoordinatesStr[0]);
-        double lobbyY = Double.parseDouble(lobbyCoordinatesStr[1]);
-        double lobbyZ = Double.parseDouble(lobbyCoordinatesStr[2]);
-        lobbyLocation = new Location(world, lobbyX, lobbyY, lobbyZ);
-
-        String[] bossCoordinatesStr = locationSection.getString("bossLocation").split(" ");
-        double bossX = Double.parseDouble(bossCoordinatesStr[0]);
-        double bossY = Double.parseDouble(bossCoordinatesStr[1]);
-        double bossZ = Double.parseDouble(bossCoordinatesStr[2]);
-        bossLocation = new Location(world, bossX, bossY, bossZ);
-
-        locationFactor = Double.parseDouble(locationSection.getString("locationFactor"));
-
-        addZombie = Integer.parseInt(locationSection.getString("addZombie"));
-
-        bossName = (locationSection.getString("bossName"));
-
-        List<String> chestsCoordinatesStr = locationSection.getStringList("chests");
-        for(String chestCords : chestsCoordinatesStr){
-            String[] chestCordsStr = chestCords.split(" ");
-            double x = Double.parseDouble(chestCordsStr[0]);
-            double y = Double.parseDouble(chestCordsStr[1]);
-            double z = Double.parseDouble(chestCordsStr[2]);
-            chests.add(new Location(world, x, y, z));
-        }
-
-        ConfigurationSection zombiesSection = locationSection.getConfigurationSection("zombies");
-        Set<String> zombiesNames = zombiesSection.getKeys(false);
-        for(String zombieName : zombiesNames){
-            Zombie zombie = new Zombie(zombieName,
-                    zombiesSection.getDouble(zombieName + ".spawnChance"),
-                    zombiesSection.getInt(zombieName + ".hardLevel"));
-            zombies.add(zombie);
-        }
-
-        ConfigurationSection stagesSection = locationSection.getConfigurationSection("stages");
-        Set<String> stagesKeys = stagesSection.getKeys(false);
-        for(String section : stagesKeys) {
-            ConfigurationSection stageSection = stagesSection.getConfigurationSection(section);
             List<String> spawnersCoordinatesStr = stageSection.getStringList("spawners");
             List<Location> tempCordsList = new ArrayList<>();
             for (String spawnerCords : spawnersCoordinatesStr) {
@@ -170,7 +115,85 @@ public class ArenaLocation {
             } else {
                 train = null;
             }
-            stages.add(new Stage(tempCordsList, structureChanges, wavesCount, commands, mobsSpawn, collapseCords, train));
+
+        return new Events(tempCordsList, structureChanges, wavesCount, commands, mobsSpawn, collapseCords, train, waveEvent);
+    }
+
+    public void setLocationType(LocationTypes locationType) {
+        this.locationType = locationType;
+        File folder = new File(Main.getInstance().getDataFolder().getAbsolutePath());
+
+        File file = new File(folder.getAbsolutePath() + "/Locations.yml");
+
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+        ConfigurationSection locationSection = config.getConfigurationSection(locationType.name().toLowerCase());
+
+        name = locationSection.getString("name");
+
+        String[] spawnCoordinatesStr = locationSection.getString("spawnLocation").split(" ");
+        double spawnX = Double.parseDouble(spawnCoordinatesStr[0]);
+        double spawnY = Double.parseDouble(spawnCoordinatesStr[1]);
+        double spawnZ = Double.parseDouble(spawnCoordinatesStr[2]);
+        spawnLocation = new Location(world, spawnX, spawnY, spawnZ);
+
+        String[] lobbyCoordinatesStr = locationSection.getString("lobbyLocation").split(" ");
+        double lobbyX = Double.parseDouble(lobbyCoordinatesStr[0]);
+        double lobbyY = Double.parseDouble(lobbyCoordinatesStr[1]);
+        double lobbyZ = Double.parseDouble(lobbyCoordinatesStr[2]);
+        lobbyLocation = new Location(world, lobbyX, lobbyY, lobbyZ);
+
+        String[] bossCoordinatesStr = locationSection.getString("bossLocation").split(" ");
+        double bossX = Double.parseDouble(bossCoordinatesStr[0]);
+        double bossY = Double.parseDouble(bossCoordinatesStr[1]);
+        double bossZ = Double.parseDouble(bossCoordinatesStr[2]);
+        bossLocation = new Location(world, bossX, bossY, bossZ);
+
+        locationFactor = Double.parseDouble(locationSection.getString("locationFactor"));
+
+        addZombie = Integer.parseInt(locationSection.getString("addZombie"));
+
+        bossName = (locationSection.getString("bossName"));
+
+        List<String> chestsCoordinatesStr = locationSection.getStringList("chests");
+        for(String chestCords : chestsCoordinatesStr){
+            String[] chestCordsStr = chestCords.split(" ");
+            double x = Double.parseDouble(chestCordsStr[0]);
+            double y = Double.parseDouble(chestCordsStr[1]);
+            double z = Double.parseDouble(chestCordsStr[2]);
+            chests.add(new Location(world, x, y, z));
+        }
+
+        ConfigurationSection zombiesSection = locationSection.getConfigurationSection("zombies");
+        Set<String> zombiesNames = zombiesSection.getKeys(false);
+        for(String zombieName : zombiesNames){
+            Zombie zombie = new Zombie(zombieName,
+                    zombiesSection.getDouble(zombieName + ".spawnChance"),
+                    zombiesSection.getInt(zombieName + ".hardLevel"));
+            zombies.add(zombie);
+        }
+
+        ConfigurationSection stagesSection = locationSection.getConfigurationSection("stages");
+        ConfigurationSection wavesSection = locationSection.getConfigurationSection("waves");
+        if (stagesSection != null){
+            Set<String> keys = stagesSection.getKeys(false);
+            for (String key: keys){
+                Events events = getEvents(stagesSection, key);
+                stages.add(new Stage(events.spawners, events.structureChanges, events.wavesCount, events.commands, events.mobsSpawn, events.collapseCords, events.train));
+            }
+        }
+        if (wavesSection != null){
+            Set<String> keys = wavesSection.getKeys(false);
+            for (String key: keys){
+                Events events = getEvents(wavesSection, key);
+                waveEvents.put(events.waveEvent, new WaveEvents(events.structureChanges, events.commands, events.mobsSpawn, events.collapseCords, events.train));
+            }
         }
 
         ConfigurationSection cutSceneSection = locationSection.getConfigurationSection("cutScene");
@@ -284,6 +307,10 @@ public class ArenaLocation {
         return name;
     }
 
+    public HashMap<Integer, WaveEvents> getWaveEvents() {
+        return waveEvents;
+    }
+
     public enum LocationTypes {
         HOSPITAL,
         MALL,
@@ -292,7 +319,27 @@ public class ArenaLocation {
         METRO
     }
 }
+class Events {
+    List<Location> spawners;
+    HashMap<Location, Material> structureChanges;
+    int waveEvent;
+    List<String> commands;
+    List<SpawnMob> mobsSpawn;
+    List<Location> collapseCords;
+    Train train;
+    int wavesCount;
 
+    public Events(List<Location> spawners, HashMap<Location, Material> structureChanges, int wavesCount, List<String> commands, List<SpawnMob> mobsSpawn, List<Location> collapseCords, Train train, int waveEvent) {
+        this.spawners = spawners;
+        this.structureChanges = structureChanges;
+        this.waveEvent = waveEvent;
+        this.commands = commands;
+        this.mobsSpawn = mobsSpawn;
+        this.collapseCords = collapseCords;
+        this.train = train;
+        this.wavesCount = wavesCount;
+    }
+}
 
 class Stage{
     List<Location> spawners;
@@ -302,7 +349,8 @@ class Stage{
     List<SpawnMob> mobsSpawn;
     List<Location> collapseCords;
     Train train;
-    public Stage(List<Location> spawners, HashMap<Location, Material> structureChanges, int wavesCount, List<String> commands, List<SpawnMob> mobsSpawn, List<Location> collapseCords, Train train){
+
+    public Stage(List<Location> spawners, HashMap<Location, Material> structureChanges, int wavesCount, List<String> commands, List<SpawnMob> mobsSpawn, List<Location> collapseCords, Train train) {
         this.spawners = spawners;
         this.structureChanges = structureChanges;
         this.wavesCount = wavesCount;
@@ -310,13 +358,25 @@ class Stage{
         this.mobsSpawn = mobsSpawn;
         this.collapseCords = collapseCords;
         this.train = train;
-
-    }
-    class WaveEvents{
-
-
     }
 }
+
+    class WaveEvents {
+        HashMap<Location, Material> structureChanges;
+        List<String> commands;
+        List<SpawnMob> mobsSpawn;
+        List<Location> collapseCords;
+        Train train;
+
+        public WaveEvents(HashMap<Location, Material> structureChanges, List<String> commands, List<SpawnMob> mobsSpawn, List<Location> collapseCords, Train train) {
+            this.structureChanges = structureChanges;
+            this.commands = commands;
+            this.mobsSpawn = mobsSpawn;
+            this.collapseCords = collapseCords;
+            this.train = train;
+
+        }
+    }
 
 
 class Zombie{

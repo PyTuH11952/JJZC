@@ -21,7 +21,9 @@ Events\EntityDamageListener.class
 Commands\LaunchCMD.class
 com\mimikcraft\mcc\Main.class
 Arena\Stage.class
+Arena\WaveEvents.class
 Events\PlayerInteractListener.class
+Arena\Events.class
 Events\PlayerMoveEventListener.class
 Arena\Arena$1.class
 Arena\Game$6.class

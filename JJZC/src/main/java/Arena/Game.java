@@ -555,7 +555,6 @@ public class Game {
             clearMobs();
             spawnMob(arena.getLocation().getBossLocation(), arena.getLocation().getBossName(), Particle.FLAME);
             wave++;
-            collapse();
             return;
         }
         if(wavesCount == wave){
@@ -585,38 +584,12 @@ public class Game {
 
         gameProgress = (int)((double)wave/maxWave*(double)100);
         zombiesCount = (int)(wave*arena.getPlayers().size()*arena.getLocation().getLocationFactor()+addZombie+1);
+        if (arena.getLocation().getWaveEvents().get(wave) != null){
+            applyEvents(0, wave);
+        }
         if(wave == wavesCount){
-            for(Map.Entry<Location, Material> entry : arena.getLocation().getStages().get(stage - 1).structureChanges.entrySet()){
-                changedBLocks.put(entry.getKey(), arena.getArenaWorld().getBlockAt(entry.getKey()).getType());
-                arena.getArenaWorld().getBlockAt(entry.getKey()).setType(entry.getValue());
-            }
-            for(String command : arena.getLocation().getStages().get(stage - 1).commands){
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute in " + arena.getName() + " run " + command);
-            }
             zombiesCount *= 2;
-            for (SpawnMob mob : arena.getLocation().getStages().get(stage - 1).mobsSpawn){
-                if (mob.randomZombie){
-                    String mobName;
-                    for (int i = 0;i < mob.loops; i++){
-                        mobName = getRandomZombie();
-                        for (int i2 = 0;i2< mob.count; i++){
-                            spawnMob(mob.location, mobName, null);
-                        }
-                    }
-                } else {
-                    for (int i = 0;i < mob.count; i++){
-                        spawnMob(mob.location, mob.name, null);
-                    }
-                }
-            }
-
-            collapse();
-
-            if (arena.getLocation().getStages().get(stage - 1).train != null){
-                arena.sendArenaMessage("&a&lПоезд открыт!");
-                train = arena.getLocation().getStages().get(stage - 1).train;
-                return;
-            }
+            applyEvents(stage, 0);
         }
         aliveZombies += zombiesCount;
 
@@ -677,6 +650,71 @@ public class Game {
         return zombieName;
     }
 
+    private void applyEvents(int stage, int wave){
+        Map<Location, Material> structureChanges = new HashMap<>();
+        List<String> commands = new ArrayList<>();
+        List<SpawnMob> spawnMob = new ArrayList<>();
+        List<Location> collapseCords = new ArrayList<>();
+
+        if (stage != 0) {
+            structureChanges = arena.getLocation().getStages().get(stage - 1).structureChanges;
+            commands = arena.getLocation().getStages().get(stage - 1).commands;
+            spawnMob = arena.getLocation().getStages().get(stage - 1).mobsSpawn;
+            collapseCords = arena.getLocation().getStages().get(stage - 1).collapseCords;
+            train = arena.getLocation().getStages().get(stage - 1).train;
+        }
+        if (wave != 0){
+            structureChanges = arena.getLocation().getWaveEvents().get(wave).structureChanges;
+            commands = arena.getLocation().getWaveEvents().get(wave).commands;
+            spawnMob = arena.getLocation().getWaveEvents().get(wave).mobsSpawn;
+            collapseCords = arena.getLocation().getWaveEvents().get(wave).collapseCords;
+            train = arena.getLocation().getWaveEvents().get(wave).train;
+        }
+        for(Map.Entry<Location, Material> entry : structureChanges.entrySet()){
+            changedBLocks.put(entry.getKey(), arena.getArenaWorld().getBlockAt(entry.getKey()).getType());
+            arena.getArenaWorld().getBlockAt(entry.getKey()).setType(entry.getValue());
+        }
+        for(String command : commands){
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute in " + arena.getName() + " run " + command);
+        }
+        for (SpawnMob mob : spawnMob){
+            if (mob.randomZombie){
+                String mobName;
+                for (int i = 0;i < mob.loops; i++){
+                    mobName = getRandomZombie();
+                    for (int i2 = 0;i2< mob.count; i++){
+                        spawnMob(mob.location, mobName, null);
+                    }
+                }
+            } else {
+                for (int i = 0;i < mob.count; i++){
+                    spawnMob(mob.location, mob.name, null);
+                }
+            }
+        }
+
+        if (collapseCords.isEmpty()){
+            return;
+        }
+        int collapseWave = wave;
+        List<Location> finalCollapseCords = collapseCords;
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                if(collapseWave != wave){
+                    cancel();
+                }
+                spawnMob(finalCollapseCords.get((int)(Math.random() * arena.getLocation().getStages().get(stage - 1).collapseCords.size())), "blockpad", null);
+            }
+        }.runTaskTimer(Main.getInstance(), 0, 30);
+
+        if (train != null){
+            arena.sendArenaMessage("&a&lПоезд открыт!");
+            train = arena.getLocation().getStages().get(stage - 1).train;
+        }
+
+    }
+
     public void startAdditionalWave(){
         int randomMiniGame = (int)(1 + Math.random() * 4);
         spawnersCount = arena.getLocation().getStages().get(stage - 1).spawners.size();
@@ -729,21 +767,6 @@ public class Game {
 
     }
 
-    private void collapse(){
-        if (arena.getLocation().getStages().get(stage - 1).collapseCords.size()==0){
-            return;
-        }
-        int collapseWave = wave;
-        new BukkitRunnable(){
-            @Override
-            public void run(){
-                if(collapseWave != wave){
-                    cancel();
-                }
-                spawnMob(arena.getLocation().getStages().get(stage - 1).collapseCords.get((int)(Math.random() * arena.getLocation().getStages().get(stage - 1).collapseCords.size())), "blockpad", null);
-            }
-        }.runTaskTimer(Main.getInstance(), 0, 30);
-    }
 
     public void giveItems(){
         double random = Math.random();
