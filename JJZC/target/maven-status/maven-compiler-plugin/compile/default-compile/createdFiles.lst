@@ -1,5 +1,6 @@
 Events\PlayerConnectionEventListener.class
 Arena\Game.class
+Commands\PartyCMD.class
 Commands\ReviveCMD.class
 Arena\Game$8.class
 Utils\StringToLocationUtil.class
@@ -13,6 +14,7 @@ Arena\ArenaLocation$LocationTypes.class
 Commands\JoinCMD.class
 Utils\KeyUtil.class
 Arena\Game$9.class
+Party\Party.class
 Arena\CustomAnvil.class
 Events\BlockEventListener.class
 Commands\SetStructureChangesCMD.class
@@ -22,14 +24,17 @@ Commands\LaunchCMD.class
 com\mimikcraft\mcc\Main.class
 Arena\Stage.class
 Arena\WaveEvents.class
+Party\PartyList.class
 Events\PlayerInteractListener.class
 Arena\Events.class
 Events\PlayerMoveEventListener.class
 Arena\Arena$1.class
 Arena\Game$6.class
 Events\Editor.class
+Commands\PartyChatCMD.class
 Arena\Game$3.class
 Events\KillsEventListener.class
+Party\Party$1.class
 Utils\ChatUtil.class
 Commands\SetSpawnsCMD.class
 Arena\ArenaList.class

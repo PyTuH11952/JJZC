@@ -13,6 +13,10 @@ commands:
     usage: /gamesettings
   party:
     usage: /party
+  partychat:
+    usage: /partychat
+    aliases:
+      - pc
   setspawns:
     usage: /setspawns
   getchest:

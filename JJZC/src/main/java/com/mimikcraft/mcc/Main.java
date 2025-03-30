@@ -3,16 +3,22 @@ package com.mimikcraft.mcc;
 import Arena.Arena;
 import Commands.*;
 import Events.*;
+import Party.Party;
 import org.bukkit.Bukkit;
 import org.bukkit.WorldCreator;
 import org.bukkit.plugin.java.JavaPlugin;
 import Arena.ArenaList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Main extends JavaPlugin {
 
     private static Main instance;
 
     private final int maxArenas = 3;
+
+    private List<Party> partyes = new ArrayList<>();
 
 
     @Override
@@ -31,6 +37,8 @@ public final class Main extends JavaPlugin {
         getServer().getPluginCommand("choosestructurechanges").setExecutor(new ChooseStructureChangesCMD());
         getServer().getPluginCommand("setstructurechanges").setExecutor(new SetStructureChangesCMD());
         getServer().getPluginCommand("arenakick").setExecutor(new KickCMD());
+        getServer().getPluginCommand("party").setExecutor(new PartyCMD());
+        getServer().getPluginCommand("partychat").setExecutor(new PartyChatCMD());
         getServer().getPluginManager().registerEvents(new KillsEventListener(), this);
         getServer().getPluginManager().registerEvents(new BlockEventListener(), this);
         getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
@@ -59,5 +67,9 @@ public final class Main extends JavaPlugin {
     }
     public static Main getInstance() {
         return instance;
+    }
+
+    public List<Party> getPartyes() {
+        return partyes;
     }
 }
