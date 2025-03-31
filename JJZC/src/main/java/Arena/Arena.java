@@ -1,5 +1,6 @@
 package Arena;
 
+import Party.PartyList;
 import Utils.ChatUtil;
 import Utils.RemoveItemUtil;
 import com.mimikcraft.mcc.ExecutableApi;
@@ -104,6 +105,12 @@ public class Arena {
             ChatUtil.sendMessage(player, "Вы уже сбежали с этой игры! Вернуться нельзя.");
             return;
         }
+        if (PartyList.hasParty(player)){
+            if (PartyList.getParty(player).getHost() == player && PartyList.getParty(player).getPartyPlayers().size() > (maxPlayers-players.size())){
+                ChatUtil.sendMessage(player, "На арене недостаточно места для всех учатников пати!");
+                return;
+            }
+        }
         playerExp.put(player,player.getExp());
         playerLvl.put(player,player.getLevel());
         player.setExp(0.0f);
@@ -145,6 +152,16 @@ public class Arena {
         ExecutableApi.giveExecutableItem(player, "hubitem2", 1);
         ExecutableApi.giveExecutableItem(player, "hubitem3", 1);
         ExecutableApi.giveExecutableItem(player, "hubitem4", 1);
+
+        if (PartyList.hasParty(player)){
+            if (PartyList.getParty(player).getHost() == player){
+                for (Player partyPlayer : PartyList.getParty(player).getPartyPlayers()){
+                    if (PartyList.getParty(player).getHost() != partyPlayer) {
+                        join(partyPlayer);
+                    }
+                }
+            }
+        }
 
     }
 
@@ -208,6 +225,15 @@ public class Arena {
             player.getInventory().setItem(entry.getKey(), entry.getValue());
         }
         player.getActivePotionEffects().clear();
+        if (PartyList.hasParty(player)){
+            if (PartyList.getParty(player).getHost() == player){
+                for (Player partyPlayer : PartyList.getParty(player).getPartyPlayers()) {
+                    if (partyPlayer != PartyList.getParty(player).getHost() && ArenaList.hasArena((partyPlayer))) {
+                        ArenaList.get(partyPlayer).leave(partyPlayer);
+                    }
+                }
+            }
+        }
     }
 
     public void playerDie(Player player){

@@ -27,7 +27,7 @@ public class PartyCMD implements CommandExecutor {
             return true;
         }
         if (args.length == 1){
-            if (args[0].equals("accept")){
+            if (args[0].equals("accept") || args[0].equals("a")){
                 if (PartyList.hasInvited(player)){
                     PartyList.getInvitedParty(player).join(player);
                 } else {
@@ -35,7 +35,7 @@ public class PartyCMD implements CommandExecutor {
                 }
                 return true;
             }
-            if (args[0].equals("cancel")){
+            if (args[0].equals("cancel") || args[0].equals("c")){
                 if (PartyList.hasInvited(player)){
                     PartyList.getInvitedParty(player).getInvitedPlayers().remove(player);
                 } else{
@@ -43,7 +43,7 @@ public class PartyCMD implements CommandExecutor {
                 }
                 return true;
             }
-            if (args[0].equals("warp")){
+            if (args[0].equals("warp") || args[0].equals("w")){
                 if (PartyList.hasParty(player)){
                     if(PartyList.getParty(player).getHost() == player) {
                         ChatUtil.sendMessage(player, "&eВсе учестники пати перемещены к вам!");
@@ -69,11 +69,17 @@ public class PartyCMD implements CommandExecutor {
                 return true;
             }
             if (Bukkit.getPlayer(args[0]) != null) {
-                if (PartyList.hasParty(Bukkit.getPlayer(args[0]))) {
+                if (!PartyList.hasParty(Bukkit.getPlayer(args[0]))) {
+                    ChatUtil.sendMessage(player, "&aОтправлено приглашение в пати игроку &e" + player.getDisplayName());
                     if (PartyList.hasParty(player)) {
-                        PartyList.getParty(player).invite(Bukkit.getPlayer(args[0]), player);
+                        if (!PartyList.getParty(player).getInvitedPlayers().contains(Bukkit.getPlayer(args[0]))) {
+                            PartyList.getParty(player).invite(Bukkit.getPlayer(args[0]), player);
+                        } else {
+                            ChatUtil.sendMessage(player, "&cЭтот игрок уже приглашен в пати!");
+                        }
                     } else {
                         Party party = new Party();
+                        PartyList.getPartyes().add(party);
                         party.join(player);
                         party.invite(Bukkit.getPlayer(args[0]), player);
                     }
@@ -84,17 +90,17 @@ public class PartyCMD implements CommandExecutor {
                 ChatUtil.sendMessage(player, "&cИгрок " + args[0] + " не в сети!");
             }
         }
-        if ((args.length > 1) && (args[0].equals("kick"))){
+        if (args[0].equals("kick") || args[0].equals("k")){
             if(PartyList.hasParty(player)){
                 if(PartyList.getParty(player).getHost() == player) {
-                    if (Bukkit.getPlayer(args[0]) != null) {
+                    if (Bukkit.getPlayer(args[1]) != null) {
                         if (PartyList.getParty(Bukkit.getPlayer(args[1])) == PartyList.getParty(player)) {
                             PartyList.getParty(player).leave(Bukkit.getPlayer(args[1]));
                         } else {
                             ChatUtil.sendMessage(player, "&cИгрок " + args[1] + " не состоит в этом пати!");
                         }
                     } else {
-                        ChatUtil.sendMessage(player, "&cИгрок " + args[0] + " не в сети!");
+                        ChatUtil.sendMessage(player, "&cИгрок " + args[1] + " не в сети!");
                     }
                 } else {
                     ChatUtil.sendMessage(player, "&cДанная команда доступна только создателю пати!");

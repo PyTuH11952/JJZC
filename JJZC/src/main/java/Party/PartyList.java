@@ -42,4 +42,8 @@ public class PartyList {
             }
             return null;
         }
+
+    public static List<Party> getPartyes() {
+        return partyes;
     }
+}

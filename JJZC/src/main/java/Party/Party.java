@@ -52,7 +52,7 @@ public class Party {
         }
         partyPlayers.add(player);
         ChatUtil.sendMessage(player, "&eВы успешно присоединились к пати!");
-        sendPartyMessage("&a" + player + " &eприсоединился к пати!");
+        sendPartyMessage("&a" + player.getDisplayName() + " &eприсоединился к пати!");
         if (partyPlayers.size() == 1) {
             host = player;
         }
