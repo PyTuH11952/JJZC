@@ -11,16 +11,9 @@
   <component name="ChangeListManager">
     <list default="true" id="826ec8dd-69ce-4dea-9d10-7bbbf4b43755" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Commands/PartyCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands/PartyCMD.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Commands/PartyChatCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands/PartyChatCMD.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Party/Party.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Party/Party.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Party/PartyList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Party/PartyList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Commands/GetChestCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands/GetChestCMD.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/MCC-1.0.0-shaded.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/MCC-1.0.0-shaded.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/MCC-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/MCC-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Commands/PartyCMD.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Commands/PartyCMD.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Party/Party.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Party/Party.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Party/PartyList.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Party/PartyList.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/original-MCC-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/original-MCC-1.0.0.jar" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -125,5 +118,16 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/Events/BlockEventListener.java</url>
+          <line>49</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
