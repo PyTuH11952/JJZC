@@ -53,6 +53,30 @@ public class ArenaLocation {
             List<Location> tempCordsList = new ArrayList<>();
             for (String spawnerCords : spawnersCoordinatesStr) {
                 String[] spawnerCordsStr = spawnerCords.split(" ");
+                if (spawnerCordsStr.length == 1){
+                    File folder = new File(Main.getInstance().getDataFolder().getAbsolutePath());
+
+                    File file = new File(folder.getAbsolutePath() + "/SpawnersCords.yml");
+
+                    if (!file.exists()) {
+                        try {
+                            file.createNewFile();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+                    ConfigurationSection spawnersSection = config.getConfigurationSection(spawnerCords);
+                    List<String> spawnersCordsStr = spawnersSection.getStringList("cords");
+                    for (String spawnerCordsString : spawnersCordsStr){
+                        String[] spawnerCordsStringi = spawnerCordsString.split(" ");
+                        double x = Double.parseDouble(spawnerCordsStringi[0]);
+                        double y = Double.parseDouble(spawnerCordsStringi[1]);
+                        double z = Double.parseDouble(spawnerCordsStringi[2]);
+                        tempCordsList.add(new Location(world, x, y, z));
+                    }
+                    continue;
+                }
                 double x = Double.parseDouble(spawnerCordsStr[0]);
                 double y = Double.parseDouble(spawnerCordsStr[1]);
                 double z = Double.parseDouble(spawnerCordsStr[2]);

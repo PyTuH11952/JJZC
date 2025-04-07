@@ -164,6 +164,12 @@ Artifacts:
     - ...
   ...
 
+Структура конфига со спавнерами "SpawnersCords.yml":
+<название спавнера>:
+  cords:
+  - x y z
+  ...
+
 Структруа конфига с локациями "Locations.yml":
 <Название локации>:
   name: "АБОБА"  - название локации на русском
@@ -192,7 +198,8 @@ Artifacts:
   stages:  - список этапов
     stage1:
       spawners:  - список координат спавнеров зомби
-        - 'x y z yaw pitch'
+        - x y z yaw pitch
+        - spawnerName(из SpawnersCords.yml)
 	- ...
       wavesCount: num - количество волн на этапе
       structureChanges: 

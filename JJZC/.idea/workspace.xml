@@ -11,9 +11,17 @@
   <component name="ChangeListManager">
     <list default="true" id="826ec8dd-69ce-4dea-9d10-7bbbf4b43755" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Commands/GetChestCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands/GetChestCMD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/ArenaLocation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/ArenaLocation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/MCC-1.0.0-shaded.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/MCC-1.0.0-shaded.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/MCC-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/MCC-1.0.0.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Arena/ArenaLocation$LocationTypes.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/ArenaLocation$LocationTypes.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Arena/ArenaLocation.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/ArenaLocation.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Arena/CutScene.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/CutScene.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Events.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Events.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Arena/SpawnMob.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/SpawnMob.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Stage.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Stage.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Arena/WaveEvents.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/WaveEvents.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Zombie.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Zombie.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/original-MCC-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/original-MCC-1.0.0.jar" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
