@@ -4,6 +4,7 @@ Commands\PartyCMD.class
 Commands\ReviveCMD.class
 Arena\Game$8.class
 Utils\StringToLocationUtil.class
+Utils\EmptyChunkGenerator.class
 com\mimikcraft\mcc\ExecutableApi.class
 Commands\LeaveCMD.class
 Arena\Game$1.class
@@ -17,6 +18,7 @@ Arena\Game$9.class
 Party\Party.class
 Arena\CustomAnvil.class
 Events\BlockEventListener.class
+Commands\ApplyWorldChangesCMD.class
 Commands\SetStructureChangesCMD.class
 Arena\Zombie.class
 Events\EntityDamageListener.class
@@ -24,6 +26,7 @@ Commands\LaunchCMD.class
 com\mimikcraft\mcc\Main.class
 Arena\Stage.class
 Arena\WaveEvents.class
+Commands\TestCMD.class
 Party\PartyList.class
 Events\PlayerInteractListener.class
 Arena\Events.class
@@ -44,7 +47,6 @@ Events\PlayerInteractListener$1.class
 Arena\ArenaStages.class
 Arena\Game$10.class
 Utils\RemoveItemUtil.class
-Arena\EmptyChunkGenerator.class
 Commands\KickCMD.class
 Events\PlayerDeathListener.class
 Arena\ArtifactsTypes.class

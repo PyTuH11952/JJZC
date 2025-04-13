@@ -1,4 +1,4 @@
-package Arena;
+package Utils;
 
 import java.util.Random;
 

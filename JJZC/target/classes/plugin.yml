@@ -17,8 +17,12 @@ commands:
     usage: /partychat
     aliases:
       - pc
+  applyWorldChanges:
+    usage: /applyWorldChanges
   setspawns:
     usage: /setspawns
+  test:
+    usage: /test
   getchest:
     usage: /getchest
   bestiary:

@@ -2,6 +2,7 @@ package Arena;
 
 import Party.PartyList;
 import Utils.ChatUtil;
+import Utils.EmptyChunkGenerator;
 import Utils.RemoveItemUtil;
 import com.mimikcraft.mcc.ExecutableApi;
 import com.mimikcraft.mcc.Main;
@@ -11,7 +12,6 @@ import me.neznamy.tab.api.TabAPI;
 import me.neznamy.tab.api.TabPlayer;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 

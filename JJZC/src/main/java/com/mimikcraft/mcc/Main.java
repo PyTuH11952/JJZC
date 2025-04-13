@@ -4,6 +4,7 @@ import Arena.Arena;
 import Commands.*;
 import Events.*;
 import Party.Party;
+import Utils.EmptyChunkGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.WorldCreator;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -23,7 +24,7 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        WorldCreator wc = new WorldCreator("zombie");
+        WorldCreator wc = new WorldCreator("zombie").generator(new EmptyChunkGenerator());
         wc.createWorld();
         getServer().getPluginCommand("join").setExecutor(new JoinCMD());
         getServer().getPluginCommand("leave").setExecutor(new LeaveCMD());
@@ -39,6 +40,8 @@ public final class Main extends JavaPlugin {
         getServer().getPluginCommand("arenakick").setExecutor(new KickCMD());
         getServer().getPluginCommand("party").setExecutor(new PartyCMD());
         getServer().getPluginCommand("partychat").setExecutor(new PartyChatCMD());
+        getServer().getPluginCommand("applyWorldChanges").setExecutor(new ApplyWorldChangesCMD());
+        getServer().getPluginCommand("test").setExecutor(new TestCMD());
         getServer().getPluginManager().registerEvents(new KillsEventListener(), this);
         getServer().getPluginManager().registerEvents(new BlockEventListener(), this);
         getServer().getPluginManager().registerEvents(new EntityDamageListener(), this);
