@@ -10,25 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="826ec8dd-69ce-4dea-9d10-7bbbf4b43755" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/Commands/ApplyWorldChangesCMD.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Commands/TestCMD.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/EmptyChunkGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Utils/EmptyChunkGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Commands/SetStructureChangesCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands/SetStructureChangesCMD.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/mimikcraft/mcc/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mimikcraft/mcc/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/MCC-1.0.0-shaded.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/MCC-1.0.0-shaded.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/MCC-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/MCC-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/Arena.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Arena/Arena.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Arena/EmptyChunkGenerator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Commands/SetStructureChangesCMD.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Commands/SetStructureChangesCMD.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/mimikcraft/mcc/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/mimikcraft/mcc/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/plugin.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/original-MCC-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/original-MCC-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../TechnicalTask.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../TechnicalTask.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/Train.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/Train.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Party/Party.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Party/Party.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

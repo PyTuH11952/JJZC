@@ -158,7 +158,8 @@ public class Game {
     }
 
     private void preparePlayers() {
-        for (Player player : arena.getPlayers().keySet()) {
+        for (UUID uuid : arena.getPlayers().keySet()) {
+            Player player = Bukkit.getPlayer(uuid);
             player.getInventory().clear();
             getkit(player);
             player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
@@ -176,11 +177,13 @@ public class Game {
 
     private void showCutScene(String titleLoc, String titleStages, String titleDoors, Location showLoc, List<Location> showStages, List<Location> showDoors) {
         arena.setArenaStage(ArenaStages.CUTSCENE);
-        for (Player player : arena.getPlayers().keySet()) {
+        for (UUID uuid : arena.getPlayers().keySet()) {
+            Player player = Bukkit.getPlayer(uuid);
             player.setGameMode(GameMode.SPECTATOR);
             TabPlayer tabPlayer = TabAPI.getInstance().getPlayer(player.getUniqueId());
             TabAPI.getInstance().getScoreboardManager().toggleScoreboard(tabPlayer, false);
-            for (Player otherPlayer : arena.getPlayers().keySet()) {
+            for (UUID otherPlayerUuid : arena.getPlayers().keySet()) {
+                    Player otherPlayer = Bukkit.getPlayer(otherPlayerUuid);
                     otherPlayer.hidePlayer(Main.getInstance(), player);
                     player.hidePlayer(Main.getInstance(), otherPlayer);
             }
@@ -196,7 +199,8 @@ public class Game {
             @Override
             public void run(){
                 if(!bob){
-                    for(Player player : arena.getPlayers().keySet()){
+                    for(UUID uuid : arena.getPlayers().keySet()){
+                        Player player = Bukkit.getPlayer(uuid);
                         player.teleport(showLoc);
                     }
                     arena.sendArenaTitle(titleLoc, "");
@@ -217,7 +221,8 @@ public class Game {
             @Override
             public void run(){
                 if(i < showStages.size()){
-                    for(Player player : arena.getPlayers().keySet()){
+                    for(UUID uuid : arena.getPlayers().keySet()){
+                        Player player = Bukkit.getPlayer(uuid);
                         player.teleport(showStages.get(i));
                         player.playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK,1,1);
                     }
@@ -239,16 +244,19 @@ public class Game {
             @Override
             public void run(){
                 if(i < showDoors.size()){
-                    for(Player player : arena.getPlayers().keySet()){
+                    for(UUID uuid : arena.getPlayers().keySet()){
+                        Player player = Bukkit.getPlayer(uuid);
                         player.teleport(showDoors.get(i));
                         player.playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK, 1, 1);
                     }
                     i++;
                 }else{
-                    for (Player player : arena.getPlayers().keySet()){
+                    for (UUID uuid : arena.getPlayers().keySet()){
+                        Player player = Bukkit.getPlayer(uuid);
                         player.playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_AMBIENT,1 ,1);
                     }
-                    smoothTeleport(new ArrayList<>(arena.getPlayers().keySet()).get(0).getLocation(), arena.getLocation().getSpawnLocation());
+                    Player player = Bukkit.getPlayer(new ArrayList<>(arena.getPlayers().keySet()).get(0));
+                    smoothTeleport(player.getLocation(), arena.getLocation().getSpawnLocation());
                     cancel();
                 }
             }
@@ -278,8 +286,10 @@ public class Game {
                     z = (1-t) * z1 + t * z2;
                     if (t > 1){
                         arena.setArenaStage(ArenaStages.IN_PROCESS);
-                        for (Player player : arena.getPlayers().keySet()) {
-                            for (Player otherPlayer : arena.getPlayers().keySet()) {
+                        for (UUID playerUuid : arena.getPlayers().keySet()) {
+                            for (UUID otherPlayerUuid : arena.getPlayers().keySet()) {
+                                Player player = Bukkit.getPlayer(playerUuid);
+                                Player otherPlayer = Bukkit.getPlayer(otherPlayerUuid);
                                 otherPlayer.showPlayer(Main.getInstance(), player);
                                 player.showPlayer(Main.getInstance(), otherPlayer);
                             }
@@ -288,7 +298,8 @@ public class Game {
                         cancel();
                     }
                     else
-                        for (Player player : arena.getPlayers().keySet()){
+                        for (UUID playerUuid : arena.getPlayers().keySet()){
+                            Player player = Bukkit.getPlayer(playerUuid);
                             SmoothTeleportUtil.teleport(player, new Location(world, x, y, z));
                         }
                 }
@@ -500,7 +511,8 @@ public class Game {
         }
 
     public void sendBossBar() {
-        for (Player player : arena.getPlayers().keySet()) {
+        for (UUID playerUuid : arena.getPlayers().keySet()) {
+            Player player = Bukkit.getPlayer(playerUuid);
             bossbar.addPlayer(player);
         }
         bossbarProgress = (double)mobs.size()/(double)zombiesCount;
@@ -565,7 +577,8 @@ public class Game {
                 wave = 0;
                 stage = 0;
                 hardLevel++;
-                for(Player player : arena.getPlayers().keySet()){
+                for(UUID playerUuid : arena.getPlayers().keySet()){
+                    Player player = Bukkit.getPlayer(playerUuid);
                     player.teleport(arena.getLocation().getSpawnLocation());
                 }
             }
@@ -772,7 +785,8 @@ public class Game {
         double random = Math.random();
         List<Player> players = new ArrayList<>();
         int randomPlayer = (int)(Math.random() * arena.getPlayers().size());
-        for (Player player : arena.getPlayers().keySet()){
+        for (UUID playerUuid : arena.getPlayers().keySet()){
+            Player player = Bukkit.getPlayer(playerUuid);
             players.add(player);
         }
         if (random <= 0.07){
@@ -822,7 +836,8 @@ public class Game {
 
         clearMobs();
 
-        for (Player player : arena.getPlayers().keySet()){
+        for (UUID playerUuid : arena.getPlayers().keySet()){
+            Player player = Bukkit.getPlayer(playerUuid);
             if(!player.hasPermission("loc" + (arena.getLocation().getLocationType().ordinal() + 1) + "." + (hardLevel - 1))){
                 PermissionAttachment attachment = player.addAttachment(Main.getInstance());
                 attachment.setPermission("loc" + (arena.getLocation().getLocationType().ordinal() + 1) + "." + (hardLevel - 1), true);
@@ -880,7 +895,8 @@ public class Game {
         for (Entity entity : mobs){
             entity.remove();
         }
-        for (Player player : arena.getPlayers().keySet()){
+        for (UUID playerUuid : arena.getPlayers().keySet()){
+            Player player = Bukkit.getPlayer(playerUuid);
             removeBossBar(player);
         }
         mobs.clear();

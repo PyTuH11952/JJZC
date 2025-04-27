@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.function.DoubleToIntFunction;
 
 public class Train {
@@ -42,20 +43,23 @@ public class Train {
 
     public void startTrain(Arena arena){
         arena.getGame().clearMobs();
-        for(Player player : arena.getPlayers().keySet()){
+        for(UUID playerUuid : arena.getPlayers().keySet()){
+            Player player = Bukkit.getPlayer(playerUuid);
             player.teleport(trainLocation);
         }
         new BukkitRunnable(){
             int ctr = 0;
             @Override
             public void run(){
-                for (Player player : arena.getPlayers().keySet()){
+                for (UUID playerUuid : arena.getPlayers().keySet()){
+                    Player player = Bukkit.getPlayer(playerUuid);
                     player.getLocation().getWorld().spawnParticle(Particle.CLOUD, player.getLocation(), 100, 10, 10, 10, 0.1);
                     player.getLocation().getWorld().playSound(player.getLocation(), Sound.ENTITY_ARMOR_STAND_BREAK, 1, 1);
                 }
                 ctr++;
                 if(ctr >= 20){
-                    for(Player player : arena.getPlayers().keySet()){
+                    for(UUID playerUuid : arena.getPlayers().keySet()){
+                        Player player = Bukkit.getPlayer(playerUuid);
                         player.teleport(newTrainLocation);
                         arena.getGame().startNewWave();
                         arena.getGame().setTrain(null);

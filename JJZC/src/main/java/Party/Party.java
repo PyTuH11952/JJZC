@@ -2,27 +2,31 @@ package Party;
 
 import Utils.ChatUtil;
 import com.mimikcraft.mcc.Main;
+import io.lumine.mythic.bukkit.utils.lib.jooq.impl.QOM;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Party {
-    private List<Player> partyPlayers = new ArrayList<>();
-    private List<Player> invitedPlayers = new ArrayList<>();
+    private List<UUID> partyPlayers = new ArrayList<>();
+    private List<UUID> invitedPlayers = new ArrayList<>();
     private static final String prefix = "&0[&eПати&0]&7: ";
     private Player host;
 
     public void sendPartyMessage(String msg) {
-        for (Player player : partyPlayers) {
+        for (UUID playerUuid : partyPlayers) {
+            Player player = Bukkit.getPlayer(playerUuid);
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + msg));
         }
     }
 
     public void invite(Player player, Player sender) {
-        invitedPlayers.add(player);
+        invitedPlayers.add(player.getUniqueId());
         ChatUtil.sendMessage(player, "&aИгрок &e" + sender + " &aотправил вам приглашение в пати!");
         ChatUtil.sendMessage(player, "&e/party accept &a- принять запрос в пати");
         ChatUtil.sendMessage(player, "&e/party cancel &a- отклонить запрос в пати");
@@ -50,7 +54,7 @@ public class Party {
         if (invitedPlayers.contains(player)){
             invitedPlayers.remove(player);
         }
-        partyPlayers.add(player);
+        partyPlayers.add(player.getUniqueId());
         ChatUtil.sendMessage(player, "&eВы успешно присоединились к пати!");
         sendPartyMessage("&a" + player.getDisplayName() + " &eприсоединился к пати!");
         if (partyPlayers.size() == 1) {
@@ -72,7 +76,7 @@ public class Party {
         }
     }
 
-    public List<Player> getPartyPlayers() {
+    public List<UUID> getPartyPlayers() {
         return partyPlayers;
     }
 
@@ -80,7 +84,7 @@ public class Party {
         return host;
     }
 
-    public List<Player> getInvitedPlayers() {
+    public List<UUID> getInvitedPlayers() {
         return invitedPlayers;
     }
 

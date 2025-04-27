@@ -32,22 +32,22 @@ public class Arena {
 
     private World arenaWorld;
 
-    private final Map<Player, Location> onJoinLocation = new HashMap<>();
+    private final Map<UUID, Location> onJoinLocation = new HashMap<>();
 
-    private final Map<Player, Float> playerExp = new HashMap<>();
+    private final Map<UUID, Float> playerExp = new HashMap<>();
 
-    private final Map<Player, Integer> playerLvl = new HashMap<>();
+    private final Map<UUID, Integer> playerLvl = new HashMap<>();
 
-    private final Map<Player, Map<Integer, ItemStack>> playerInventory = new HashMap<>();
+    private final Map<UUID, Map<Integer, ItemStack>> playerInventory = new HashMap<>();
 
     private ArenaStages arenaStage = ArenaStages.FREE;
 
     private Game game;
     private ArenaLocation location;
 
-    private final Map<Player, List<Artifact>> players = new HashMap<>();
-    private final List<Player> ghosts = new ArrayList<>();
-    private final List<Player> leavedPlayers = new ArrayList<>();
+    private final Map<UUID, List<Artifact>> players = new HashMap<>();
+    private final List<UUID> ghosts = new ArrayList<>();
+    private final List<UUID> leavedPlayers = new ArrayList<>();
 
     private Player host;
 
@@ -73,7 +73,8 @@ public class Arena {
 
     public void reset(){
         arenaStage = ArenaStages.RESET;
-        for (Player player : players.keySet()){
+        for (UUID uuid : players.keySet()){
+            Player player = Bukkit.getPlayer(uuid);
             leave(player);
         }
         Bukkit.unloadWorld(Bukkit.getWorld(name), true);
@@ -111,15 +112,15 @@ public class Arena {
                 return;
             }
         }
-        playerExp.put(player,player.getExp());
-        playerLvl.put(player,player.getLevel());
+        playerExp.put(player.getUniqueId(),player.getExp());
+        playerLvl.put(player.getUniqueId(),player.getLevel());
         player.setExp(0.0f);
-        onJoinLocation.put(player, player.getLocation());
-        playerInventory.put(player, new HashMap<>());
+        onJoinLocation.put(player.getUniqueId(), player.getLocation());
+        playerInventory.put(player.getUniqueId(), new HashMap<>());
         for(int i = 0; i < player.getInventory().getSize(); i++){
-            playerInventory.get(player).put(i, player.getInventory().getItem(i));
+            playerInventory.get(player.getUniqueId()).put(i, player.getInventory().getItem(i));
         }
-        players.put(player, new ArrayList<>());
+        players.put(player.getUniqueId(), new ArrayList<>());
         sendArenaMessage(player.getDisplayName() + " присоединился!");
         player.getInventory().clear();
         player.getActivePotionEffects().clear();
@@ -136,7 +137,8 @@ public class Arena {
             player.setGameMode(GameMode.SPECTATOR);
             TabPlayer tabPlayer = TabAPI.getInstance().getPlayer(player.getUniqueId());
             TabAPI.getInstance().getScoreboardManager().toggleScoreboard(tabPlayer, false);
-            for (Player otherPlayer : getPlayers().keySet()) {
+            for (UUID otherPlayerUuid : getPlayers().keySet()) {
+                Player otherPlayer = Bukkit.getPlayer(otherPlayerUuid);
                 otherPlayer.hidePlayer(Main.getInstance(), player);
                 player.hidePlayer(Main.getInstance(), otherPlayer);
             }
@@ -155,7 +157,8 @@ public class Arena {
 
         if (PartyList.hasParty(player)){
             if (PartyList.getParty(player).getHost() == player){
-                for (Player partyPlayer : PartyList.getParty(player).getPartyPlayers()){
+                for (UUID partyPlayerUuid : PartyList.getParty(player).getPartyPlayers()){
+                    Player partyPlayer = Bukkit.getPlayer(partyPlayerUuid);
                     if (PartyList.getParty(player).getHost() != partyPlayer) {
                         join(partyPlayer);
                     }
@@ -198,12 +201,12 @@ public class Arena {
 
     public void leave(Player player){
         if (arenaStage == ArenaStages.STARTING){
-            player.setExp(playerExp.get(player));
-            player.setLevel(playerLvl.get(player));
+            player.setExp(playerExp.get(player.getUniqueId()));
+            player.setLevel(playerLvl.get(player.getUniqueId()));
         }
         players.remove(player);
         if(arenaStage == ArenaStages.IN_PROCESS){
-            leavedPlayers.add(player);
+            leavedPlayers.add(player.getUniqueId());
             sendArenaMessage(player.getDisplayName() + " сбежал!");
         }else{
             sendArenaMessage(player.getDisplayName() + " отключился!");
@@ -212,22 +215,23 @@ public class Arena {
             reset();
         }
         if(players.size() == 1){
-            for(Map.Entry<Player, List<Artifact>> entry : players.entrySet()){
-                host = entry.getKey();
+            for(Map.Entry<UUID, List<Artifact>> entry : players.entrySet()){
+                host = Bukkit.getPlayer(entry.getKey());
                 ExecutableApi.setExecutableItem(host, "hostitem1", 1, 8);
                 ExecutableApi.setExecutableItem(host, "hostitem2", 1, 7);
                 break;
             }
         }
-        player.teleport(onJoinLocation.get(player));
+        player.teleport(onJoinLocation.get(player.getUniqueId()));
         game.removeBossBar(player);
-        for(Map.Entry<Integer, ItemStack> entry : playerInventory.get(player).entrySet()){
+        for(Map.Entry<Integer, ItemStack> entry : playerInventory.get(player.getUniqueId()).entrySet()){
             player.getInventory().setItem(entry.getKey(), entry.getValue());
         }
         player.getActivePotionEffects().clear();
         if (PartyList.hasParty(player)){
             if (PartyList.getParty(player).getHost() == player){
-                for (Player partyPlayer : PartyList.getParty(player).getPartyPlayers()) {
+                for (UUID partyPlayerUuid : PartyList.getParty(player).getPartyPlayers()) {
+                    Player partyPlayer = Bukkit.getPlayer(partyPlayerUuid);
                     if (partyPlayer != PartyList.getParty(player).getHost() && ArenaList.hasArena((partyPlayer))) {
                         ArenaList.get(partyPlayer).leave(partyPlayer);
                     }
@@ -237,7 +241,7 @@ public class Arena {
     }
 
     public void playerDie(Player player){
-        ghosts.add(player);
+        ghosts.add(player.getUniqueId());
         player.setGameMode(GameMode.SPECTATOR);
         player.sendTitle(ChatColor.translateAlternateColorCodes('&', "&cВы умерли!"), "");
         new BukkitRunnable(){
@@ -268,7 +272,8 @@ public class Arena {
         }
         if(player.getInventory().containsAtLeast(item, 7)){
             RemoveItemUtil.remove(player, item, 7);
-            Player ghost = ghosts.get((int)(Math.random() * ghosts.size()));
+            UUID ghostUuid = ghosts.get((int)(Math.random() * ghosts.size()));
+            Player ghost = Bukkit.getPlayer(ghostUuid);
             ghosts.remove(ghost);
             ghost.setGameMode(GameMode.ADVENTURE);
             ghost.teleport(location.getSpawnLocation());
@@ -311,35 +316,40 @@ public class Arena {
     }
 
     public void sendArenaMessage(String message){
-        for (Player player : players.keySet()){
+        for (UUID uuid : players.keySet()){
+            Player player = Bukkit.getPlayer(uuid);
             ChatUtil.sendMessage(player, message);
         }
     }
 
     public void sendArenaTitle (String message, String subMessage){
-        for (Player player : players.keySet()){
+        for (UUID uuid : players.keySet()){
+            Player player = Bukkit.getPlayer(uuid);
             player.sendTitle(ChatColor.translateAlternateColorCodes('&', message), ChatColor.translateAlternateColorCodes('&', subMessage));
         }
     }
 
     public void expTimerArena (int value){
-        for (Player player : players.keySet()){
+        for (UUID uuid : players.keySet()){
+            Player player = Bukkit.getPlayer(uuid);
             player.setLevel(value);
         }
     }
     public void expSoundArena (){
-        for (Player player : players.keySet()){
+        for (UUID uuid : players.keySet()){
+            Player player = Bukkit.getPlayer(uuid);
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1,1);
         }
     }
 
     public void setPlayerExp(){
-        for (Player player : players.keySet()){
-            if(playerExp.get(player) == 0 || playerLvl.get(player) == 0){
+        for (UUID uuid : players.keySet()){
+            if(playerExp.get(uuid) == 0 || playerLvl.get(uuid) == 0){
                 return;
             }
-            player.setExp(playerExp.get(player));
-            player.setLevel(playerLvl.get(player));
+            Player player = Bukkit.getPlayer(uuid);
+            player.setExp(playerExp.get(uuid));
+            player.setLevel(playerLvl.get(uuid));
         }
     }
 
@@ -348,7 +358,7 @@ public class Arena {
     }
 
 
-    public Map<Player, List<Artifact>> getPlayers() {
+    public Map<UUID, List<Artifact>> getPlayers() {
         return players;
     }
 
@@ -358,7 +368,7 @@ public class Arena {
     }
 
 
-    public Map<Player, Location> getOnJoinLocation() {
+    public Map<UUID, Location> getOnJoinLocation() {
         return onJoinLocation;
     }
 
@@ -382,7 +392,7 @@ public class Arena {
         this.arenaStage = arenaStage;
     }
 
-    public List<Player> getGhosts(){
+    public List<UUID> getGhosts(){
         return ghosts;
     }
 
