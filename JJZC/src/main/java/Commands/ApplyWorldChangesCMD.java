@@ -4,6 +4,7 @@ import Arena.Arena;
 import Arena.ArenaList;
 import Utils.ChatUtil;
 import com.mimikcraft.mcc.Main;
+import com.mimikcraft.mcc.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -31,7 +32,7 @@ public class ApplyWorldChangesCMD implements CommandExecutor {
         Player player = (Player) commandSender;
 
         if(!player.isOnline()){
-            ChatUtil.sendMessage(player, "&cНедостаточно прав!");
+            ChatUtil.sendMessage(player, Messages.noPerm);
             return  true;
         }
 

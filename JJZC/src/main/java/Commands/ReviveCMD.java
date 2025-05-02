@@ -3,6 +3,7 @@ package Commands;
 import Arena.Arena;
 import Arena.ArenaList;
 import Utils.ChatUtil;
+import com.mimikcraft.mcc.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,7 +24,7 @@ public class ReviveCMD implements CommandExecutor {
                 arena.reviveRandom(player);
                 return true;
             }else{
-                ChatUtil.sendMessage(player, "&CВы находитесь не на арене!");
+                ChatUtil.sendMessage(player, Messages.notOnArena);
                 return true;
             }
         }else{

@@ -5,6 +5,7 @@ import Arena.Arena;
 import Arena.ArenaStages;
 import Utils.ChatUtil;
 import Utils.KeyUtil;
+import com.mimikcraft.mcc.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -32,7 +33,7 @@ public class LeaveCMD implements CommandExecutor {
 
         Arena arena = ArenaList.get(player);
         if (arena == null) {
-            ChatUtil.sendMessage(player, "&cВы не подключены к арене!");
+            ChatUtil.sendMessage(player, Messages.notOnArena);
             return true;
         }
 

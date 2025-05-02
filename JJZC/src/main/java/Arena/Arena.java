@@ -6,8 +6,10 @@ import Utils.EmptyChunkGenerator;
 import Utils.RemoveItemUtil;
 import com.mimikcraft.mcc.ExecutableApi;
 import com.mimikcraft.mcc.Main;
+import com.mimikcraft.mcc.Messages;
 import com.ssomar.score.api.executableitems.ExecutableItemsAPI;
 import com.ssomar.score.api.executableitems.config.ExecutableItemInterface;
+import io.r2dbc.spi.Result;
 import me.neznamy.tab.api.TabAPI;
 import me.neznamy.tab.api.TabPlayer;
 import org.bukkit.*;
@@ -91,24 +93,24 @@ public class Arena {
 
     public void join(Player player){
         if (ArenaList.get(player) != null){
-            ChatUtil.sendMessage(player, "Вы уже на арене!");
+            ChatUtil.sendMessage(player, Messages.alreadyOnArena);
             return;
         }
         if (arenaStage == ArenaStages.RESET || arenaStage == ArenaStages.GAME_ENDED) {
-            ChatUtil.sendMessage(player, "Арена закрыта!");
+            ChatUtil.sendMessage(player, Messages.arenaClosed);
             return;
         }
         if (players.size() >= maxPlayers){
-            ChatUtil.sendMessage(player, "Арена заполнена!");
+            ChatUtil.sendMessage(player, Messages.arenaFull);
             return;
         }
         if(leavedPlayers.contains(player)){
-            ChatUtil.sendMessage(player, "Вы уже сбежали с этой игры! Вернуться нельзя.");
+            ChatUtil.sendMessage(player, Messages.leavedFromArena);
             return;
         }
         if (PartyList.hasParty(player)){
             if (PartyList.getParty(player).getHost() == player && PartyList.getParty(player).getPartyPlayers().size() > (maxPlayers-players.size())){
-                ChatUtil.sendMessage(player, "На арене недостаточно места для всех учатников пати!");
+                ChatUtil.sendMessage(player, Messages.arenaFullForParty);
                 return;
             }
         }
@@ -121,7 +123,7 @@ public class Arena {
             playerInventory.get(player.getUniqueId()).put(i, player.getInventory().getItem(i));
         }
         players.put(player.getUniqueId(), new ArrayList<>());
-        sendArenaMessage(player.getDisplayName() + " присоединился!");
+        sendArenaMessage(player.getDisplayName() + " " + Messages.arenaJoin);
         player.getInventory().clear();
         player.getActivePotionEffects().clear();
         if (arenaStage == ArenaStages.STARTING || arenaStage == ArenaStages.FREE){
@@ -186,8 +188,8 @@ public class Arena {
                 expTimerArena(ctr);
 
                 if (ctr == 60 || ctr == 30 || ctr == 15 || ctr == 10 || ctr == 5 || ctr == 4 || ctr == 3 || ctr == 2 || ctr == 1) {
-                    sendArenaTitle("&eДо старта игры осталось", "&c&l" + ctr);
-                    sendArenaMessage("&eДо старта осталось &c " + ctr + " &eсекунд...");
+                    sendArenaTitle(Messages.leftUntilStart, "&c&l" + ctr);
+                    sendArenaMessage(Messages.leftUntilStart + "&c " + ctr + " &eсекунд...");
                     expSoundArena();
                 }
                 ctr--;
@@ -207,9 +209,9 @@ public class Arena {
         players.remove(player);
         if(arenaStage == ArenaStages.IN_PROCESS){
             leavedPlayers.add(player.getUniqueId());
-            sendArenaMessage(player.getDisplayName() + " сбежал!");
+            sendArenaMessage(player.getDisplayName() + " " + Messages.arenaEscape);
         }else{
-            sendArenaMessage(player.getDisplayName() + " отключился!");
+            sendArenaMessage(player.getDisplayName() + " " + Messages.arenaLeave);
         }
         if (players.isEmpty() && arenaStage == ArenaStages.STARTING){
             reset();
@@ -243,7 +245,7 @@ public class Arena {
     public void playerDie(Player player){
         ghosts.add(player.getUniqueId());
         player.setGameMode(GameMode.SPECTATOR);
-        player.sendTitle(ChatColor.translateAlternateColorCodes('&', "&cВы умерли!"), "");
+        player.sendTitle(ChatColor.translateAlternateColorCodes('&', Messages.arenaDeath), "");
         new BukkitRunnable(){
             @Override
             public void run(){
@@ -277,9 +279,9 @@ public class Arena {
             ghosts.remove(ghost);
             ghost.setGameMode(GameMode.ADVENTURE);
             ghost.teleport(location.getSpawnLocation());
-            ghost.sendTitle(ChatColor.translateAlternateColorCodes('&', "&aВы воскрешены!"), "");
+            ghost.sendTitle(ChatColor.translateAlternateColorCodes('&', Messages.arenaRevived), "");
         } else {
-            ChatUtil.sendMessage(player, "&cНедостаточно материала!");
+            ChatUtil.sendMessage(player, Messages.needMoreItems);
             player.closeInventory();
         }
     }
@@ -295,9 +297,9 @@ public class Arena {
             RemoveItemUtil.remove(player, item, 5);
             getGame().setLifesCount(getGame().getLifesCount()+1);
             player.closeInventory();
-            sendArenaMessage("&aИгрок &e" + player + " &aскрафтил дополнительную жизнь!");
+            sendArenaMessage("&aИгрок &e" + player + " " + Messages.craftAdditionalLife);
         } else{
-            ChatUtil.sendMessage(player, "&cНедостаточно материала!");
+            ChatUtil.sendMessage(player, Messages.needMoreItems);
             player.closeInventory();
         }
     }
@@ -305,7 +307,7 @@ public class Arena {
     public boolean canJoin(Player player) {
         if(game.getHardLevel() == 1) return true;
         if(!player.hasPermission("loc" + (location.getLocationType().ordinal() + 1) + "." + (game.getHardLevel() - 1))){
-            ChatUtil.sendMessage(player, "&cНе удалось определить локацию");
+            ChatUtil.sendMessage(player, Messages.couldntDetermineLocation);
             return false;
         }else return true;
     }

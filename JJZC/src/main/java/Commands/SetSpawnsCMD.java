@@ -2,6 +2,7 @@ package Commands;
 
 import Utils.ChatUtil;
 import com.mimikcraft.mcc.Main;
+import com.mimikcraft.mcc.Messages;
 import io.lumine.mythic.api.adapters.AbstractLocation;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
@@ -27,7 +28,7 @@ public class SetSpawnsCMD implements CommandExecutor {
         }
         Player player = (Player) commandSender;
         if(!player.isOp()){
-            ChatUtil.sendMessage(player, "&cУ вас нет прав на эту команду!");
+            ChatUtil.sendMessage(player, Messages.noPerm);
             return true;
         }
         if(args.length == 0){

@@ -10,11 +10,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="826ec8dd-69ce-4dea-9d10-7bbbf4b43755" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mimikcraft/mcc/Messages.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/Arena.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/Train.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/Train.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Party/Party.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Party/Party.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arena/CustomAnvil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arena/CustomAnvil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Commands/AddLifeCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands/AddLifeCMD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Commands/ApplyWorldChangesCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands/ApplyWorldChangesCMD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Commands/ForceStartCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands/ForceStartCMD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Commands/GameSettingsCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands/GameSettingsCMD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Commands/JoinCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands/JoinCMD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Commands/KickCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands/KickCMD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Commands/LeaveCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands/LeaveCMD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Commands/PartyChatCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands/PartyChatCMD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Commands/ReviveCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands/ReviveCMD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Commands/SetSpawnsCMD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Commands/SetSpawnsCMD.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

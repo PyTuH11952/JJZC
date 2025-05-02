@@ -5,6 +5,7 @@ import Arena.ArenaList;
 import Arena.ArenaStages;
 import Utils.ChatUtil;
 import Utils.KeyUtil;
+import com.mimikcraft.mcc.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -102,7 +103,7 @@ public class JoinCMD implements CommandExecutor {
         }
 
         if (!ArenaList.hasArena(args[0])) {
-            ChatUtil.sendMessage(player, "&cТакой арены нет!");
+            ChatUtil.sendMessage(player, Messages.ArenaListNoArena);
             return true;
         }
         Arena arena = ArenaList.get(args[0]);

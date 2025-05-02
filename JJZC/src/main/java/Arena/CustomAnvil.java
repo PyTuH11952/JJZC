@@ -1,6 +1,7 @@
 package Arena;
 
 import Utils.ChatUtil;
+import com.mimikcraft.mcc.Messages;
 import com.ssomar.score.api.executableitems.ExecutableItemsAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -62,7 +63,7 @@ public class CustomAnvil extends CustomBlock {
                 }
             }
         }
-        ChatUtil.sendMessage(buyer, "&cНедостаточно материала!");
+        ChatUtil.sendMessage(buyer, Messages.needMoreItems);
     }
 
     public void onBreak(){

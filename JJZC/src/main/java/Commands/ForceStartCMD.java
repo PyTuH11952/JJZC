@@ -4,6 +4,7 @@ import Arena.ArenaList;
 import Arena.Arena;
 import Arena.ArenaStages;
 import Utils.ChatUtil;
+import com.mimikcraft.mcc.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,7 +35,7 @@ public class ForceStartCMD implements CommandExecutor {
             return true;
         }
 
-        ChatUtil.sendMessage(player, "&cНет подходящих арен!");
+        ChatUtil.sendMessage(player, Messages.ArenaListNoArena);
 
         return true;
     }

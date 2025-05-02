@@ -5,6 +5,7 @@ import Arena.Arena;
 import Arena.ArenaStages;
 import Utils.ChatUtil;
 import Utils.KeyUtil;
+import com.mimikcraft.mcc.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -32,11 +33,11 @@ public class GameSettingsCMD implements CommandExecutor {
         }
         Arena arena = ArenaList.get(player);
         if(!arena.getHost().getUniqueId().toString().equals(player.getUniqueId().toString())){
-            ChatUtil.sendMessage(player, "&cКоманда доступна только хосту!");
+            ChatUtil.sendMessage(player, Messages.onlyForHost);
             return true;
         }
         if(arena.getArenaStage() == ArenaStages.IN_PROCESS){
-            ChatUtil.sendMessage(player, "&cНельзя использовать эту команду во время игры!");
+            ChatUtil.sendMessage(player, Messages.cannotUseInGame);
             return true;
         }
 
