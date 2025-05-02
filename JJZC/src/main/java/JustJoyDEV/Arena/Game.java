@@ -1,0 +1,1002 @@
+package JustJoyDEV.Arena;
+
+import Utils.ChatUtil;
+import Utils.SmoothTeleportUtil;
+import com.mimikcraft.mcc.Main;
+import com.ssomar.score.api.executableitems.ExecutableItemsAPI;
+import com.ssomar.score.api.executableitems.config.ExecutableItemInterface;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import me.neznamy.tab.api.TabAPI;
+import me.neznamy.tab.api.TabPlayer;
+import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.block.Barrel;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+
+import static com.mimikcraft.mcc.ExecutableApi.giveExecutableItem;
+
+public class Game {
+
+    private final Arena arena;
+
+    private Train train;
+
+    private int hardLevel = 1;
+
+    public int wave = 0;
+
+    private int wavesCount;
+
+    private int spawnedZombies;
+
+    private int infinityWave = 0;
+
+    private boolean isInfinity = false;
+
+    private Map<Location, Material> changedBLocks = new HashMap<>();
+
+    public int stage = 0;
+
+    private int zombiesCount = 0;
+
+    private int lifesCount = 2;
+
+    private int lifesSpent = 0;
+
+    private int addZombie;
+
+    private double bossbarProgress;
+
+    private int spawnersCount;
+
+    public List<Entity> mobs = new ArrayList<>();
+
+    public int aliveZombies = 0;
+
+    private int gameProgress = 0;
+
+    private int glowingTime = 60;
+
+    private boolean glowingTimer = false;
+
+    private double maxWave = 0;
+
+    private Map<Player, Integer> playerKills = new HashMap<>();
+
+    BossBar bossbar = Bukkit.getServer().createBossBar("Осталось зомби: 0", BarColor.BLUE, BarStyle.SOLID);
+
+
+    public Game(Arena arena) {
+        this.arena = arena;
+    }
+
+
+    public void start() {
+        CutScene cutScene = arena.getLocation().getCutScene();
+        showCutScene(cutScene.locTitle,
+                cutScene.floorsTitle,
+                cutScene.doorsTitle,
+                cutScene.locShowLocation,
+                cutScene.floorsLocations,
+                cutScene.doorsLocationcs);
+    }
+
+    private void getkit(Player player) {
+
+        if (player.hasPermission("default")) {
+
+            giveExecutableItem(player, "case1", 3);
+
+        } else if (player.hasPermission("vip")) {
+            giveExecutableItem(player, "case1", 10);
+            giveExecutableItem(player, "bomba1", 3);
+            giveExecutableItem(player, "bomba2", 2);
+        } else if (player.hasPermission("vip+")) {
+            giveExecutableItem(player, "case1", 10);
+            giveExecutableItem(player, "case2", 3);
+            giveExecutableItem(player, "bomba1", 5);
+            giveExecutableItem(player, "bomba2", 3);
+
+        } else if (player.hasPermission("premium")) {
+            giveExecutableItem(player, "case1", 15);
+            giveExecutableItem(player, "case2", 5);
+            giveExecutableItem(player, "case3", 3);
+            giveExecutableItem(player, "bomba1", 7);
+            giveExecutableItem(player, "bomba2", 5);
+            giveExecutableItem(player, "bomba3", 3);
+
+        } else if (player.hasPermission("sponsor")) {
+            giveExecutableItem(player, "case1", 16);
+            giveExecutableItem(player, "case2", 6);
+            giveExecutableItem(player, "case3", 4);
+            giveExecutableItem(player, "bomba1", 8);
+            giveExecutableItem(player, "bomba2", 6);
+            giveExecutableItem(player, "bomba3", 4);
+
+        } else if (player.hasPermission("elite")) {
+            giveExecutableItem(player, "case1", 16);
+            giveExecutableItem(player, "case2", 5);
+            giveExecutableItem(player, "case3", 3);
+            giveExecutableItem(player, "case4", 2);
+            giveExecutableItem(player, "bomba1", 8);
+            giveExecutableItem(player, "bomba2", 6);
+            giveExecutableItem(player, "bomba3", 4);
+            giveExecutableItem(player, "lom", 1);
+
+        } else if (player.hasPermission("god")) {
+            giveExecutableItem(player, "case1", 16);
+            giveExecutableItem(player, "case2", 5);
+            giveExecutableItem(player, "case3", 3);
+            giveExecutableItem(player, "case4", 2);
+            giveExecutableItem(player, "bomba1", 8);
+            giveExecutableItem(player, "bomba2", 6);
+            giveExecutableItem(player, "bomba3", 4);
+            giveExecutableItem(player, "bomba5", 2);
+            giveExecutableItem(player, "lom2", 1);
+
+        }
+
+
+    }
+
+    private void preparePlayers() {
+        for (UUID uuid : arena.getPlayers().keySet()) {
+            Player player = Bukkit.getPlayer(uuid);
+            player.getInventory().clear();
+            getkit(player);
+            player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+            arena.setPlayerExp();
+            Location location = arena.getLocation().getSpawnLocation();
+            player.teleport(new Location(Bukkit.getWorld(arena.getArenaWorld().getName()), location.getX(), location.getY(), location.getZ()));
+            ChatUtil.sendMessage(player, "&cБейся!");
+            player.setGameMode(GameMode.ADVENTURE);
+            TabPlayer tabPlayer = TabAPI.getInstance().getPlayer(player.getUniqueId());
+            TabAPI.getInstance().getScoreboardManager().toggleScoreboard(tabPlayer, true);
+        }
+        addZombie = arena.getLocation().getAddZombie();
+        startNewWave();
+    }
+
+    private void showCutScene(String titleLoc, String titleStages, String titleDoors, Location showLoc, List<Location> showStages, List<Location> showDoors) {
+        arena.setArenaStage(ArenaStages.CUTSCENE);
+        for (UUID uuid : arena.getPlayers().keySet()) {
+            Player player = Bukkit.getPlayer(uuid);
+            player.setGameMode(GameMode.SPECTATOR);
+            TabPlayer tabPlayer = TabAPI.getInstance().getPlayer(player.getUniqueId());
+            TabAPI.getInstance().getScoreboardManager().toggleScoreboard(tabPlayer, false);
+            for (UUID otherPlayerUuid : arena.getPlayers().keySet()) {
+                    Player otherPlayer = Bukkit.getPlayer(otherPlayerUuid);
+                    otherPlayer.hidePlayer(Main.getInstance(), player);
+                    player.hidePlayer(Main.getInstance(), otherPlayer);
+            }
+            player.getInventory().clear();
+            player.playSound(player.getLocation(), Sound.AMBIENT_CAVE, 1, 1);
+        }
+        showLoc(titleLoc, titleStages, titleDoors, showLoc,showStages,showDoors);
+    }
+
+    private void showLoc(String titleLoc, String titleStages, String titleDoors, Location showLoc, List<Location> showStages, List<Location> showDoors){
+        new BukkitRunnable(){
+            boolean bob = false;
+            @Override
+            public void run(){
+                if(!bob){
+                    for(UUID uuid : arena.getPlayers().keySet()){
+                        Player player = Bukkit.getPlayer(uuid);
+                        player.teleport(showLoc);
+                    }
+                    arena.sendArenaTitle(titleLoc, "");
+                    bob = true;
+                }else{
+                    arena.sendArenaTitle(titleStages, "");
+                    showStages(showStages, titleDoors, showDoors);
+                    cancel();
+                }
+            }
+
+        }.runTaskTimer(Main.getInstance(), 0L, 80L);
+    }
+
+    private void showStages(List<Location> showStages, String titleDoors, List<Location> showDoors){
+        new BukkitRunnable(){
+            int i = 0;
+            @Override
+            public void run(){
+                if(i < showStages.size()){
+                    for(UUID uuid : arena.getPlayers().keySet()){
+                        Player player = Bukkit.getPlayer(uuid);
+                        player.teleport(showStages.get(i));
+                        player.playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK,1,1);
+                    }
+                    i++;
+                }else{
+                    arena.sendArenaTitle(titleDoors, "");
+                    showDoors(showDoors);
+
+                    cancel();
+                }
+            }
+
+        }.runTaskTimer(Main.getInstance(), 0L, 20L);
+    }
+
+    private void showDoors(List<Location> showDoors){
+        new BukkitRunnable(){
+            int i = 0;
+            @Override
+            public void run(){
+                if(i < showDoors.size()){
+                    for(UUID uuid : arena.getPlayers().keySet()){
+                        Player player = Bukkit.getPlayer(uuid);
+                        player.teleport(showDoors.get(i));
+                        player.playSound(player.getLocation(), Sound.BLOCK_LEVER_CLICK, 1, 1);
+                    }
+                    i++;
+                }else{
+                    for (UUID uuid : arena.getPlayers().keySet()){
+                        Player player = Bukkit.getPlayer(uuid);
+                        player.playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_AMBIENT,1 ,1);
+                    }
+                    Player player = Bukkit.getPlayer(new ArrayList<>(arena.getPlayers().keySet()).get(0));
+                    smoothTeleport(player.getLocation(), arena.getLocation().getSpawnLocation());
+                    cancel();
+                }
+            }
+
+        }.runTaskTimer(Main.getInstance(), 0L, 20L);
+    }
+
+    private void smoothTeleport(Location loc1, Location loc2) {
+            new BukkitRunnable() {
+                double x1 = loc1.getX();
+                double y1 = loc1.getY();
+                double z1 = loc1.getZ();
+                double x2 = loc2.getX();
+                double y2 = loc2.getY();
+                double z2 = loc2.getZ();
+                double x;
+                double y;
+                double z;
+                int i = 0;
+                World world = loc1.getWorld();
+                @Override
+                public void run() {
+                    double t = 0 + 0.01 * i;
+                    i++;
+                    x = (1-t) * x1 + t * x2;
+                    y = (1-t) * y1 + t * y2;
+                    z = (1-t) * z1 + t * z2;
+                    if (t > 1){
+                        arena.setArenaStage(ArenaStages.IN_PROCESS);
+                        for (UUID playerUuid : arena.getPlayers().keySet()) {
+                            for (UUID otherPlayerUuid : arena.getPlayers().keySet()) {
+                                Player player = Bukkit.getPlayer(playerUuid);
+                                Player otherPlayer = Bukkit.getPlayer(otherPlayerUuid);
+                                otherPlayer.showPlayer(Main.getInstance(), player);
+                                player.showPlayer(Main.getInstance(), otherPlayer);
+                            }
+                        }
+                        preparePlayers();
+                        cancel();
+                    }
+                    else
+                        for (UUID playerUuid : arena.getPlayers().keySet()){
+                            Player player = Bukkit.getPlayer(playerUuid);
+                            SmoothTeleportUtil.teleport(player, new Location(world, x, y, z));
+                        }
+                }
+            }.runTaskTimer(Main.getInstance(), 0L, 1L);
+    }
+
+    public void spawnMob(Location location, String name, Particle particle){
+        if(particle != null){
+            arena.getArenaWorld().spawnParticle(particle, location,10, 0.3, 0.3, 0.3, 0);
+            arena.getArenaWorld().playSound(location, Sound.ENTITY_GENERIC_EXTINGUISH_FIRE, 1, 1);
+        }
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                 ActiveMob mythicEntity = MythicBukkit.inst().getMobManager().spawnMob(name, location, hardLevel);
+                 cancel();
+                }
+        }.runTaskLater(Main.getInstance(),20L);
+    }
+
+    public void spawnRandomArtifact(Location location){
+        File folder = new File(Main.getInstance().getDataFolder().getAbsolutePath());
+
+        File file = new File(folder.getAbsolutePath() + "/Artifacts.yml");
+
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+        ConfigurationSection artifactsSection = config.getConfigurationSection("Artifacts");
+        Map<String, Double> artifacts = new HashMap<>();
+        Set<String> artifactsNames = artifactsSection.getKeys(false);
+        for(String artifact : artifactsNames){
+            for(int i = 0; i < artifactsSection.getDoubleList(artifact).size(); i++){
+                artifacts.put(artifact + "_" + (i + 1), artifactsSection.getDoubleList(artifact).get(i));
+            }
+        }
+        int random = (int)(Math.random() * 10000);
+        int temp = 0;
+        String artifactName = "";
+        for(Map.Entry<String, Double> entry : artifacts.entrySet()){
+            temp += (int) (entry.getValue() * 100);
+            if(random <= temp){
+                artifactName = entry.getKey();
+                break;
+            }
+        }
+        spawnMob(location, artifactName, null);
+    }
+
+    public void glowing(){
+        glowingTime = 60;
+        glowingTimer = true;
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                if (!glowingTimer){
+                    cancel();
+                }
+                if (glowingTime == 0){
+                    for (Entity entity : mobs) {
+                        entity.setGlowing(true);
+                    }
+                    glowingTimer = false;
+                    cancel();
+                } else{
+                    glowingTime--;
+                }
+
+            }
+        }.runTaskTimer(Main.getInstance(), 0, 20);
+    }
+
+    private void addItems(Location location, ItemStack item) {
+        Block block = location.getBlock();
+        Inventory inv;
+        Random random = new Random();
+        if (block.getType() == Material.CHEST){
+            Chest chest = (Chest) block.getState();
+            inv = chest.getInventory();
+            inv.setItem(random.nextInt(26), item);
+        } else if (block.getType() == Material.BARREL){
+            Barrel barrel = (Barrel) block.getState();
+            inv = barrel.getInventory();
+            inv.setItem(random.nextInt(26), item);
+        }
+
+    }
+
+    private ItemStack getItem(String itemid, int count) {
+        ItemStack item = null;
+        Optional<ExecutableItemInterface> eiOpt = ExecutableItemsAPI.getExecutableItemsManager().getExecutableItem(itemid);
+        if (eiOpt.isPresent()) {
+            item = eiOpt.get().buildItem(count, Optional.empty());
+        }
+        return item;
+    }
+
+    private void fillСhest(Location location, String locationType){
+        Random random = new Random();
+        int armorWeaponCount = random.nextInt(3);
+        int materialCount = random.nextInt(3);
+        int differentCount = random.nextInt(2);
+        int locItemCount = random.nextInt(2);
+
+        Block block = location.getBlock();
+        Inventory inv;
+        if (block.getType() == Material.CHEST){
+            Chest chest = (Chest) block.getState();
+            inv = chest.getInventory();
+            inv.clear();
+        } else if (block.getType() == Material.BARREL){
+            Barrel barrel = (Barrel) block.getState();
+            inv = barrel.getInventory();
+            inv.clear();
+        }
+
+        for (int i = 0; i <= armorWeaponCount; i++) {
+            double d = Math.random();
+
+            if (d < 0.39) {
+                int tir1armor = random.nextInt(11) + 1;
+                addItems(location, getItem("tir1armor" + tir1armor, 1));
+            } else if (d < 0.78) {
+                int tir1armor = random.nextInt(9) + 1;
+                addItems(location, getItem("tir1weapon" + tir1armor, 1));
+            } else if (d < 0.83) {
+                int tir2armor = random.nextInt(7) + 1;
+                addItems(location, getItem("tir2armor" + tir2armor, 1));
+            } else if (d < 0.88) {
+                int tir2weapon = random.nextInt(3) + 1;
+                addItems(location, getItem("tir2weapon" + tir2weapon, 1));
+            } else if (d < 0.91) {
+                int tir3armor = random.nextInt(7) + 1;
+                addItems(location, getItem("tir3armor" + tir3armor, 1));
+            } else if (d < 0.94) {
+                int tir3weapon = random.nextInt(2) + 1;
+                addItems(location, getItem("tir3weapon" + tir3weapon, 1));
+            } else if (d < 0.96) {
+                int tir4armor = random.nextInt(7) + 1;
+                addItems(location, getItem("tir4armor" + tir4armor, 1));
+            } else if (d < 0.98) {
+                int tir4weapon = random.nextInt(2) + 1;
+                addItems(location, getItem("tir4weapon" + tir4weapon, 1));
+            } else if (d < 0.99) {
+                int tir5armor = random.nextInt(7) + 1;
+                addItems(location, getItem("tir5armor" + tir5armor, 1));
+            } else {
+                int tir5weapon = random.nextInt(2) + 1;
+                addItems(location, getItem("tir5weapon" + tir5weapon, 1));
+            }
+        }
+        for (int i = 0; i <= materialCount; i++) {
+            double d = Math.random();
+            int matcount = random.nextInt(2) + 1;
+            if (d < 0.5) {
+                addItems(location, getItem("material1", matcount));
+            } else if (d < 0.75) {
+                addItems(location, getItem("material2", matcount));
+            } else if (d < 0.9) {
+                addItems(location, getItem("material3", matcount));
+            } else if (d < 0.97) {
+                addItems(location, getItem("material4", matcount));
+            } else {
+                addItems(location, getItem("material5", matcount));
+            }
+        }
+        for (int i = 0; i <= differentCount; i++){
+            double d = Math.random();
+            int diffcount = random.nextInt(2) + 1;
+            if (d < 0.7){
+                int eda = random.nextInt(4) + 1;
+                addItems(location, getItem("eda" + eda, diffcount));
+            } else if (d < 0.77){
+                int bomba = random.nextInt(4) + 1;
+                addItems(location, getItem("bomba" + bomba, 1));
+            } else if (d < 0.84){
+                addItems(location, getItem("repair", 1));
+            } else if (d < 0.91){
+                addItems(location, getItem("hpregen", 1));
+            } else if (d < 0.97){
+                addItems(location, getItem("dopitem2", 1));
+            } else if (d < 0.98){
+                addItems(location, getItem("dopitem1", 1));
+            } else if (d < 0.99){
+                addItems(location, getItem("lom", 1));
+            } else {
+                addItems(location, getItem("lom2", 1));
+            }
+        }
+        for (int i = 0; i <= locItemCount; i++){
+            double d = Math.random();
+            int loccount = random.nextInt(2) + 1;
+            int lootcount = random.nextInt(3) + 1;
+            if (d < 0.02){
+                addItems(location, getItem("loc_"+locationType+"_loot"+lootcount, loccount));
+            }
+
+
+        }
+    }
+
+    public void removeBossBar(Player player) {
+        bossbar.removePlayer(player);
+        }
+
+    public void sendBossBar() {
+        for (UUID playerUuid : arena.getPlayers().keySet()) {
+            Player player = Bukkit.getPlayer(playerUuid);
+            bossbar.addPlayer(player);
+        }
+        bossbarProgress = (double)mobs.size()/(double)zombiesCount;
+//for test//        Bukkit.broadcastMessage("bossbarprogress: "+(double)mobs.size()/(double)zombiesCount+" mobs.size: "+(double)mobs.size()+" zombiecount: "+(double)zombiesCount);
+        if (bossbarProgress <= 0.0) {
+            bossbar.removeAll();
+            return;
+        }
+        if (bossbarProgress > 1){
+            bossbarProgress = 1;
+        }
+        bossbar.setTitle("Осталось зомби: " + (aliveZombies - addZombie));
+        bossbar.setProgress(bossbarProgress);
+    }
+
+    public void startNewWave(){
+        glowingTimer = false;
+        giveItems();
+        if (wave == 0){
+            for (int i = 0; i<=5; i++){
+                List<Location> chests = arena.getLocation().getChests();
+                int randomChest = (int)(Math.random() * chests.size());
+                fillСhest(arena.getLocation().getChests().get(randomChest),arena.getLocation().getLocationType().name().toLowerCase());
+            }
+        } else {
+            for (int i = 0; i<=3; i++){
+                List<Location> chests = arena.getLocation().getChests();
+                int randomChest = (int)(Math.random() * chests.size());
+                fillСhest(arena.getLocation().getChests().get(randomChest), arena.getLocation().getLocationType().name().toLowerCase());
+            }
+        }
+        if (wave >= 5){
+            double random = Math.random();
+            if (random <= 0.875){
+                startUsualWave();
+            } else {
+                startAdditionalWave();
+            }
+        } else {
+            startUsualWave();
+        }
+    }
+
+    public void startUsualWave(){
+        if (wave == 0){
+            for (int i = 0; i < arena.getLocation().getStages().size(); i++){
+                maxWave += arena.getLocation().getStages().get(i).wavesCount;
+            }
+        }
+        if (wavesCount == (wave+1) && stage == arena.getLocation().getStages().size()){
+            arena.sendArenaTitle("Босс!", "");
+            clearMobs();
+            spawnMob(arena.getLocation().getBossLocation(), arena.getLocation().getBossName(), Particle.FLAME);
+            wave++;
+            return;
+        }
+        if(wavesCount == wave){
+            if(stage == arena.getLocation().getStages().size() && isInfinity){
+                for(Map.Entry<Location, Material> entry : changedBLocks.entrySet()){
+                    arena.getArenaWorld().getBlockAt(entry.getKey()).setType(entry.getValue());
+                }
+                wave = 0;
+                stage = 0;
+                hardLevel++;
+                for(UUID playerUuid : arena.getPlayers().keySet()){
+                    Player player = Bukkit.getPlayer(playerUuid);
+                    player.teleport(arena.getLocation().getSpawnLocation());
+                }
+            }
+            stage++;
+            wavesCount = wavesCount + arena.getLocation().getStages().get(stage - 1).wavesCount;
+        }
+        wave++;
+
+        int waveToShow;
+        if(isInfinity){
+            infinityWave++;
+            waveToShow = infinityWave;
+        }else{
+            waveToShow = wave;
+        }
+
+        gameProgress = (int)((double)wave/maxWave*(double)100);
+        zombiesCount = (int)(wave*arena.getPlayers().size()*arena.getLocation().getLocationFactor()+addZombie+1);
+        if (arena.getLocation().getWaveEvents().get(wave) != null){
+            applyEvents(0, wave);
+        }
+        if(wave == wavesCount){
+            zombiesCount *= 2;
+            applyEvents(stage, 0);
+        }
+        aliveZombies += zombiesCount;
+
+
+        if (wave == wavesCount){
+            arena.sendArenaTitle("&cВолна: " + waveToShow, "&cКол-во зомби: " + zombiesCount);
+        } else {
+            arena.sendArenaTitle("Волна: " + waveToShow, "Кол-во зомби: " + zombiesCount);
+        }
+        spawnedZombies = mobs.size();
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                if(spawnedZombies == (zombiesCount-1)){
+                    cancel();
+                }
+                spawnedZombies++;
+                spawnersCount = arena.getLocation().getStages().get(stage - 1).spawners.size();
+
+                spawnMob(arena.getLocation().getStages().get(stage - 1).spawners.get((int)(Math.random() * spawnersCount)), getRandomZombie(), Particle.FLAME);
+            }
+        }.runTaskTimer(Main.getInstance(), 0L, 20L);
+    }
+
+    private String getRandomZombie(){
+        String zombieName = "";
+        List<Zombie> tempZombies = arena.getLocation().getZombies();
+        double extraChances = 0;
+        int firstHardLevelZombiesCount = 0;
+        for(Zombie zombie : tempZombies){
+            if(zombie.hardLevel > hardLevel){
+                tempZombies.remove(zombie);
+            }
+            if(zombie.hardLevel > 1){
+                extraChances += zombie.spawnChance;
+            }else{
+                firstHardLevelZombiesCount++;
+            }
+        }
+        extraChances /= firstHardLevelZombiesCount;
+        for(Zombie zombie: tempZombies){
+            if(extraChances == 0){
+                break;
+            }
+            if(zombie.hardLevel == 1){
+                tempZombies.get(tempZombies.indexOf(zombie)).spawnChance -= extraChances;
+            }
+        }
+        int random = (int)(Math.random() * 10000);
+        int temp = 0;
+        for(Zombie zombie : tempZombies){
+            temp += (int) (zombie.spawnChance * 100);
+            if(random <= temp){
+                zombieName = zombie.name;
+                break;
+            }
+        }
+        return zombieName;
+    }
+
+    private void applyEvents(int stage, int wave){
+        Map<Location, Material> structureChanges = new HashMap<>();
+        List<String> commands = new ArrayList<>();
+        List<SpawnMob> spawnMob = new ArrayList<>();
+        List<Location> collapseCords = new ArrayList<>();
+
+        if (stage != 0) {
+            structureChanges = arena.getLocation().getStages().get(stage - 1).structureChanges;
+            commands = arena.getLocation().getStages().get(stage - 1).commands;
+            spawnMob = arena.getLocation().getStages().get(stage - 1).mobsSpawn;
+            collapseCords = arena.getLocation().getStages().get(stage - 1).collapseCords;
+            train = arena.getLocation().getStages().get(stage - 1).train;
+        }
+        if (wave != 0){
+            structureChanges = arena.getLocation().getWaveEvents().get(wave).structureChanges;
+            commands = arena.getLocation().getWaveEvents().get(wave).commands;
+            spawnMob = arena.getLocation().getWaveEvents().get(wave).mobsSpawn;
+            collapseCords = arena.getLocation().getWaveEvents().get(wave).collapseCords;
+            train = arena.getLocation().getWaveEvents().get(wave).train;
+        }
+        for(Map.Entry<Location, Material> entry : structureChanges.entrySet()){
+            changedBLocks.put(entry.getKey(), arena.getArenaWorld().getBlockAt(entry.getKey()).getType());
+            arena.getArenaWorld().getBlockAt(entry.getKey()).setType(entry.getValue());
+        }
+        for(String command : commands){
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "execute in " + arena.getName() + " run " + command);
+        }
+        for (SpawnMob mob : spawnMob){
+            if (mob.randomZombie){
+                String mobName;
+                for (int i = 0;i < mob.loops; i++){
+                    mobName = getRandomZombie();
+                    for (int i2 = 0;i2< mob.count; i++){
+                        spawnMob(mob.location, mobName, null);
+                    }
+                }
+            } else {
+                for (int i = 0;i < mob.count; i++){
+                    spawnMob(mob.location, mob.name, null);
+                }
+            }
+        }
+
+        if (collapseCords.isEmpty()){
+            return;
+        }
+        int collapseWave = wave;
+        List<Location> finalCollapseCords = collapseCords;
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                if(collapseWave != wave){
+                    cancel();
+                }
+                spawnMob(finalCollapseCords.get((int)(Math.random() * arena.getLocation().getStages().get(stage - 1).collapseCords.size())), "blockpad", null);
+            }
+        }.runTaskTimer(Main.getInstance(), 0, 30);
+
+        if (train != null){
+            arena.sendArenaMessage("&a&lПоезд открыт!");
+            train = arena.getLocation().getStages().get(stage - 1).train;
+        }
+
+    }
+
+    public void startAdditionalWave(){
+        int randomMiniGame = (int)(1 + Math.random() * 4);
+        spawnersCount = arena.getLocation().getStages().get(stage - 1).spawners.size();
+        clearMobs();
+        switch (randomMiniGame){
+            case 1:
+                arena.sendArenaTitle("Дополнительная волна!","Минибосс");
+                int randomValue = (int) (1 + Math.random() * 3);
+                spawnMob(arena.getLocation().getBossLocation(), "miniboss"+randomValue, Particle.FLAME);
+                break;
+            case 2:
+                arena.sendArenaTitle("Дополнительная волна!","Пеньята");
+                spawnMob(arena.getLocation().getBossLocation(), "peniata", Particle.FLAME);
+                break;
+            case 3:
+                arena.sendArenaTitle("Дополнительная волна!","Загрязнение");
+                addZombie *= 3;
+                zombiesCount = (int)(wave*arena.getPlayers().size()*arena.getLocation().getLocationFactor()*10+addZombie+1);
+                aliveZombies += zombiesCount/10;
+                new BukkitRunnable(){
+                    int spawnedZombies = 0;
+                    @Override
+                    public void run(){
+                        if(spawnedZombies == (zombiesCount/10-1)){
+                            cancel();
+                        }
+                        spawnedZombies++;
+                        spawnMob(arena.getLocation().getStages().get(stage - 1).spawners.get((int)(Math.random() * spawnersCount)), "kaka", Particle.FLAME);
+                    }
+                }.runTaskTimer(Main.getInstance(), 0, 20);
+                break;
+            case 4:
+                arena.sendArenaTitle("Дополнительная волна!","Тротиловые зомби");
+                addZombie = 0;
+                zombiesCount = (int)(wave*arena.getPlayers().size()*arena.getLocation().getLocationFactor()/2+addZombie+1);
+                aliveZombies += zombiesCount;
+                spawnedZombies = 0;
+                new BukkitRunnable(){
+                    @Override
+                    public void run(){
+                        if(spawnedZombies == (zombiesCount-1)){
+                            cancel();
+                        }
+                        spawnedZombies++;
+                        spawnMob(arena.getLocation().getStages().get(stage - 1).spawners.get((int)(Math.random() * spawnersCount)), "bombzombie", Particle.FLAME);
+                    }
+                }.runTaskTimer(Main.getInstance(), 0, 20);
+                break;
+        }
+
+    }
+
+
+    public void giveItems(){
+        double random = Math.random();
+        List<Player> players = new ArrayList<>();
+        int randomPlayer = (int)(Math.random() * arena.getPlayers().size());
+        for (UUID playerUuid : arena.getPlayers().keySet()){
+            Player player = Bukkit.getPlayer(playerUuid);
+            players.add(player);
+        }
+        if (random <= 0.07){
+            giveExecutableItem(players.get(randomPlayer), "lom", 1);
+        }
+
+        for (int i = 0; i <= players.size(); i++){
+            double random2 = Math.random();
+            if (random2 <= 0.05){
+                giveExecutableItem(players.get(randomPlayer), "case5", 1);
+            } else if (random2 <= 0.15) {
+                giveExecutableItem(players.get(randomPlayer), "case4", 1);
+            } else if (random2 <= 0.3){
+                giveExecutableItem(players.get(randomPlayer), "case3", 1);
+            } else if (random2 <= 0.5){
+                giveExecutableItem(players.get(randomPlayer), "case2", 1);
+            } else {
+                giveExecutableItem(players.get(randomPlayer), "case1", 1);
+            }
+        }
+    }
+
+    public void endGame(boolean isWon) {
+        int stars = 0;
+        String starsSubTitle = "&7✮✮✮";
+        switch (lifesSpent) {
+            case 0:
+                stars = 3;
+                starsSubTitle = "&e✮✮✮";
+                break;
+            case 1:
+                stars = 2;
+                starsSubTitle = "&e✮✮&7✮";
+                break;
+            case 2:
+                stars = 1;
+                starsSubTitle = "&e✮&7✮✮";
+                break;
+        }
+        if(isWon){
+            arena.sendArenaTitle("&aПобеда!", starsSubTitle);
+        }else{
+            arena.sendArenaTitle("&cПоражение!", "");
+        }
+
+        arena.setArenaStage(ArenaStages.GAME_ENDED);
+
+        clearMobs();
+
+        for (UUID playerUuid : arena.getPlayers().keySet()){
+            Player player = Bukkit.getPlayer(playerUuid);
+            if(!player.hasPermission("loc" + (arena.getLocation().getLocationType().ordinal() + 1) + "." + (hardLevel - 1))){
+                PermissionAttachment attachment = player.addAttachment(Main.getInstance());
+                attachment.setPermission("loc" + (arena.getLocation().getLocationType().ordinal() + 1) + "." + (hardLevel - 1), true);
+                player.removeAttachment(attachment);
+            }
+
+            if(!arena.getPlayers().get(player).isEmpty()){
+                for(int i = arena.getPlayers().get(player).size() - 1; i > 0; i--){
+                    ArtifactsTypes artifactType = arena.getPlayers().get(player).get(i).artifactType;
+                    int artefactLevel = arena.getPlayers().get(player).get(i).level;
+
+                    switch (artifactType){
+                        case STRENGTH:
+                            player.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+                            break;
+                        case SPEED:
+                            player.removePotionEffect(PotionEffectType.SPEED);
+                            break;
+                        case JUMPBOOST:
+                            player.removePotionEffect(PotionEffectType.JUMP);
+                            break;
+                        case REGENERATION:
+                            player.removePotionEffect(PotionEffectType.REGENERATION);
+                            break;
+                        case KACHUMBER:
+                            player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue() - 2*artefactLevel);
+                            break;
+                        case BREAD:
+                            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() - player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.1 * artefactLevel);
+                            break;
+                        case OIL:
+                            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() - player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.2 * artefactLevel);
+                            break;
+                        case DOUBLEJUMP:
+                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tdj " + player.getName() + " disable");
+                            break;
+                        case BONES:
+                            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 2);
+                            break;
+                    }
+                }
+            }
+            ChatUtil.sendMessage(player, "&c&lАрена перезагрузиться через 10 секунд...");
+        }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                arena.reset();
+                cancel();
+            }
+        }.runTaskLater(Main.getInstance(), 200);
+    }
+
+    public void clearMobs(){
+        for (Entity entity : mobs){
+            entity.remove();
+        }
+        for (UUID playerUuid : arena.getPlayers().keySet()){
+            Player player = Bukkit.getPlayer(playerUuid);
+            removeBossBar(player);
+        }
+        mobs.clear();
+        aliveZombies = 0;
+    }
+
+    public boolean isInfinity() {
+        return isInfinity;
+    }
+
+    public void changeInfinityMode(){
+        isInfinity = !isInfinity;
+    }
+
+    public void setAddZombie(int addZombie) {
+        this.addZombie = addZombie;
+    }
+
+    public int getAddZombie() {
+        return addZombie;
+    }
+
+    public Map<Player, Integer> getPlayerKills() {
+        return playerKills;
+    }
+
+    public int getLifesCount() {
+        return lifesCount;
+    }
+
+    public int getHardLevel() {
+        return hardLevel;
+    }
+
+    public void setLifesCount(int lifesCount) {
+        this.lifesCount = lifesCount;
+    }
+
+    public void setHardLevel(int hardLevel) {
+        this.hardLevel = hardLevel;
+    }
+
+    public int getGameProgress() {
+        return gameProgress;
+    }
+
+    public int getGlowingTime() {
+        return glowingTime;
+    }
+
+    public boolean isGlowingTimer() {
+        return glowingTimer;
+    }
+
+    public void setGlowingTimer(boolean glowingTimer) {
+        this.glowingTimer = glowingTimer;
+    }
+
+    public int getZombiesCount() {
+        return zombiesCount;
+    }
+
+    public void setZombiesCount(int zombiesCount) {
+        this.zombiesCount = zombiesCount;
+    }
+
+    public void setBossbarProgress(double bossbarProgress) {
+        this.bossbarProgress = bossbarProgress;
+    }
+
+    public int getSpawnedZombies() {
+        return spawnedZombies;
+    }
+
+    public void setSpawnedZombies(int spawnedZombies) {
+        this.spawnedZombies = spawnedZombies;
+    }
+
+    public boolean isGameInfinity(){
+        return isInfinity;
+    }
+
+    public int getLifesSpent() {
+        return lifesSpent;
+    }
+
+    public void setLifesSpent(int lifesSpent) {
+        this.lifesSpent = lifesSpent;
+    }
+
+    public int getStage() {
+        return stage;
+    }
+
+    public Train getTrain() {
+        return train;
+    }
+
+    public void setTrain(Train train) {
+        this.train = train;
+    }
+}
+

@@ -1,5 +1,58 @@
 name: JJZC
 version: '${project.version}'
-main: Main
+main: JustJoyDEV.Main
 api-version: '1.16'
 authors: [pakhom14, PyTuH1952]
+commands:
+  join:
+    usage: /join
+  leave:
+    usage: /leave
+  forcestart:
+    usage: /forcestart
+  gamesettings:
+    usage: /gamesettings
+  party:
+    usage: /party
+  partychat:
+    usage: /partychat
+    aliases:
+      - pc
+  applyWorldChanges:
+    usage: /applyWorldChanges
+  setspawns:
+    usage: /setspawns
+  test:
+    usage: /test
+  getchest:
+    usage: /getchest
+  bestiary:
+    usage: /bestiary
+  prestige:
+    usage: /prestige
+  arenakick:
+    usage: /arenakick
+  launch:
+    usage: /launch
+    aliases:
+      - startgame
+      - launchgame
+      - start
+  choosestructurechanges:
+    usage: /chooseStructureChange
+  setstructurechanges:
+    usage: /setStructureChanges
+  revive:
+    usage: /revive
+  addlife:
+    usage: /addlife
+depend:
+  - MythicMobs
+  - Vault
+  - TAB
+softdepend:
+  - ExecutableItems
+  - SCore
+  - PlaceholderAPI
+
+

@@ -1,0 +1,93 @@
+package JustJoyDEV.Arena.Commands;
+
+import Utils.ChatUtil;
+import com.mimikcraft.mcc.Main;
+import com.mimikcraft.mcc.Messages;
+import io.lumine.mythic.api.adapters.AbstractLocation;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import org.bukkit.Location;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+public class SetSpawnsCMD implements CommandExecutor {
+    @Override
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+        if(!(commandSender instanceof Player)){
+            return true;
+        }
+        Player player = (Player) commandSender;
+        if(!player.isOp()){
+            ChatUtil.sendMessage(player, Messages.noPerm);
+            return true;
+        }
+        if(args.length == 0){
+            ChatUtil.sendMessage(player, "&cВвдеите название локации!");
+            return true;
+        }
+        if(args.length == 1){
+            ChatUtil.sendMessage(player, "&cВвдеите номер этапа!");
+            return true;
+        }
+        Collection<ActiveMob> mobs = MythicBukkit.inst().getMobManager().getActiveMobs();
+        List<Location> spawners = new ArrayList<>();
+        for(ActiveMob mob : mobs){
+            if(!mob.hasFaction()){
+                continue;
+            }
+            if(mob.getFaction().equals("maintenance")){
+                AbstractLocation absLoc = mob.getLocation();
+                Location spawner = new Location(player.getWorld(), absLoc.getX(), absLoc.getY(), absLoc.getZ());
+                spawners.add(spawner);
+                mob.despawn();
+            }
+        }
+        File folder = new File(Main.getInstance().getDataFolder().getAbsolutePath());
+
+        File file = new File(folder.getAbsolutePath() + "/Locations.yml");
+
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+
+        if(config.getConfigurationSection(args[0]) == null){
+            config.createSection(args[0]);
+        }
+        if(config.getConfigurationSection(args[0] + ".stages") == null){
+            config.createSection(args[0] + ".stages");
+        }
+        if(config.getConfigurationSection(args[0] + ".stages.stage" + args[1]) == null){
+            config.createSection(args[0] + ".stages.stage" + args[1]);
+        }
+        if(config.getConfigurationSection(args[0] + ".stages.stage" + args[1] + ".spawners") == null){
+            config.createSection(args[0] + ".stages.stage" + args[1] + ".spawners");
+        }
+        List<String> locationsStr = new ArrayList<>();
+        for(Location spawner : spawners){
+            String res = spawner.getX() + " " + spawner.getY() + " " + spawner.getZ();
+            locationsStr.add(res);
+        }
+        config.set(args[0] + ".stages.stage" + args[1] + ".spawners", locationsStr);
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return true;
+    }
+}
