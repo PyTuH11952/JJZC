@@ -4,18 +4,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.mimikcraft</groupId>
-  <artifactId>MCC</artifactId>
-  <version>1.0.0</version>
+  <groupId>JustJoyDEV</groupId>
+  <artifactId>JJZC</artifactId>
+  <version>1.0</version>
   <packaging>jar</packaging>
 
-  <name>MCC</name>
-    <properties>
+  <name>JJZC</name>
+
+  <properties>
     <java.version>1.8</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-    <build>
+  <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -26,12 +27,7 @@
           <target>${java.version}</target>
         </configuration>
       </plugin>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-resources-plugin</artifactId>
-            <version>3.1.0</version>
-        </plugin>
-        <plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.2.4</version>
@@ -55,72 +51,20 @@
 
   <repositories>
       <repository>
-          <id>spigotmc-repo</id>
-          <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+          <id>papermc-repo</id>
+          <url>https://repo.papermc.io/repository/maven-public/</url>
       </repository>
       <repository>
           <id>sonatype</id>
           <url>https://oss.sonatype.org/content/groups/public/</url>
       </repository>
-      <repository>
-          <id>nexus</id>
-          <name>Lumine Releases</name>
-          <url>https://mvn.lumine.io/repository/maven-public/</url>
-      </repository>
-      <repository>
-          <id>jitpack.io</id>
-          <url>https://jitpack.io</url>
-      </repository>
-      <repository>
-          <id>papermc</id>
-          <url>https://repo.papermc.io/repository/maven-public/</url>
-      </repository>
-      <repository>
-          <id>enginehub</id>
-          <url>https://maven.enginehub.org/repo/</url>
-      </repository>
-      <repository>
-          <id>placeholderapi</id>
-          <url>https://repo.extendedclip.com/releases/</url>
-      </repository>
   </repositories>
 
   <dependencies>
       <dependency>
-          <groupId>org.spigotmc</groupId>
-          <artifactId>spigot-api</artifactId>
+          <groupId>com.destroystokyo.paper</groupId>
+          <artifactId>paper-api</artifactId>
           <version>1.16.5-R0.1-SNAPSHOT</version>
-          <scope>provided</scope>
-      </dependency>
-      <dependency>
-          <groupId>io.lumine</groupId>
-          <artifactId>Mythic-Dist</artifactId>
-          <version>5.5.1</version>
-          <scope>provided</scope>
-      </dependency>
-      <dependency>
-          <groupId>com.ssomar.score</groupId>
-          <artifactId>SCore</artifactId>
-          <version>5.25.1.5</version>
-          <scope>system</scope>
-          <systemPath>${project.basedir}/src/main/resources/SCore.jar</systemPath>
-      </dependency>
-      <dependency>
-          <groupId>com.github.MilkBowl</groupId>
-          <artifactId>VaultAPI</artifactId>
-          <version>1.7</version>
-          <scope>provided</scope>
-      </dependency>
-      <dependency>
-          <groupId>com.github.NEZNAMY</groupId>
-          <artifactId>TAB-API</artifactId>
-          <version>5.0.7</version>
-          <scope>provided</scope>
-      </dependency>
-      <dependency>
-          <groupId>me.clip</groupId>
-          <artifactId>placeholderapi</artifactId>
-          <version>2.11.6</version>
           <scope>provided</scope>
       </dependency>
   </dependencies>

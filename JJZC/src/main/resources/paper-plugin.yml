@@ -1,0 +1,5 @@
+name: JJZC
+version: '${project.version}'
+main: Main
+api-version: '1.16'
+authors: [pakhom14, PyTuH1952]
